@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const joi = require('./../../validator/authValidator');
 const { signedCookie } = require('cookie-parser');
@@ -38,6 +39,38 @@ exports.auth = async (req, res) => {
             signed: true,
             secure: true
         })
+
+
+
+        let transport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "ex@gmail.com", // your gmail
+                pass: "your app password" // your app password
+            }
+        })
+
+        const mailOptions = {
+            from: "ex@gmail.com", // your gmail
+            to: req.body.email, // send to 
+            subject: "contactUs", // email subject
+            text: req.body.answer, // email body
+        }
+
+        transport.sendMail(mailOptions, async (e, i) => {
+            if (e) {
+                return res.status(422).json({ error: e.message })
+            }
+            else {
+                const x = await contactUs.updateOne({ email: req.body.email }, { answerd: 1 })
+                return res.json({ message: "succ" })
+            }
+        })
+
+
+
+
+
         return res.status(200).json({ message: "success", token: token })
     } catch (err) { return res.status(500).send(err.message); }
 }
