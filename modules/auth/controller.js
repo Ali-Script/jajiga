@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const userModel = require('./authModel')
-const joi = require('./../../validator/userValidator');
+const userModel = require('./model')
+const joi = require('./../../validator/authValidatorrs');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
@@ -38,7 +38,7 @@ exports.auth = async (req, res) => {
 }
 exports.login = async (req, res) => {
     try {
-
+        console.log("object");
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.getme = async (req, res) => {
