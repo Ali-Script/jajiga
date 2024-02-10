@@ -10,10 +10,11 @@ const schema = Joi.object({
             .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$'))
             .required(),
     ConfirmPassword:
-        Joi.ref("Password"),
+        Joi.any().valid(Joi.ref('Password')).required(),
     Email:
         Joi.string()
             .email({ tlds: { allow: false } })
+            .required(),
 });
 
 module.exports = schema;

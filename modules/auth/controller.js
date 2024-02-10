@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('./model')
-const joi = require('./../../validator/authValidatorrs');
+const joi = require('./../../validator/authValidator');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
@@ -10,20 +10,25 @@ require("dotenv").config()
 exports.auth = async (req, res) => {
     try {
         const { UserName, Email, Password, ConfirmPassword } = req.body;
-        req.body = { UserName, Email }
 
         const validator = joi.validate(req.body)
-        if (validator.error) return res.status(409).json({ message: validator.error })
+        if (validator.error) return res.status(409).json({ message: validator.error.details })
 
-        const checkDuplicate = await userModel.findOne({ UserName })
-        if (checkDuplicate) return res.status(409).json({ message: "User already exists !" })
+        const ifDUPLC = await userModel.findOne({
+            $or: [{ UserName }, { Email }]
+        })
+
+        if (ifDUPLC) {
+            return res.status(409).json({ message: "User Name or Email is Duplicated" })
+        }
 
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(Password, salt);
 
         const user = await userModel.create({
             UserName,
-            Email
+            Email,
+            Password: hash
         })
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "14 day" })
@@ -38,7 +43,12 @@ exports.auth = async (req, res) => {
 }
 exports.login = async (req, res) => {
     try {
-        console.log("object");
+
+        const user = await userModel.create({
+            UserName: "perikb",
+            Email: "perikb",
+            Password: "perikb",
+        })
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.getme = async (req, res) => {
