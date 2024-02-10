@@ -13,7 +13,7 @@ const schema = Joi.object({
         Joi.ref("Password"),
     Email:
         Joi.string()
-            .email({ tlds: { allow: false } });
+            .email({ tlds: { allow: false } })
 });
 
 module.exports = schema;

@@ -9,7 +9,7 @@ require("dotenv").config()
 
 exports.auth = async (req, res) => {
     try {
-        const { UserName, Email } = req.body;
+        const { UserName, Email, Password, ConfirmPassword } = req.body;
         req.body = { UserName, Email }
 
         const validator = joi.validate(req.body)
