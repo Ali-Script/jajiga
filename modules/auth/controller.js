@@ -12,7 +12,6 @@ require("dotenv").config()
 exports.auth = async (req, res) => {
     try {
         const { UserName, Email, Password, ConfirmPassword } = req.body;
-        var a = 9
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
@@ -60,20 +59,24 @@ exports.auth = async (req, res) => {
                 return res.status(200).json({ message: "Email Sended !" })
             }
         })
-
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.authCode = async (req, res) => {
     try {
-        const { Code, Email } = req.body;
+        const { Code, Email, UserName, Password, ConfirmPassword } = req.body;
+
+        req.body = { Email, UserName, Password, ConfirmPassword }
+
+        const validator = joi.validate(req.body)
+        if (validator.error) return res.status(409).json({ message: validator.error.details })
 
         const getCode = await codeModel.find({ Email }).sort({ _id: -1 }).lean()
+        if (getCode.length == 0) return res.status(404).json({ message: `There is no Code for : ${Email}` })
 
         if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
 
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(Password, salt);
-
 
             const user = await userModel.create({
                 UserName,
@@ -89,9 +92,17 @@ exports.authCode = async (req, res) => {
                 secure: true
             })
 
-            return res.status(200).json({ message: "success", token: token })
-        }
+            return res.status(200).json({ message: "User Created Succ !", token: token })
 
+        } else if (getCode[0].Code != Code) {
+
+            return res.status(422).json({ message: "Invalid Code !" })
+        }
+        else if (getCode[0].ExpiresIn < Date.now()) {
+
+            return res.status(422).json({ message: "Code Has Expired !" })
+        }
+        return res.status(422).json({ message: "Invalid Err" })
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.login = async (req, res) => {
