@@ -7,6 +7,9 @@ router
     .route("/auth")
     .post(controller.auth)
 router
+    .route("/authCode")
+    .post(controller.authCode)
+router
     .route("/login")
     .get(controller.login)
 router

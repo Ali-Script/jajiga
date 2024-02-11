@@ -9,8 +9,8 @@ const schema = new mongoose.Schema({
         type: 'string',
         required: true
     },
-    Time: {
-        type: 'string',
+    ExpiresIn: {
+        type: "number",
         required: true
     },
     Used: {
@@ -21,5 +21,5 @@ const schema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-const model = mongoose.model("user", schema);
+const model = mongoose.model("code", schema);
 module.exports = model;
