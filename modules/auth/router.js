@@ -17,7 +17,7 @@ router
     .route("/login")
     .post(controller.login)
 router
-    .route("/getme")
+    .route("/getMe")
     .get(authMiddleware, controller.getme)
 
 module.exports = router
