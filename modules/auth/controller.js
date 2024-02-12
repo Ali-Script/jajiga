@@ -111,7 +111,22 @@ exports.authCode = async (req, res) => {
 }
 exports.login = async (req, res) => {
     try {
+        const { Identifeir, Password } = req.body;
 
+        const user = await userModel.findOne({
+            $or: [{ UserName: Identifeir }, { email: Identifeir }]
+        })
+
+        if (!user) {
+            return res.status(401).json({ message: "UserName or Email is Incrract !!" })
+        }
+
+        const checkPassword = await bcrypt.compare(Password, user.Password)
+        if (!checkPassword) {
+            return res.status(401).json({ message: "Password is Incrract !!" })
+        }
+
+        return res.status(200).json({ message: "Login Successfully " })
 
     } catch (err) { return res.status(500).send(err.message); }
 }

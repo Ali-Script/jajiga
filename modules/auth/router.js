@@ -15,7 +15,7 @@ router
     .post(controller.authCode)
 router
     .route("/login")
-    .get(controller.login)
+    .post(controller.login)
 router
     .route("/getme")
     .get(authMiddleware, controller.getme)
