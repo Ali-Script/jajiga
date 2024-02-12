@@ -8,7 +8,16 @@ const joi = require('./../../validator/authValidator');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
-
+exports.start = async (req, res) => {
+    try {
+        const token = req.signedCookies.token;
+        if (token == undefined) return res.render("index")
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await userModel.findOne({ _id: decoded.id })
+        if (user) return res.render("home")
+        res.render("index")
+    } catch (err) { return res.status(500).send(err.message); }
+}
 exports.auth = async (req, res) => {
     try {
         const { UserName, Email, Password, ConfirmPassword } = req.body;
@@ -108,11 +117,7 @@ exports.authCode = async (req, res) => {
 exports.login = async (req, res) => {
     try {
 
-        let time = {
-            Year: Date.now() + 20000
 
-        }
-        console.log(time);
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.getme = async (req, res) => {

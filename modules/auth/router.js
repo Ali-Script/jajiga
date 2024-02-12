@@ -4,6 +4,9 @@ const router = express.Router()
 const controller = require('./controller')
 
 router
+    .route("/start")
+    .post(controller.auth)
+router
     .route("/auth")
     .post(controller.auth)
 router
