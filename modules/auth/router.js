@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router()
 
 const controller = require('./controller')
+const authMiddleware = require('./../../middlewares/authMiddleware')
 
 router
-    .route("/start")
-    .post(controller.auth)
+    .route("/")
+    .get(authMiddleware, controller.start)
 router
     .route("/auth")
     .post(controller.auth)
@@ -17,6 +18,6 @@ router
     .get(controller.login)
 router
     .route("/getme")
-    .get(controller.getme)
+    .get(authMiddleware, controller.getme)
 
 module.exports = router

@@ -10,12 +10,7 @@ require("dotenv").config()
 
 exports.start = async (req, res) => {
     try {
-        const token = req.signedCookies.token;
-        if (token == undefined) return res.render("index")
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await userModel.findOne({ _id: decoded.id })
-        if (user) return res.render("home")
-        res.render("index")
+        return res.status(200).json({ message: "Succ" })
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.auth = async (req, res) => {
@@ -122,6 +117,6 @@ exports.login = async (req, res) => {
 }
 exports.getme = async (req, res) => {
     try {
-
+        return res.status(200).json({ message: "Succ", user: req.user })
     } catch (err) { return res.status(500).send(err.message); }
 }
