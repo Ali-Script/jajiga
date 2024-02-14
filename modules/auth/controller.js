@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const codeModel = require('./../authcode/model')
 const joi = require('./../../validator/authValidator');
+const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
@@ -88,8 +89,13 @@ exports.authCode = async (req, res) => {
                 Password: hash
             })
 
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "14 day" })
-            res.cookie("token", token, {
+            // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "14 day" })
+
+            const accessToken = genAccessToken(user.Email)
+            const RefreshToken = genRefreshToken(user.Email)
+
+
+            res.cookie("Refresh-token", token, {
                 maxAge: 14 * 24 * 60 * 60,
                 httpOnly: true,
                 signed: true,
