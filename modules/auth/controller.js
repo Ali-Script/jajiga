@@ -11,7 +11,7 @@ require("dotenv").config()
 exports.start = async (req, res) => {
     try {
         return res.status(200).json({ message: "Succ" })
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(422).send(err.message); }
 }
 exports.auth = async (req, res) => {
     try {
@@ -50,7 +50,7 @@ exports.auth = async (req, res) => {
         transport.sendMail(mailOptions, async (e, i) => {
 
             if (e) {
-                return res.status(422).json({ error: e.message })
+                return res.status(500).json({ error: e.message })
             }
             else {
                 const setcode = await codeModel.create({
@@ -58,12 +58,12 @@ exports.auth = async (req, res) => {
                     Email,
                     ExpiresIn: Date.now() + 120000,
                 })
-                if (!setcode) return res.status(422).json({ err: "Server Err" })
+                if (!setcode) return res.status(500).json({ err: "Server Err" })
 
                 return res.status(200).json({ message: "Email Sended !" })
             }
         })
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(422).send(err.message); }
 }
 exports.authCode = async (req, res) => {
     try {
@@ -100,14 +100,14 @@ exports.authCode = async (req, res) => {
 
         } else if (getCode[0].Code != Code) {
 
-            return res.status(422).json({ message: "Invalid Code !" })
+            return res.status(400).json({ message: "Invalid Code !" })
         }
         else if (getCode[0].ExpiresIn < Date.now()) {
 
             return res.status(422).json({ message: "Code Has Expired !" })
         }
         return res.status(422).json({ message: "Invalid Err" })
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(422).send(err.message); }
 }
 exports.login = async (req, res) => {
     try {
@@ -118,20 +118,20 @@ exports.login = async (req, res) => {
         })
 
         if (!user) {
-            return res.status(401).json({ message: "UserName or Email is Incrract !!" })
+            return res.status(400).json({ message: "UserName or Email is Incrract !!" })
         }
 
         const checkPassword = await bcrypt.compare(Password, user.Password)
         if (!checkPassword) {
-            return res.status(401).json({ message: "Password is Incrract !!" })
+            return res.status(400).json({ message: "Password is Incrract !!" })
         }
 
         return res.status(200).json({ message: "Login Successfully " })
 
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(422).send(err.message); }
 }
 exports.getme = async (req, res) => {
     try {
         return res.status(200).json({ message: "Succ", user: req.user })
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(422).send(err.message); }
 }

@@ -13,6 +13,10 @@ const schema = new mongoose.Schema({
         type: 'string',
         required: true
     },
+    refreshToken: {
+        type: 'string',
+        required: false
+    },
 }, { timestamps: true })
 
 const model = mongoose.model("User", schema);

@@ -7,7 +7,7 @@ const schema = Joi.object({
         .required(),
     Password:
         Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$'))
+            .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))
             .required(),
     ConfirmPassword:
         Joi.any().valid(Joi.ref('Password')).required(),
