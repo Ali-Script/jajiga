@@ -13,7 +13,12 @@ const schema = new mongoose.Schema({
         type: 'string',
         required: true
     },
-    refreshToken: {
+    Role: {
+        type: 'string',
+        enum: ['admin', 'user'],
+        default: 'user'
+    },
+    RefreshToken: {
         type: 'string',
         required: false
     },

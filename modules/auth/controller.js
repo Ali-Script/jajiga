@@ -108,6 +108,10 @@ exports.authCode = async (req, res) => {
                 secure: true
             })
 
+            await user.updateOne({
+                $set: { RefreshToken }
+            })
+
             return res.status(200).json({ message: "User Created Succ !", token: token })
 
         } else if (getCode[0].Code != Code) {
