@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const codeModel = require('./../authcode/model')
 const joi = require('./../../validator/authValidator');
-const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
+const genRefreshToken = require('./../../utils/auth');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
@@ -68,6 +68,9 @@ exports.auth = async (req, res) => {
 }
 exports.authCode = async (req, res) => {
     try {
+        const RefreshToken = genRefreshToken(req.body.Email)
+        console.log(RefreshToken);
+
         const { Code, Email, UserName, Password, ConfirmPassword } = req.body;
 
         req.body = { Email, UserName, Password, ConfirmPassword }
@@ -107,12 +110,13 @@ exports.authCode = async (req, res) => {
                 signed: true,
                 secure: true
             })
+            console.log(RefreshToken);
+            // await userModel.findByIdAndUpdate({ Email }, {
+            //     $set: { RefreshToken: "RefreshToke" }
+            // }
+            // )
 
-            await user.updateOne({
-                $set: { RefreshToken }
-            })
-
-            return res.status(200).json({ message: "User Created Succ !", token: token })
+            return res.status(200).json({ message: "User Created Succ !", token: RefreshToken })
 
         } else if (getCode[0].Code != Code) {
 

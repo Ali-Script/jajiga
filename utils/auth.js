@@ -1,22 +1,24 @@
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 
-const genAccessToken = (email) => {
+const genAccessToken = (Email) => {
     try {
-        const token = jwt.sign({ email }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15 s" })
+        const token = jwt.sign({ Email }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15 s" })
         return token;
     }
     catch (e) { return res.status(500).json(e.message); }
 }
-const genRefreshToken = async (email) => {
+const genRefreshToken = async (Email) => {
     try {
-        const token = jwt.sign({ email }, process.env.JWT_REFRESH_SECRET, { expiresIn: "14 day" })
+        const token = jwt.sign({ Email }, process.env.JWT_REFRESH_SECRET, { expiresIn: "14 day" })
         return token;
     }
     catch (e) { return res.status(500).json(e.message); }
 }
 
-module.exports = {
-    genAccessToken,
-    genRefreshToken
-}
+module.exports = genRefreshToken
+
+// module.exports = {
+//     genAccessToken,
+//     genRefreshToken
+// }

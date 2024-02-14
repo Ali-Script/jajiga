@@ -20,7 +20,6 @@ const schema = new mongoose.Schema({
     },
     RefreshToken: {
         type: 'string',
-        required: false
     },
 }, { timestamps: true })
 
