@@ -18,5 +18,15 @@ const authRouter = require('./modules/auth/router')
 app.use("/", authRouter)
 // app.use("/auth/E-code", codeRouter)
 
+app.use((req, res) => {
+    res.status(404).json({ message: "page not found 404" })
+})
+app.use((err, req, res, next) => {
+    return res.status(500).json({
+        error: {
+            message: err,
+        },
+    });
+});
 
 module.exports = app;
