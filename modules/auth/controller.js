@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const codeModel = require('./../authcode/model')
 const joi = require('./../../validator/authValidator');
-const genRefreshToken = require('./../../utils/auth');
+const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
 
@@ -69,7 +69,10 @@ exports.auth = async (req, res) => {
 exports.authCode = async (req, res) => {
     try {
         const RefreshToken = genRefreshToken(req.body.Email)
+        const AccessToken = genAccessToken(req.body.Email)
+
         console.log(RefreshToken);
+        console.log(AccessToken);
 
         const { Code, Email, UserName, Password, ConfirmPassword } = req.body;
 
