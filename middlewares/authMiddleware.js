@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
         //     return res.status(403).json({ message: "This Route is Protect You cant Have Accsess it" })
         // }
 
-        const token = req.signedCookies.token;
+        const token = req.signedCookies.(`${Access - Token}`);
         if (token == undefined) return res.status(403).json({ message: "This Route is Protect You cant Have Accsess it" })
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET)

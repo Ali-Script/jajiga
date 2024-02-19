@@ -102,13 +102,13 @@ exports.authCode = async (req, res) => {
             const RefreshToken = genRefreshToken(user.Email)
 
 
-            res.cookie("Refresh-token", RefreshToken, {
+            res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 14 * 24 * 60 * 60,
                 httpOnly: true,
                 signed: true,
                 secure: true
             })
-            res.cookie("Access-token", accessToken, {
+            res.cookie("AccessToken", accessToken, {
                 maxAge: 15000,
                 httpOnly: true,
                 signed: true,
