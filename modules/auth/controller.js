@@ -115,7 +115,7 @@ exports.authCode = async (req, res) => {
                 secure: true
             })
 
-            const upUser = await userModel.updateOne({ Email }, { $set: { RefreshToken: RefreshToken } })
+            const upUser = await userModel.updateOne({ Email }, { $set: { accessToken: accessToken } })
 
             return res.status(200).json({ message: "User Created Succ !", token: RefreshToken })
 
