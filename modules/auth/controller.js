@@ -68,12 +68,6 @@ exports.auth = async (req, res) => {
 }
 exports.authCode = async (req, res) => {
     try {
-        const RefreshToken = genRefreshToken(req.body.Email)
-        const AccessToken = genAccessToken(req.body.Email)
-
-        console.log(RefreshToken);
-        console.log(AccessToken);
-
         const { Code, Email, UserName, Password, ConfirmPassword } = req.body;
 
         req.body = { Email, UserName, Password, ConfirmPassword }
@@ -88,6 +82,13 @@ exports.authCode = async (req, res) => {
 
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(Password, salt);
+
+            const ifDUPLC = await userModel.findOne({
+                $or: [{ UserName }, { Email }]
+            })
+            if (ifDUPLC) {
+                return res.status(409).json({ message: "User Name or Email is Duplicated" })
+            }
 
             const user = await userModel.create({
                 UserName,
@@ -113,11 +114,8 @@ exports.authCode = async (req, res) => {
                 signed: true,
                 secure: true
             })
-            console.log(RefreshToken);
-            // await userModel.findByIdAndUpdate({ Email }, {
-            //     $set: { RefreshToken: "RefreshToke" }
-            // }
-            // )
+
+            const upUser = await userModel.updateOne({ Email }, { $set: { RefreshToken: RefreshToken } })
 
             return res.status(200).json({ message: "User Created Succ !", token: RefreshToken })
 
