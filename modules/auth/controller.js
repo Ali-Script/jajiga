@@ -156,3 +156,25 @@ exports.getme = async (req, res) => {
         return res.status(200).json({ message: "Succ", user: req.user })
     } catch (err) { return res.status(422).send(err.message); }
 }
+exports.getAccessToken = async (req, res) => {
+    try {
+        const RefreshToken = req.signedCookies.RefreshToken
+        if (RefreshToken == undefined) return res.status(403).json({ message: "Refresh Token has expired" })
+
+        const decode = jwt.verify(RefreshToken, process.env.JWT_REFRESH_SECRET)
+
+        const user = await userModel.findOne({ Email: decode.Email })
+        if (!user) return res.status(404).json({ message: "User Not Found !" })
+
+        const accessToken = genAccessToken(user.Email)
+        res.cookie("AccessToken", accessToken, {
+            maxAge: 15000,
+            httpOnly: true,
+            signed: true,
+            secure: true
+        })
+
+        return res.status(200).json("succ !")
+
+    } catch (err) { return res.status(422).send(err.message); }
+}

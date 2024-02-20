@@ -19,5 +19,8 @@ router
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)
+router
+    .route("/setNewAccessToken")
+    .post(controller.getAccessToken)
 
 module.exports = router
