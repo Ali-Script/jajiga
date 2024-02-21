@@ -9,7 +9,7 @@ router
     .route("/getAll")
     .get(authMiddleware, isAdminMiddleware, controller.getAll)
 router
-    .route("/getOne/:email")
+    .route("/get/:email")
     .get(authMiddleware, isAdminMiddleware, controller.getOne)
 router
     .route("/delete/:email")
