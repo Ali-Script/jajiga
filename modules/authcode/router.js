@@ -1,19 +1,19 @@
-// const express = require('express');
-// const router = express.Router()
+const express = require('express');
+const router = express.Router()
 
-// const controller = require('./controller')
+const controller = require('./controller')
+const authMiddleware = require('./../../middlewares/authMiddleware')
+const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 
-// router
-//     .route("/ckeck")
-//     .post(controller.ckeck)
-// router
-//     .route("/getOne")
-//     .get(controller.getOne)
-// router
-//     .route("/getAll")
-//     .get(controller.getAll)
-// router
-//     .route("/deleteAll")
-//     .get(controller.deleteAll)
 
-// module.exports = router
+router
+    .route("/get/:email")
+    .get(authMiddleware, isAdminMiddleware, controller.getOne)
+router
+    .route("/getAll")
+    .get(authMiddleware, isAdminMiddleware, controller.getAll)
+router
+    .route("/deleteAll")
+    .get(authMiddleware, isAdminMiddleware, controller.deleteAll)
+
+module.exports = router

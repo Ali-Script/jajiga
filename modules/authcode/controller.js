@@ -1,32 +1,37 @@
-// const mongoose = require('mongoose');
-// const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
-// const nodemailer = require('nodemailer');
-// const userModel = require('./model')
-// const joi = require('./../../validator/authValidator');
-// const { signedCookie } = require('cookie-parser');
-// require("dotenv").config()
+const mongoose = require('mongoose');
+const codeModel = require('./model')
+const validator = require("email-validator");
 
 
-exports.auth = async (req, res) => {
+exports.getOne = async (req, res) => {
     try {
 
+        const email = req.params.email
+        const validate = validator.validate(email);
+        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
 
+        const code = await codeModel.find({ Email: email }).sort({ _id: -1 }).lean();
+        if (code.length == 0) return res.status(404).send({ status: false, message: "There is no code for this email !" })
 
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json(code);
+    } catch (err) { return res.status(422).send(err.message); }
 }
-exports.login = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
+        const code = await codeModel.find().sort({ _id: -1 }).lean();
+        if (code.length == 0) return res.status(404).send({ status: false, message: "There is no code !" })
 
-        const user = await userModel.create({
-            UserName: "perikb",
-            Email: "perikb",
-            Password: "perikb",
-        })
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json(code);
+    } catch (err) { return res.status(422).send(err.message); }
 }
-exports.getme = async (req, res) => {
+exports.deleteAll = async (req, res) => {
     try {
+        const code = await codeModel.find().lean();
+        if (code.length == 0) return res.status(404).send({ status: false, message: "There is no code !" })
 
-    } catch (err) { return res.status(500).send(err.message); }
+        const Delcode = await codeModel.deleteMany();
+        if (code.length == 0) return res.status(500).send({ status: false, message: "Can not delete codes !" })
+
+        return res.status(200).json("succ !");
+    } catch (err) { return res.status(422).send(err.message); }
 }

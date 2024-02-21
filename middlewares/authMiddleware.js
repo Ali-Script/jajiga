@@ -29,7 +29,7 @@ module.exports = async (req, res, next) => {
         Reflect.deleteProperty(userobj, "Password")
         //console.log(userobj);
         req.user = userobj
-        next();
+        return next();
     }
     catch (err) {
         return res.status(422).json(err.message)
