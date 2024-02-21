@@ -12,11 +12,12 @@
 
 ```py
 
-GET  http://localhost:4001/ 
-POST  http://localhost:4001/auth  Body: {UserName, Email, Password, ConfirmPassword}
-POST  http://localhost:4001/authCode  Body: {Code, UserName, Email, Password, ConfirmPassword}
-POST  http://localhost:4001/login  Body: {Identifeir, Password}
-GET  http://localhost:4001/getMe
+GET    http://localhost:4001/ 
+POST   http://localhost:4001/auth  Body: {UserName, Email, Password, ConfirmPassword}
+POST   http://localhost:4001/authCode  Body: {Code, UserName, Email, Password, ConfirmPassword}
+POST   http://localhost:4001/login  Body: {Identifeir, Password}
+GET    http://localhost:4001/getMe
+GET    http://localhost:4001/setNewAccessToken
 
 ```
   
