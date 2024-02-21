@@ -175,6 +175,5 @@ exports.getAccessToken = async (req, res) => {
         })
 
         return res.status(200).json("succ !")
-
     } catch (err) { return res.status(422).send(err.message); }
 }
