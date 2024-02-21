@@ -4,7 +4,7 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
 
-        cb(null, path.join("public", "courses", "covers"))
+        cb(null, path.join("public", "multer", "pics", "avatars"))
 
     },
     filename: function (req, file, cb) {
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const maxSize = 1 * 1000 * 1000
+const maxSize = 1 * 1000 * 1000 * 10
 
 const upload = multer({
     storage, limits: {

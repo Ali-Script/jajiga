@@ -38,7 +38,10 @@ exports.delete = async (req, res) => {
 }
 exports.setAvatar = async (req, res) => {
     try {
+        const user = await userModel.updateOne({ _id: req.user._id }, { $set: { Avatar: req.file.filename } })
+        if (!user || user.length == 0) return res.status(404).json({ status: false, message: 'No user found !' })
 
+        return res.status(200).json("succ !")
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.update = async (req, res) => {
