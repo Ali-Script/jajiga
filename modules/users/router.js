@@ -5,15 +5,20 @@ const controller = require('./controller')
 const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 
-
-router
-    .route("/get/:email")
-    .get(authMiddleware, isAdminMiddleware, controller.getOne)
 router
     .route("/getAll")
     .get(authMiddleware, isAdminMiddleware, controller.getAll)
 router
-    .route("/deleteAll")
-    .delete(authMiddleware, isAdminMiddleware, controller.deleteAll)
+    .route("/getOne/:email")
+    .get(authMiddleware, isAdminMiddleware, controller.getOne)
+router
+    .route("/delete/:email")
+    .delete(authMiddleware, isAdminMiddleware, controller.delete)
+router
+    .route("/setAvatar/:email")
+    .post(authMiddleware, controller.setAvatar)
+router
+    .route("/update/:email")
+    .post(authMiddleware, controller.update)
 
 module.exports = router

@@ -21,6 +21,6 @@ router
     .get(authMiddleware, controller.getme)
 router
     .route("/setNewAccessToken")
-    .post(controller.getAccessToken)
+    .get(controller.getAccessToken)
 
 module.exports = router
