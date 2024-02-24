@@ -22,4 +22,5 @@ router
     .route("/update/:email")
     .post(authMiddleware, controller.update)
 
+
 module.exports = router
