@@ -21,12 +21,14 @@ app.use("/course/cover", express.static(path.join(__dirname, 'public', 'multer',
 const authRouter = require('./modules/auth/router')
 const codeRouter = require('./modules/authcode/router')
 const userRouter = require('./modules/users/router')
+const villaRouter = require('./modules/villas/router')
 
 // Routers ^
 
 app.use("/", authRouter)
 app.use("/auth/E-code", codeRouter)
 app.use("/users/", userRouter)
+app.use("/villa/", villaRouter)
 
 // Routers Middleware ^
 
