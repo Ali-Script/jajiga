@@ -19,6 +19,12 @@ const schema = new mongoose.Schema({
             required: true
         }
     ],
+    map: [
+        {
+            type: "string",
+            required: true
+        }
+    ],
     capAndSize: [
         {
             normalcapacity: {
@@ -39,22 +45,37 @@ const schema = new mongoose.Schema({
             }
         }
     ],
-    capAndSize: [
+    bedRoom: [
         {
             bedRoom: {
                 type: "number",
                 required: true
             },
-            Maxcapacity: {
+            singleBed: {
                 type: "number",
+                default: 0
 
             },
-            Buildingsize: {
+            doubleBed: {
                 type: "number",
+                default: 0
             },
-            FuundationSize: {
+            traditionalBed: {
                 type: "number",
+                default: 0
             }
+        }
+    ],
+    facility: [
+        {
+            primaryFacility: [{ type: "string" }],
+            moreFacility: [{ type: "string" }],
+        }
+    ],
+    sanitaryFacilities: [
+        {
+            primarySanitaryFacilities: [{ type: "string" }],
+            moreSanitaryFacilities: [{ type: "string" }],
         }
     ],
     phone: {
