@@ -8,6 +8,8 @@ exports.add = async (req, res) => {
         const { address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
         // req.body = { address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules }
 
+        let a = [{ a: "tikjh" }]
+
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
         return res.status(200).json("succ")
