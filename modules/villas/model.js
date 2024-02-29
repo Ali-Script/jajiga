@@ -23,8 +23,14 @@ const schema = new mongoose.Schema({
     ],
     map: [
         {
-            type: "string",
-            required: true
+            first: {
+                type: "string",
+                required: true
+            },
+            sec: {
+                type: "string",
+                required: true
+            }
         }
     ],
     cover: [
@@ -70,9 +76,9 @@ const schema = new mongoose.Schema({
                 title: { type: "string", required: true },
                 description: { type: "string" },
             }],
-            moreFacility: {
+            moreFacility: [{
                 description: { type: "string" },
-            }
+            }]
         }
     ],
     sanitaryFacilities: [
@@ -81,9 +87,9 @@ const schema = new mongoose.Schema({
                 title: { type: "string", required: true },
                 description: { type: "string" },
             }],
-            moreSanitaryFacility: {
+            moreSanitaryFacility: [{
                 description: { type: "string" },
-            }
+            }]
         }
     ],
     timing: [
