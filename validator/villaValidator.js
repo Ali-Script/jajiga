@@ -2,10 +2,10 @@ const Joi = require('joi');
 
 const schema = Joi.object({
 
-    address: Joi.array().items(Joi.object().items(Joi.string()))
+    address: Joi.array().items(Joi.object()).items(Joi.string())
         .required(),
 
-    map: Joi.array().items(Joi.object().items(Joi.string()))
+    map: Joi.array().items(Joi.object()).items(Joi.string())
         .required(),
 
     cover: Joi.array().items(Joi.string())
@@ -16,22 +16,22 @@ const schema = Joi.object({
         .max(9999)
         .required(),
 
-    capAndSizeAndRooms: Joi.array().items(Joi.object().items(Joi.number().string()))
+    capAndSizeAndRooms: Joi.array().items(Joi.object()).items(Joi.string(), Joi.number())
         .required(),
 
-    facility: Joi.array().items(Joi.array().items(Joi.object().items(Joi.string())))
+    facility: Joi.array().items(Joi.array()).items(Joi.object()).items(Joi.string())
         .required(),
 
-    sanitaryFacilities: Joi.array().items(Joi.array().items(Joi.object().items(Joi.string())))
+    sanitaryFacilities: Joi.array().items(Joi.array()).items(Joi.object()).items(Joi.string())
         .required(),
 
-    timing: Joi.array().items(Joi.object().items(Joi.object().items(Joi.number())))
+    timing: Joi.array().items(Joi.object()).items(Joi.object()).items(Joi.number())
         .required(),
 
-    price: Joi.array().items(Joi.object().items(Joi.object().items(Joi.number())))
+    price: Joi.array().items(Joi.object()).items(Joi.object()).items(Joi.number())
         .required(),
 
-    rules: Joi.array().items(Joi.object().items(Joi.string()))
+    rules: Joi.array().items(Joi.object()).items(Joi.string())
         .required(),
 });
 
