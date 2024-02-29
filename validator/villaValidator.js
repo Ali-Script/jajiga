@@ -25,18 +25,14 @@ const schema = Joi.object({
     sanitaryFacilities: Joi.array().items(Joi.array().items(Joi.object().items(Joi.string())))
         .required(),
 
-    timing: Joi.array().items(Joi.object().items(Joi.string()))
+    timing: Joi.array().items(Joi.object().items(Joi.object().items(Joi.number())))
         .required(),
-    price: Joi.string()
-        .min(3)
-        .max(30)
+
+    price: Joi.array().items(Joi.object().items(Joi.object().items(Joi.number())))
         .required(),
-    rules:
-        Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))
-            .required(),
-    phone:
-        Joi.any().valid(Joi.ref('Password')).required(),
+
+    rules: Joi.array().items(Joi.object().items(Joi.string()))
+        .required(),
 });
 
 module.exports = schema;

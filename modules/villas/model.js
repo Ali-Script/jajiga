@@ -95,23 +95,21 @@ const schema = new mongoose.Schema({
     timing: [
         {
             minimumStay: {
-                type: "number",
-                required: true,
+                value: { type: "number", required: true },
             },
             deliveryTime: {
                 from: { type: "number", required: true },
                 to: { type: "number", required: true },
             },
             dischargeTime: {
-                type: "number", required: true
+                value: { type: "number", required: true },
             }
         }
     ],
     price: [
         {
             newYear: {
-                type: "number",
-                required: true,
+                value: { type: "number", required: true },
             },
             spring: {
                 midWeek: { type: "number", required: true },
