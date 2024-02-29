@@ -7,20 +7,20 @@ const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware')
 
 router
-    .route("/getAll")
-    .get(authMiddleware, isAdminMiddleware, controller.getAll)
-router
-    .route("/get/:email")
-    .get(authMiddleware, isAdminMiddleware, controller.getOne)
-router
-    .route("/delete/:email")
-    .delete(authMiddleware, isAdminMiddleware, controller.delete)
-router
-    .route("/setAvatar")
-    .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
-router
-    .route("/update/:email")
-    .post(authMiddleware, controller.update)
+    .route("/add")
+    .post(authMiddleware, isAdminMiddleware, controller.add)
+// router
+//     .route("/get/:email")
+//     .get(authMiddleware, isAdminMiddleware, controller.getOne)
+// router
+//     .route("/delete/:email")
+//     .delete(authMiddleware, isAdminMiddleware, controller.delete)
+// router
+//     .route("/setAvatar")
+//     .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
+// router
+//     .route("/update/:email")
+//     .post(authMiddleware, controller.update)
 
 
 module.exports = router
