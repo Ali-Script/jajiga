@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const villaModel = require('./../villas/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
+const validator = require("email-validator");
 
 exports.add = async (req, res) => {
     try {
@@ -54,5 +55,41 @@ exports.getAll = async (req, res) => {
         if (villas.length == 0) return res.status(404).json({ message: "there is no villa!" })
 
         return res.status(200).json(villas)
+    } catch (err) { return res.status(422).send(err.message); }
+}
+exports.getOne = async (req, res) => {
+    try {
+        const email = req.params.email
+        const validate = validator.validate(email);
+        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+
+        const villa = await villaModel.find(email).sort({ _id: -1 }).lean()
+        if (villa.length == 0) return res.status(404).json({ message: "This user has not added a villa yet " })
+
+        return res.status(200).json(villa)
+    } catch (err) { return res.status(422).send(err.message); }
+}
+exports.myVillas = async (req, res) => {
+    try {
+        const email = req.user.email
+        const validate = validator.validate(email);
+        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+
+        const villa = await villaModel.find(email).sort({ _id: -1 }).lean()
+        if (villa.length == 0) return res.status(404).json({ message: "You have not added a villa yet " })
+
+        return res.status(200).json(villa)
+    } catch (err) { return res.status(422).send(err.message); }
+}
+exports.delete = async (req, res) => {
+    try {
+        const id = req.params.User
+        const validate = mongoose.Types.ObjectId.isValid(id);
+        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+
+        const villa = await villaModel.findOneAndDelete({ _id: id })
+        if (!villa) return res.status(404).json({ message: "Villa Not Found 404 ! " })
+
+        return res.status(200).json("Succ !")
     } catch (err) { return res.status(422).send(err.message); }
 }

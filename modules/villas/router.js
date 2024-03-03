@@ -15,9 +15,12 @@ router
 router
     .route("/get/:email")
     .get(authMiddleware, isAdminMiddleware, controller.getOne)
-// router
-//     .route("/delete/:email")
-//     .delete(authMiddleware, isAdminMiddleware, controller.delete)
+router
+    .route("/myVillas")
+    .get(authMiddleware, controller.myVillas)
+router
+    .route("/delete/:id")
+    .delete(authMiddleware, isAdminMiddleware, controller.delete)
 // router
 //     .route("/setAvatar")
 //     .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
