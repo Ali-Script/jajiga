@@ -9,16 +9,21 @@ exports.add = async (req, res) => {
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
 
-        const ifDUPLC = await userModel.findOne(map)
+        const ifDUPLC = await villaModel.findOne(map)
         if (ifDUPLC) {
             return res.status(409).json({ message: "this location is already exist" })
         }
 
+
+        const covers = req.files;
+        const coverFiles = []
+        covers.forEach(i => coverFiles.push(i.filename))
+
         const newVilla = await villaModel.create({
-            // user: req.user._id,
+            user: req.user._id,
             address,
             map,
-            cover: req.files.filename,
+            cover: coverFiles,
             description,
             capAndSizeAndRooms,
             facility,
