@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const villaModel = require('./../auth/model');
+const villaModel = require('./../villas/model');
 const joi = require("./../../validator/villaValidator");
 
 exports.add = async (req, res) => {
@@ -15,7 +15,7 @@ exports.add = async (req, res) => {
         }
 
         const newVilla = await villaModel.create({
-            user: req.user._id,
+            // user: req.user._id,
             address,
             map,
             cover: req.files.filename,
@@ -36,7 +36,7 @@ exports.add = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const villas = await villaModel.find({}).sort({ _id: -1 }).lean()
-        if (villas.length == 0) return res.status(404).json({ message: "there is no product!" })
+        if (villas.length == 0) return res.status(404).json({ message: "there is no villa!" })
 
         return res.status(200).json(villas)
     } catch (err) { return res.status(422).send(err.message); }

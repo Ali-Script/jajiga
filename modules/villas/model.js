@@ -33,12 +33,10 @@ const schema = new mongoose.Schema({
             }
         }
     ],
-    cover: [
-        {
-            type: "string",
-            required: true
-        }
-    ],
+    cover: {
+        type: Array,
+        required: true
+    },
     description: {
         type: "string",
         required: true
