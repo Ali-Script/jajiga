@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const villaModel = require('./../villas/model');
+const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
 
 exports.add = async (req, res) => {
     try {
         const { address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
-
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
 
@@ -13,7 +13,6 @@ exports.add = async (req, res) => {
         if (ifDUPLC) {
             return res.status(409).json({ message: "this location is already exist" })
         }
-
 
         const covers = req.files;
         const coverFiles = []
@@ -33,6 +32,16 @@ exports.add = async (req, res) => {
             rules
         })
         if (!newVilla) return res.status(500).json({ message: "can not add data to the database" })
+
+        const isAlreadyExist = await userVilla.findOne({ User: req.user._id, Villa: newVilla._id })
+        if (isAlreadyExist) {
+            return res.status(404).json({ message: "this location is already exists!" })
+        }
+
+        const create = await userVilla.create({
+            User: req.user._id,
+            Villa: newVilla._id,
+        })
 
         return res.status(200).json({ message: "Succ !" })
 

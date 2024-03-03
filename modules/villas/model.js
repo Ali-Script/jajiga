@@ -155,5 +155,5 @@ const schema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-const model = mongoose.model("villa", schema);
+const model = mongoose.model("Villa", schema);
 module.exports = model;

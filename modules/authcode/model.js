@@ -21,5 +21,5 @@ const schema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-const model = mongoose.model("code", schema);
+const model = mongoose.model("Code", schema);
 module.exports = model;
