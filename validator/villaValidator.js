@@ -42,10 +42,6 @@ const schema = Joi.object({
     rules: Joi.array().items(Joi.object()).items(Joi.string())
         .min(1)
         .required(),
-    email:
-        Joi.string()
-            .email({ tlds: { allow: false } })
-            .required(),
 });
 
 module.exports = schema;

@@ -20,6 +20,7 @@ exports.add = async (req, res) => {
 
         const newVilla = await villaModel.create({
             user: req.user._id,
+            email: req.user.email,
             address,
             map,
             cover: coverFiles,
