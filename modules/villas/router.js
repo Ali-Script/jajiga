@@ -8,7 +8,10 @@ const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware
 
 router
     .route("/add")
-    .post(controller.add)
+    .post(authMiddleware, isAdminMiddleware, multerPhotoMiddleware("cover", 5), controller.add)
+router
+    .route("/getAll")
+    .get(controller.getAll)
 // router
 //     .route("/get/:email")
 //     .get(authMiddleware, isAdminMiddleware, controller.getOne)
