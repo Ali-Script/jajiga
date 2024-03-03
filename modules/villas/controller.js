@@ -83,12 +83,13 @@ exports.myVillas = async (req, res) => {
 }
 exports.delete = async (req, res) => {
     try {
-        const id = req.params.User
+        const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
 
         const villa = await villaModel.findOneAndDelete({ _id: id })
         if (!villa) return res.status(404).json({ message: "Villa Not Found 404 ! " })
+        const removeuservilla = await villaModel.findOneAndUpdate({ villa: id }, { deleted: 1 })
 
         return res.status(200).json("Succ !")
     } catch (err) { return res.status(422).send(err.message); }

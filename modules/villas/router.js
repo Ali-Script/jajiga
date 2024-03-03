@@ -21,12 +21,5 @@ router
 router
     .route("/delete/:id")
     .delete(authMiddleware, isAdminMiddleware, controller.delete)
-// router
-//     .route("/setAvatar")
-//     .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
-// router
-//     .route("/update/:email")
-//     .post(authMiddleware, controller.update)
-
 
 module.exports = router
