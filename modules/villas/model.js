@@ -150,7 +150,7 @@ const schema = new mongoose.Schema({
             }
         }
     ],
-    phone: {
+    email: {
         type: "string"
     },
 }, { timestamps: true })
