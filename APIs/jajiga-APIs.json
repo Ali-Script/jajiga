@@ -1,0 +1,614 @@
+{
+	"info": {
+		"_postman_id": "1b80f928-8216-4ab9-8007-326757a84d61",
+		"name": "lib",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27709141"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "getAll users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/users/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"users",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/users/get/:email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"users",
+								"get",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete by email",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/users/delete/:email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"users",
+								"delete",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // User Route\r\n    \"Avatar\": \"\"// 1 pic \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/users/setAvatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"users",
+								"setAvatar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "villas",
+			"item": [
+				{
+					"name": "add villa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // User Route\r\n\r\n    \"address\": [\r\n        {\r\n            \"state\": {\r\n                \"type\": \"string\",\r\n                \"required\": true\r\n            },\r\n            \"city\": {\r\n                \"type\": \"string\",\r\n                \"required\": true\r\n            },\r\n            \"address\": {\r\n                \"type\": \"string\",\r\n                \"required\": true\r\n            }\r\n        }\r\n    ],\r\n\r\n    \"map\": [\r\n        {\r\n            \"first\": {\r\n                \"type\": \"string\",\r\n                \"required\": true\r\n            },\r\n            \"sec\": {\r\n                \"type\": \"string\",\r\n                \"required\": true\r\n            }\r\n        }\r\n    ],\r\n\r\n    \"cover\": {\r\n        // 5 pic at all\r\n        \"type\": \"Array\",\r\n        \"required\": true\r\n    },\r\n\r\n    \"description\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n    },\r\n\r\n    \"capAndSizeAndRooms\": [\r\n        {\r\n            \"normalcapacity\": {\r\n                \"type\": \"number\",\r\n                \"required\": true\r\n            },\r\n            \"maxcapacity\": {\r\n                \"type\": \"number\",\r\n                \"required\": true\r\n            },\r\n            \"buildingsize\": {\r\n                \"type\": \"number\",\r\n                \"required\": true\r\n            },\r\n            \"fuundationSize\": {\r\n                \"type\": \"number\",\r\n                \"required\": true\r\n            },\r\n            \"bedRoom\": {\r\n                \"type\": \"number\",\r\n                \"required\": true\r\n            },\r\n            \"aboutBedRoom\": {\r\n                \"type\": \"string\",\r\n            },\r\n        }\r\n    ],\r\n\r\n    \"facility\": [\r\n        {\r\n            \"facility\": [\r\n                {\r\n                    \"title\": {\r\n                        \"type\": \"string\",\r\n                        \"required\": true\r\n                    },\r\n                    \"description\": {\r\n                        \"type\": \"string\"\r\n                    },\r\n                }\r\n            ],\r\n            \"moreFacility\": [\r\n                {\r\n                    \"description\": {\r\n                        \"type\": \"string\"\r\n                    },\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n\r\n    \"sanitaryFacilities\": [\r\n        {\r\n            \"sanitaryFacility\": [\r\n                {\r\n                    \"title\": {\r\n                        \"type\": \"string\",\r\n                        \"required\": true\r\n                    },\r\n                    \"description\": {\r\n                        \"type\": \"string\"\r\n                    },\r\n                }\r\n            ],\r\n            \"moreSanitaryFacility\": [\r\n                {\r\n                    \"description\": {\r\n                        \"type\": \"string\"\r\n                    },\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n\r\n    \"timing\": [\r\n        {\r\n            \"minimumStay\": {\r\n                \"value\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"deliveryTime\": {\r\n                \"from\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"to\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"dischargeTime\": {\r\n                \"value\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            }\r\n        }\r\n    ],\r\n\r\n    \"price\": [\r\n        {\r\n            \"newYear\": {\r\n                \"value\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"spring\": {\r\n                \"midWeek\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"holidays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"peakDays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"summer\": {\r\n                \"midWeek\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"holidays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"peakDays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"autumn\": {\r\n                \"midWeek\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"holidays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"peakDays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            },\r\n            \"winter\": {\r\n                \"midWeek\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"holidays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n                \"peakDays\": {\r\n                    \"type\": \"number\",\r\n                    \"required\": true\r\n                },\r\n            }\r\n        }\r\n    ],\r\n    \r\n    \"rules\": [\r\n        {\r\n            \"pet\": {\r\n                \"type\": \"boolean\",\r\n                \"required\": true,\r\n            },\r\n            \"music\": {\r\n                \"type\": \"boolean\",\r\n                \"required\": true,\r\n            },\r\n            \"smoke\": {\r\n                \"type\": \"boolean\",\r\n                \"required\": true,\r\n            },\r\n            \"more\": {\r\n                \"type\": \"string\",\r\n            }\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/villa/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"villa",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll villas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/villa/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"villa",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get villa by email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/villa/get/:email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"villa",
+								"get",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my villas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/villa/myVillas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"villa",
+								"myVillas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete villa by objectID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/villa/delete/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"villa",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authCode",
+			"item": [
+				{
+					"name": "get E-code by email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/auth/E-code/get/:email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"E-code",
+								"get",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll E-code ",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/auth/E-code/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"E-code",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAll E-code ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Admin Route\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/auth/E-code/deleteAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"E-code",
+								"deleteAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "start Route",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign in route",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserName\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .min(3).max(30)\r\n    },\r\n    \"Password\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))\r\n    },\r\n    \"ConfirmPassword\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))\r\n    },\r\n    \"Email\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enter code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserName\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .min(3).max(30)\r\n    },\r\n    \"Password\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))\r\n    },\r\n    \"ConfirmPassword\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n        // .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))\r\n    },\r\n    \"Email\": {\r\n        \"type\": \"string\",\r\n        \"required\": true\r\n    },\r\n    \"Code\":\"\" // 6-digit code 2min limit time\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/authCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"authCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Identifeir\": \"\", // email or userName\r\n    \"Password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/authCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"authCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n// User Route\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/getme",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"getme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gen new Access-Token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/setNewAccessToken",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"setNewAccessToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
