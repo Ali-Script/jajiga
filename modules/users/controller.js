@@ -46,6 +46,30 @@ exports.setAvatar = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
+        const { Email, UserName, Password, ConfirmPassword } = req.body
 
+        const validator = joi.validate(req.body)
+        if (validator.error) return res.status(409).json({ message: validator.error.details })
+
+
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(Password, salt);
+
+        const user = await userModel.updateOne({ email: Email }, {
+            UserName,
+            Password: hash
+        })
+    } catch (err) { return res.status(422).send(err.message); }
+}
+exports.promotion = async (req, res) => {
+    try {
+        const email = req.body.email;
+        const validate = validator.validate(email);
+        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+
+        const user = await userModel.updateOne({ email }, { role: "admin" })
+        if (!user || user.length == 0) return res.status(404).send({ message: "user not found" })
+
+        return res.status(200).send({ message: "succ" })
     } catch (err) { return res.status(422).send(err.message); }
 }

@@ -7,8 +7,8 @@ const validator = require("email-validator");
 exports.add = async (req, res) => {
     try {
         const { address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
-        const validator = joi.validate(req.body)
-        if (validator.error) return res.status(409).json({ message: validator.error.details })
+        const validatorr = joi.validate(req.body)
+        if (validatorr.error) return res.status(409).json({ message: validator.error.details })
 
         const ifDUPLC = await villaModel.findOne(map)
         if (ifDUPLC) {
