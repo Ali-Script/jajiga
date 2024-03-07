@@ -75,3 +75,17 @@ exports.promotion = async (req, res) => {
         return res.status(200).send({ message: "succ" })
     } catch (err) { return res.status(422).send(err.message); }
 }
+exports.demotion = async (req, res) => {
+    try {
+        const Email = req.params.email;
+        const validate = validator.validate(Email);
+        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+
+        const user = await userModel.findOne({ Email })
+        if (!user || user.length == 0) return res.status(404).send({ message: "user not found" })
+        if (user.Role === "user") return res.status(422).send({ message: "this user is already user" })
+
+        const makeadmin = await userModel.updateOne({ Email }, { Role: "user" })
+        return res.status(200).send({ message: "succ" })
+    } catch (err) { return res.status(422).send(err.message); }
+}

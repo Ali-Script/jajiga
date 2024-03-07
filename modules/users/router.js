@@ -24,6 +24,9 @@ router
 router
     .route("/promotion/:email")
     .put(authMiddleware, isAdminMiddleware, controller.promotion)
+router
+    .route("/demotion/:email")
+    .put(authMiddleware, isAdminMiddleware, controller.demotion)
 
 
 module.exports = router
