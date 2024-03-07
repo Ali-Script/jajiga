@@ -27,6 +27,12 @@ router
 router
     .route("/demotion/:email")
     .put(authMiddleware, isAdminMiddleware, controller.demotion)
+router
+    .route("/forgetPassword")
+    .post(controller.forgetPassword)
+router
+    .route("/forgetPasswordCode")
+    .post(controller.forgetPasswordCode)
 
 
 module.exports = router
