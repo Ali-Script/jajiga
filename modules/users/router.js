@@ -20,13 +20,10 @@ router
     .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
 router
     .route("/update/")
-    .post(authMiddleware, controller.update)
-router
-    .route("/update/")
-    .post(authMiddleware, controller.update)
+    .put(authMiddleware, controller.update)
 router
     .route("/promotion/:email")
-    .post(authMiddleware, isAdminMiddleware, controller.promotion)
+    .put(authMiddleware, isAdminMiddleware, controller.promotion)
 
 
 module.exports = router
