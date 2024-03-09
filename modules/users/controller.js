@@ -169,3 +169,4 @@ exports.forgetPasswordCode = async (req, res) => {
         return res.status(200).send({ message: "Password changed" })
     } catch (err) { return res.status(422).send(err.message); }
 }
+
