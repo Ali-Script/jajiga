@@ -23,6 +23,7 @@ const codeRouter = require('./modules/authcode/router')
 const userRouter = require('./modules/users/router')
 const banRouter = require('./modules/ban/router')
 const villaRouter = require('./modules/villas/router')
+const newsletterRouter = require('./modules/newsletter/router')
 
 // Routers ^
 
@@ -31,6 +32,7 @@ app.use("/auth/E-code", codeRouter)
 app.use("/users/", userRouter)
 app.use("/villa/", villaRouter)
 app.use("/ban/", banRouter)
+app.use("/newsletter/", newsletterRouter)
 
 // Routers Middleware ^
 
