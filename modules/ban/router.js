@@ -4,7 +4,6 @@ const router = express.Router()
 const controller = require('./controller')
 const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
-const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware')
 
 router
     .route("/:email")
