@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    Email: {
+    email: {
         type: 'string',
         required: true
     },
-    Used: {
-        type: 'number',
-        enum: [0, 1],
-        default: 0
-
+    reason: {
+        type: 'string'
     },
 }, { timestamps: true })
 
