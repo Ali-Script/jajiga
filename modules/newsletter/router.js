@@ -10,5 +10,5 @@ router
     .post(newsletterController.create)
 router
     .route("/getAll")
-    .get(authMiddleware, isAdmin, newsletterController.getAll)
+    .get(newsletterController.getAll)
 module.exports = router;
