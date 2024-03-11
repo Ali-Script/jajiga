@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    email: {
-        type: 'string',
-        required: true
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     },
     reason: {
         type: 'string'

@@ -8,12 +8,12 @@ const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware
 
 router
     .route("/ban/:email")
-    .get(authMiddleware, isAdminMiddleware, controller.getAll)
+    .post(authMiddleware, isAdminMiddleware, controller.ban)
 router
     .route("/unban/:email")
-    .get(authMiddleware, isAdminMiddleware, controller.getOne)
+    .delete(authMiddleware, isAdminMiddleware, controller.unban)
 router
     .route("/getAll")
-    .delete(authMiddleware, isAdminMiddleware, controller.delete)
+    .get(authMiddleware, isAdminMiddleware, controller.getAll)
 
 module.exports = router
