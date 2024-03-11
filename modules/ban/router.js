@@ -7,7 +7,7 @@ const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware')
 
 router
-    .route("/ban/:email")
+    .route("/:email")
     .post(authMiddleware, isAdminMiddleware, controller.ban)
 router
     .route("/unban/:email")
