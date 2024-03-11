@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const codeModel = require('./../authcode/model')
+const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
 const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
 const { signedCookie } = require('cookie-parser');
@@ -11,11 +12,16 @@ require("dotenv").config()
 
 exports.start = async (req, res) => {
     try {
+        const checkBan = await banModel.findOne({ user: req.user._id })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
         return res.status(200).json({ message: "Succ" })
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.auth = async (req, res) => {
     try {
+        const checkBan = await banModel.findOne({ user: req.user._id })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+
         const { UserName, Email, Password, ConfirmPassword } = req.body;
 
         const validator = joi.validate(req.body)
@@ -132,6 +138,9 @@ exports.authCode = async (req, res) => {
 }
 exports.login = async (req, res) => {
     try {
+        const checkBan = await banModel.findOne({ user: req.user._id })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+
         const { Identifeir, Password } = req.body;
 
         const user = await userModel.findOne({
