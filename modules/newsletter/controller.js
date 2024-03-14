@@ -22,3 +22,4 @@ exports.getAll = async (req, res) => {
         return res.status(200).json(news)
     } catch (err) { return res.status(422).json({ error: err.message }) }
 }
+
