@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+const swagger = require('./configs/swagger');
 
 // Packages ^
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json())
 app.use(morgan('combined'))
 app.use(cookieParser("rtujh57uhHG)B$&ghy073hy57hbHB)$&BH)Hb85h4b84bhe8hb*BH#$*B"))
 app.use("/course/cover", express.static(path.join(__dirname, 'public', 'multer', 'pics', 'avatars')));
+swagger(app);
 
 // Middlewares ^
 
