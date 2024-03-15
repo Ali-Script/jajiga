@@ -34,6 +34,15 @@ app.use("/auth/E-code", codeRouter)
 app.use("/users/", userRouter)
 app.use("/villa/", villaRouter)
 app.use("/ban/", banRouter)
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     description: Welcome to swagger-jsdoc!
+ *     responses:
+ *       200:
+ *         description: Returns a mysterious string.
+ */
 app.use("/newsletter/", newsletterRouter)
 
 // Routers Middleware ^

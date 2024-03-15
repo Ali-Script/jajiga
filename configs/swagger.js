@@ -10,10 +10,14 @@ const swaggerFunc = (app) => {
                 title: 'Jajiga-APIs',
                 version: '1.0.1',
             },
+            servers: [{ url: 'https://localhost:4001' }]
         },
-        apis: [],
+        apis: ['./app.js'],
     });
-    const swagger = swaggerUi.setup(options, { customCssUrl: "./swagger.css" })
+    var costumCss = {
+        customCssUrl: './swaggerStyles.css'
+    };
+    const swagger = swaggerUi.setup(options, costumCss)
     app.use("/Api-Doc", swaggerUi.serve, swagger)
 }
 
