@@ -1,41 +1,24 @@
 const mongoose = require('mongoose');
-const notificationModel = require("./../../models/notificationModel")
-const userModel = require("./../../models/userModel")
+const notificationModel = require("./model")
+const userModel = require("./../auth/model")
 
 
 exports.send = async (req, res) => {
     try {
-        const { message, adminID } = req.body
-        const validate = mongoose.Types.ObjectId.isValid(adminID)
+        const { message } = req.body
+        const allUsers = [];
 
-        const user = await userModel.findOne({ _id: adminID }).lean();
-        if (!user) return res.status(404).json({ message: 'User not found' })
-
-        const notif = await notificationModel.create({
-            message,
-            adminID,
-            sendBy: req.user._id
-        })
-        return res.json(notif)
-    }
-    catch (err) { return res.status(422).json({ message: err.message }); }
-}
-exports.sendToAll = async (req, res) => {
-    try {
-        const { message, adminID } = req.body
-        const validate = mongoose.Types.ObjectId.isValid(adminID)
-
-        const user = await userModel.findOne({ _id: adminID }).lean();
-        if (!user) return res.status(404).json({ message: 'User not found' })
+        const users = await userModel.find()
+        if (!users) return res.status(404).json({ message: 'User not found' })
+        users.forEach(user => allUsers.push(user._id))
 
         const notif = await notificationModel.create({
             message,
-            adminID,
+            users: allUsers,
             sendBy: req.user._id
         })
-        return res.json(notif)
-    }
-    catch (err) { return res.status(422).json({ message: err.message }); }
+        return res.status(200).json({ message: "Message sended to all users !" })
+    } catch (err) { return res.status(422).json({ message: err.message }); }
 }
 // test 1
 exports.get = async (req, res) => {

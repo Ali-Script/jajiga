@@ -5,20 +5,19 @@ const schema = new mongoose.Schema({
         type: "string",
         required: true
     },
-    adminID: {
+    users: [{
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: true
-    },
+    }],
     sendBy: {
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: true
     },
-    seen: {
-        type: Number,
-        enum: [1, 0],
-        default: 0
+    ExpiredTimeByHours: {
+        type: "number",
+        required: true
     },
 }, { timestamps: true });
 
