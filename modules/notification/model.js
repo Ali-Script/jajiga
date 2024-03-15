@@ -15,9 +15,10 @@ const schema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    ExpiredTimeByHours: {
+    seen: {
         type: "number",
-        required: true
+        enum: [0, 1],
+        default: 0
     },
 }, { timestamps: true });
 

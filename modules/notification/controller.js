@@ -23,7 +23,7 @@ exports.send = async (req, res) => {
 // test 1
 exports.get = async (req, res) => {
     try {
-        const getNotif = await notificationModel.find({ adminID: req.user._id }).sort({ _id: -1 }).lean()
+        const getNotif = await notificationModel.find({ seen: 0 }).sort({ _id: -1 }).lean()
         await notificationModel.updateMany({ adminID: req.user._id }, { seen: 1 })
         return res.json(getNotif)
     }

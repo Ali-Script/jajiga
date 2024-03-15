@@ -8,7 +8,7 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 router
     .route("/send")
-    .post(notificationController.send)
+    .post(authMiddleware, isAdmin, notificationController.send)
 
 router
     .route("/get")
