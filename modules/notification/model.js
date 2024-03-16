@@ -5,12 +5,7 @@ const schema = new mongoose.Schema({
         type: "string",
         required: true
     },
-    users: [{
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-        required: true
-    }],
-    sendBy: {
+    id: {
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: true
@@ -19,6 +14,16 @@ const schema = new mongoose.Schema({
         type: "number",
         enum: [0, 1],
         default: 0
+    },
+    sendBy: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    allUsers: {
+        type: "number",
+        enum: [0, 1],
+        default: 1
     },
 }, { timestamps: true });
 

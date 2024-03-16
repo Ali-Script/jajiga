@@ -12,12 +12,15 @@ router
 
 router
     .route("/get")
-    .get(authMiddleware, isAdmin, notificationController.get)
+    .get(authMiddleware, notificationController.get)
 router
-    .route("/getAll")
-    .get(authMiddleware, isAdmin, notificationController.getAll)
+    .route("/seen")
+    .get(authMiddleware, isAdmin, notificationController.seen)
 router
-    .route("/remove/:id")
-    .delete(authMiddleware, isAdmin, notificationController.remove)
+    .route("/removeObserved")
+    .delete(authMiddleware, isAdmin, notificationController.removeObserved)
+router
+    .route("/removeAll")
+    .delete(authMiddleware, isAdmin, notificationController.removeAll)
 
 module.exports = router;
