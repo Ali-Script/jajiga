@@ -14,10 +14,7 @@ const swaggerFunc = (app) => {
         },
         apis: ['./app.js'],
     });
-    var costumCss = {
-        customCssUrl: './swaggerStyles.css'
-    };
-    const swagger = swaggerUi.setup(options, costumCss)
+    const swagger = swaggerUi.setup(options)
     app.use("/Api-Doc", swaggerUi.serve, swagger)
 }
 
