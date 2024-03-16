@@ -15,7 +15,7 @@ router
     .get(authMiddleware, notificationController.get)
 router
     .route("/seen")
-    .get(authMiddleware, isAdmin, notificationController.seen)
+    .get(authMiddleware, notificationController.seen)
 router
     .route("/removeObserved")
     .delete(authMiddleware, isAdmin, notificationController.removeObserved)

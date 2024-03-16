@@ -44,29 +44,21 @@ exports.seen = async (req, res) => {
 }
 exports.removeObserved = async (req, res) => {
     try {
-
-
-        const getNotif = await notificationModel.findOneAndDelete({ _id: req.params.id }).lean()
-        if (!getNotif) return res.status(404).json({ message: "Notif not found !!" })
-
-        return res.json(getNotif)
-    }
-    catch (err) { return res.status(422).json({ message: err.message }); }
+        const getNotif = await notificationModel.find({ seen: 1 }).lean()
+        if (!getNotif || getNotif.length == 0) return res.status(404).json({ message: "Notif not found !!" })
+        const deleteN = await notificationModel.deleteMany({ seen: 1 }).lean()
+        return res.status(200).json(deleteN)
+    } catch (err) { return res.status(422).json({ message: err.message }); }
 }
 exports.removeAll = async (req, res) => {
     try {
 
-        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
-        if (!isvalidID) {
-            return res.status(422).json({ message: "Invalid ObjectId !!" })
-        }
-
-        const getNotif = await notificationModel.findOneAndDelete({ _id: req.params.id }).lean()
+        const getNotif = await notificationModel.find().lean()
         if (!getNotif) return res.status(404).json({ message: "Notif not found !!" })
+        const deleteN = await notificationModel.deleteMany()
+        return res.json(deleteN)
 
-        return res.json(getNotif)
-    }
-    catch (err) { return res.status(422).json({ message: err.message }); }
+    } catch (err) { return res.status(422).json({ message: err.message }); }
 }
 
 
