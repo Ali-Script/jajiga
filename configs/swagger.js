@@ -10,12 +10,18 @@ const swaggerFunc = (app) => {
                 title: 'Jajiga-APIs',
                 version: '1.0.1',
             },
+            explorer: true,
             servers: [{ url: 'https://localhost:4001' }]
         },
         apis: ['./app.js'],
     });
-    const swagger = swaggerUi.setup(options)
+
+    let styles = {
+        customCss: '.swagger-ui {color: red; font- family: sans-serif;}'
+    };
+    const swagger = swaggerUi.setup(options, styles)
     app.use("/Api-Doc", swaggerUi.serve, swagger)
 }
+
 
 module.exports = swaggerFunc;
