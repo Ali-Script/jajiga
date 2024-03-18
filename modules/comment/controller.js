@@ -1,40 +1,33 @@
 const mongoose = require('mongoose');
 const commentModel = require("./model")
-const courseModel = require("./../villas/model")
-const validator = require("./../../validator/commentValidator")
+const villaModel = require("./../villas/model")
+const joi = require("./../../validator/commentValidator")
+
 
 exports.create = async (req, res) => {
     try {
-        const { body, course, score } = req.body;
+        const { body, villa, score } = req.body;
 
-        const validationBody = validator(req.body);
-        if (validationBody != true) {
-            return res.status(422).json(validationBody)
-        }
+        const validatorr = joi.validate(req.body)
+        if (validatorr.error) return res.status(409).json({ message: validatorr.error.details })
 
-        const courseId = await courseModel.findOne({ _id: course })
-        if (!courseId) {
-            return res.status(404).json({ message: "Course Not Found", err: 404 })
-        }
+        const villaId = await villaModel.findOne({ _id: villa })
+        if (!villaId) return res.status(404).json({ message: "villa Not Found", err: 404 })
 
         const comment = await commentModel.create({
             body,
             creator: req.user._id,
-            course: courseId._id,
+            villa: villa._id,
             score,
             isAccept: 0,
             isAnswer: 0,
             haveAnswer: 0,
-
         })
-        return res.json(comment)
+        return res.status(200).json(comment)
 
-    }
-    catch (err) {
-        return res.status(422).json(err.message)
-    }
+    } catch (err) { return res.status(422).json(err.message) }
 }
-// test 1
+
 exports.remove = async (req, res) => {
     try {
         const { id } = req.params;

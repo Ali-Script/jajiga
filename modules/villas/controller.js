@@ -10,9 +10,17 @@ exports.add = async (req, res) => {
         const validatorr = joi.validate(req.body)
         if (validatorr.error) return res.status(409).json({ message: validator.error.details })
 
-        const ifDUPLC = await villaModel.findOne(map)
-        if (ifDUPLC) {
-            return res.status(409).json({ message: "this location is already exist" })
+        const ifDUPLC = await villaModel.find()
+
+        if (ifDUPLC.length >= 1) {
+            var flag = false;
+
+            ifDUPLC.forEach(data => {
+                let userobj = data.map[0].toObject()
+                Reflect.deleteProperty(userobj, "_id")
+                if (userobj.first === map[0].first) flag = true
+            })
+            if (flag == true) return res.status(409).json({ message: "this location is already exist" })
         }
 
         const covers = req.files;
@@ -21,7 +29,7 @@ exports.add = async (req, res) => {
 
         const newVilla = await villaModel.create({
             user: req.user._id,
-            email: req.user.email,
+            email: req.user.Email,
             address,
             map,
             cover: coverFiles,
@@ -47,7 +55,7 @@ exports.add = async (req, res) => {
 
         return res.status(200).json({ message: "Succ !" })
 
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(422).json(err.message); }
 }
 exports.getAll = async (req, res) => {
     try {

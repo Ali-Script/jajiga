@@ -19,10 +19,11 @@ exports.start = async (req, res) => {
 }
 exports.auth = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ user: req.user._id })
+        const { UserName, Email, Password, ConfirmPassword } = req.body;
+
+        const checkBan = await banModel.findOne({ email: Email })
         if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
 
-        const { UserName, Email, Password, ConfirmPassword } = req.body;
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
@@ -109,17 +110,29 @@ exports.authCode = async (req, res) => {
 
 
             res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 14 * 24 * 60 * 60,
+                maxAge: 999999999999999,
                 httpOnly: true,
                 signed: true,
                 secure: true
             })
             res.cookie("AccessToken", accessToken, {
-                maxAge: 15000,
+                maxAge: 999999999999999,
                 httpOnly: true,
                 signed: true,
                 secure: true
             })
+            // res.cookie("RefreshToken", RefreshToken, {
+            //     maxAge: 14 * 24 * 60 * 60,
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true
+            // })
+            // res.cookie("AccessToken", accessToken, {
+            //     maxAge: 15000,
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true
+            // })
 
             const upUser = await userModel.updateOne({ Email }, { $set: { accessToken: accessToken } })
 

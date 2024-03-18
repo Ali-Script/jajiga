@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    user: {
-        type: mongoose.Types.ObjectId,
-        ref: "User"
+    email: {
+        type: "string",
+        required: true
     },
     bannedBy: {
         type: mongoose.Types.ObjectId,

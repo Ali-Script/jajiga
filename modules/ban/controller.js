@@ -22,12 +22,11 @@ exports.ban = async (req, res) => {
         if (FindbanUser) return res.status(404).json({ message: 'This user already has banned' })
 
         const add = banModel.create({
-            user: findUser._id,
+            email,
             reason,
             bannedBy: req.user._id
         })
         return res.status(200).json({ message: "Ban Successfully" });
-
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.unban = async (req, res) => {

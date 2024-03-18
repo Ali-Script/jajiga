@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const genAccessToken = (Email) => {
     try {
-        const token = jwt.sign({ Email }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15 s" })
+        const token = jwt.sign({ Email }, process.env.JWT_ACCESS_SECRET, { expiresIn: "150 day" })
         return token;
     }
     catch (e) { return res.status(500).json(e.message); }
