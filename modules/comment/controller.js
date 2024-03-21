@@ -29,7 +29,6 @@ exports.create = async (req, res) => {
         return res.status(200).json(comment)
     } catch (err) { return res.status(422).json(err.message) }
 }
-
 exports.remove = async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,18 +110,15 @@ exports.answer = async (req, res) => {
         const { id } = req.params;
 
         const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
-        if (!isvalidID) {
-            return res.status(422).json({ message: "Invalid ObjectId !!" })
-        }
+        if (!isvalidID) return res.status(422).json({ message: "Invalid ObjectId !!" })
 
-        const comment = await commentModel.findOneAndUpdate({ _id: id }, { isAccept: 1, haveAnswer: 1 })
+        const comment = await commentModel.findOne({ _id: id })
+        if (!comment) return res.status(404).json({ message: 'Comment not found' })
+        else if (comment.isAccept == 0) return res.status(422).json({ message: 'Comment has not accepted yet !' })
 
-        if (!comment) {
-            return res.status(404).json({ message: 'Comment not found' })
+        const Updatecomment = await commentModel.updateOne({ _id: id }, { haveAnswer: 1 })
 
-        }
-
-        const Canswer = await commentModel.create({
+        const answer = await commentModel.create({
             body,
             creator: req.user._id,
             course: comment.course,
@@ -131,13 +127,10 @@ exports.answer = async (req, res) => {
             mainCommentID: comment._id
         })
 
-        const setandser = await commentModel.findOneAndUpdate({ _id: id }, { $set: { answer: Canswer._id } })
+        const setandser = await commentModel.findOneAndUpdate({ _id: id }, { $set: { answer: answer._id } })
+        return res.status(200).json(answer)
 
-        return res.json(Canswer)
-    }
-    catch (err) {
-        return res.status(422).json({ message: err.message })
-    }
+    } catch (err) { return res.status(422).json({ message: err.message }) }
 }
 // test 1
 exports.getAll = async (req, res) => {

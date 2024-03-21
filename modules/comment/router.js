@@ -18,9 +18,9 @@ router
     .put(authMiddleware, isAdmin, commentController.reject)
 router
     .route("/answer/:id")
-    .post(authMiddleware, isAdmin, commentController.answer)
+    .post(authMiddleware, commentController.answer)
 router
     .route("/getAll")
-    .get(authMiddleware, isAdmin, commentController.getAll)
+    .get(authMiddleware, commentController.getAll)
 
 module.exports = router

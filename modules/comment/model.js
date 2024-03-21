@@ -20,8 +20,7 @@ const schema = new mongoose.Schema({
     },
     score: {
         type: Number,
-        enum: [0, 1, 2, 3, 4, 5],
-        required: true
+        enum: [0, 1, 2, 3, 4, 5]
     },
     isAnswer: {
         type: Number,
