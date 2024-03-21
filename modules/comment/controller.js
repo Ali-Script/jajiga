@@ -11,6 +11,9 @@ exports.create = async (req, res) => {
         const validatorr = joi.validate(req.body)
         if (validatorr.error) return res.status(409).json({ message: validatorr.error.details })
 
+        const validate = mongoose.Types.ObjectId.isValid(villa);
+        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+
         const villaId = await villaModel.findOne({ _id: villa })
         if (!villaId) return res.status(404).json({ message: "villa Not Found", err: 404 })
 
@@ -24,7 +27,6 @@ exports.create = async (req, res) => {
             haveAnswer: 0,
         })
         return res.status(200).json(comment)
-
     } catch (err) { return res.status(422).json(err.message) }
 }
 
@@ -59,7 +61,6 @@ exports.remove = async (req, res) => {
 // test 1
 exports.accept = async (req, res) => {
     try {
-
         const { id } = req.params;
 
         const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
@@ -77,12 +78,8 @@ exports.accept = async (req, res) => {
         }
 
         return res.json({ message: 'Comment Accepted (:' })
-    }
-    catch (err) {
-        return res.status(422).json(err.message)
-    }
+    } catch (err) { return res.status(422).json(err.message) }
 }
-// test 1
 exports.reject = async (req, res) => {
     try {
 
@@ -108,7 +105,6 @@ exports.reject = async (req, res) => {
         return res.status(422).json(err.message)
     }
 }
-// test 1
 exports.answer = async (req, res) => {
     try {
         const { body } = req.body;
@@ -130,7 +126,7 @@ exports.answer = async (req, res) => {
             body,
             creator: req.user._id,
             course: comment.course,
-            isAccept: 1,
+            isAccept: 0,
             isAnswer: 1,
             mainCommentID: comment._id
         })

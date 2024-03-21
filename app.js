@@ -27,6 +27,7 @@ const banRouter = require('./modules/ban/router')
 const villaRouter = require('./modules/villas/router')
 const newsletterRouter = require('./modules/newsletter/router')
 const notificationRouter = require('./modules/notification/router')
+const commentRouter = require('./modules/comment/router')
 
 // Routers ^
 
@@ -46,6 +47,7 @@ app.use("/notification/", notificationRouter)
  *         description: Returns a mysterious string.
  */
 app.use("/newsletter/", newsletterRouter)
+app.use("/comment/", commentRouter)
 
 // Routers Middleware ^
 
