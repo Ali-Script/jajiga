@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
+    title: {
+        type: 'string',
+        required: true
+    },
     user: {
         type: mongoose.Types.ObjectId,
         ref: "User"
@@ -157,3 +161,4 @@ const schema = new mongoose.Schema({
 
 const model = mongoose.model("Villa", schema);
 module.exports = model;
+

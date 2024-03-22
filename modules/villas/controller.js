@@ -6,14 +6,16 @@ const validator = require("email-validator");
 
 exports.add = async (req, res) => {
     try {
-        const { address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
+        const { title, address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
+        req.body = { title, address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules }
         const validatorr = joi.validate(req.body)
+        console.log(validator.error);
         if (validatorr.error) return res.status(409).json({ message: validator.error.details })
 
         const ifDUPLC = await villaModel.find()
 
         if (ifDUPLC.length >= 1) {
-            var flag = false;
+            let flag = false;
 
             ifDUPLC.forEach(data => {
                 let userobj = data.map[0].toObject()
@@ -28,6 +30,7 @@ exports.add = async (req, res) => {
         covers.forEach(i => coverFiles.push(i.filename))
 
         const newVilla = await villaModel.create({
+            title,
             user: req.user._id,
             email: req.user.Email,
             address,

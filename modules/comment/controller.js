@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
         const comment = await commentModel.create({
             body,
             creator: req.user._id,
-            villa: villa._id,
+            villa: villaId._id,
             score,
             isAccept: 0,
             isAnswer: 0,
@@ -121,7 +121,7 @@ exports.answer = async (req, res) => {
         const answer = await commentModel.create({
             body,
             creator: req.user._id,
-            course: comment.course,
+            villa: comment.villa,
             isAccept: 0,
             isAnswer: 1,
             mainCommentID: comment._id
@@ -132,12 +132,11 @@ exports.answer = async (req, res) => {
 
     } catch (err) { return res.status(422).json({ message: err.message }) }
 }
-// test 1
 exports.getAll = async (req, res) => {
     try {
 
         const comments = await commentModel.find({})
-            .populate("course", "title")
+            .populate("villa", "title")
             .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
