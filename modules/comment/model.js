@@ -36,11 +36,11 @@ const schema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Comment',
     },
-    answer: {
+    answer: [{
         type: mongoose.Types.ObjectId,
         ref: 'Comment',
         required: false
-    }
+    }]
 }, { timestamps: true })
 
 const commentModel = mongoose.model('Comment ', schema)

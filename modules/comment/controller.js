@@ -117,7 +117,7 @@ exports.answer = async (req, res) => {
         else if (comment.isAccept == 0) return res.status(422).json({ message: 'Comment has not accepted yet !' })
 
         const Updatecomment = await commentModel.updateOne({ _id: id }, { haveAnswer: 1 })
-
+        console.log(comment.answer);
         const answer = await commentModel.create({
             body,
             creator: req.user._id,
@@ -127,7 +127,7 @@ exports.answer = async (req, res) => {
             mainCommentID: comment._id
         })
 
-        const setandser = await commentModel.findOneAndUpdate({ _id: id }, { $set: { answer: answer._id } })
+        const setnswer = await commentModel.findOneAndUpdate({ _id: id }, { $push: { answer: answer._id } })
         return res.status(200).json(answer)
 
     } catch (err) { return res.status(422).json({ message: err.message }) }

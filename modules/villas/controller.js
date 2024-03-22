@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const villaModel = require('./../villas/model');
+const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
 const validator = require("email-validator");
@@ -93,6 +94,9 @@ exports.delete = async (req, res) => {
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+
+        const mainComments = await commentModel.find({ villa: id })
+        const answerComments = await commentModel.find({ villa: id })
 
         const villa = await villaModel.findOneAndDelete({ _id: id })
         if (!villa) return res.status(404).json({ message: "Villa Not Found 404 ! " })

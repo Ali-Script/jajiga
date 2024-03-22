@@ -1,114 +1,114 @@
-"title": "v1",
-
-
-    "user": "User",
-
-
-        "address": [
-            {
-                state: "ker",
-                city: "ker",
-                address: "blv"
-            }
-        ],
-            "map": [
+{
+    "title": "v1",
+        "user": "User",
+            "address": [
                 {
-                    first: "12.2.4.",
-                    sec: "343.44.65.6"
+                    "state": "ker",
+                    "city": "ker",
+                    "address": "blv"
                 }
             ],
-
-
-                "cover": ["345345.of"],
-
-
-                    "description": "rpitjhortjh",
-
-
-                        "capAndSizeAndRooms": [
-                            {
-                                "normalcapacity": 3434,
-                                "maxcapacity": 34,
-                                "buildingsize": 343,
-                                "fuundationSize": 34,
-                                "bedRoom": 34,
-                                "aboutBedRoom": 34,
-                            }
-                        ],
-
-
-                            "facility": [
+                "map": [
+                    {
+                        "first": "1237.2.4.",
+                        "sec": "343.447.65.6"
+                    }
+                ],
+                    "cover": [
+                        "345345.of"
+                    ],
+                        "description": "rpitjhortjh",
+                            "capAndSizeAndRooms": [
                                 {
-                                    "facility": [{
-                                        "title": "preitjg",
-                                        "description": "oijtg",
-                                    }],
-                                    "moreFacility": [{
-                                        "description": "fogjh",
-                                    }]
+                                    "normalcapacity": 3434,
+                                    "maxcapacity": 34,
+                                    "buildingsize": 343,
+                                    "fuundationSize": 34,
+                                    "bedRoom": 34,
+                                    "aboutBedRoom": 34
                                 }
                             ],
-
-
-                                "sanitaryFacilities": [
+                                "facility": [
                                     {
-                                        "sanitaryFacility": [{
-                                            "title": "rg",
-                                            "description": "rtpijg",
-
-                                        }],
-                                        "moreSanitaryFacility": [{
-                                            "description": "rtopkh",
-                                        }]
+                                        "facility": [
+                                            {
+                                                "title": "1",
+                                                "description": "1"
+                                            },
+                                            {
+                                                "title": "2",
+                                                "description": "2"
+                                            }
+                                        ],
+                                        "moreFacility": [
+                                            {
+                                                "description": "fogjh"
+                                            }
+                                        ]
                                     }
                                 ],
-                                    "timing": [
+                                    "sanitaryFacilities": [
                                         {
-                                            "minimumStay": {
-                                                "value": 79,
-                                            },
-                                            "deliveryTime": {
-                                                "from": 89,
-                                                "to": 34,
-                                            },
-                                            "dischargeTime": {
-                                                "value": 34,
-                                            }
+                                            "sanitaryFacility": [
+                                                {
+                                                    "title": "rg",
+                                                    "description": "rtpijg"
+                                                }
+                                            ],
+                                            "moreSanitaryFacility": [
+                                                {
+                                                    "description": "rtopkh"
+                                                }
+                                            ]
                                         }
                                     ],
-                                        "price": [
+                                        "timing": [
                                             {
-                                                "newYear": {
-                                                    "value": 34,
+                                                "minimumStay": {
+                                                    "value": 79
                                                 },
-                                                "spring": {
-                                                    "midWeek": 34,
-                                                    "holidays": 34,
-                                                    "peakDays": 34,
+                                                "deliveryTime": {
+                                                    "from": 89,
+                                                    "to": 34
                                                 },
-                                                "summer": {
-                                                    "midWeek": 34,
-                                                    "holidays": 34,
-                                                    "peakDays": 34,
-                                                },
-                                                "autumn": {
-                                                    "midWeek": 34,
-                                                    "holidays": 34,
-                                                    "peakDays": 34,
-                                                },
-                                                "winter": {
-                                                    "midWeek": 34,
-                                                    "holidays": 34,
-                                                    "peakDays": 34,
+                                                "dischargeTime": {
+                                                    "value": 34
                                                 }
                                             }
                                         ],
-                                            "rules": [
+                                            "price": [
                                                 {
-                                                    "pet": true,
-                                                    "music": true,
-                                                    "smoke": true,
-                                                    "more": "rth"
+                                                    "newYear": {
+                                                        "value": 34
+                                                    },
+                                                    "spring": {
+                                                        "midWeek": 34,
+                                                        "holidays": 34,
+                                                        "peakDays": 34
+                                                    },
+                                                    "summer": {
+                                                        "midWeek": 34,
+                                                        "holidays": 34,
+                                                        "peakDays": 34
+                                                    },
+                                                    "autumn": {
+                                                        "midWeek": 34,
+                                                        "holidays": 34,
+                                                        "peakDays": 34
+                                                    },
+                                                    "winter": {
+                                                        "midWeek": 34,
+                                                        "holidays": 34,
+                                                        "peakDays": 34
+                                                    }
                                                 }
                                             ],
-                                                "email": "io;io"
+                                                "rules": [
+                                                    {
+                                                        "pet": true,
+                                                        "music": true,
+                                                        "smoke": true,
+                                                        "more": "rth"
+                                                    }
+                                                ]
+}
