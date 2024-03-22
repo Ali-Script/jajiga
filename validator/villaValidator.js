@@ -1,6 +1,8 @@
 const Joi = require('joi');
 
 const schema = Joi.object({
+    title: Joi.string()
+        .required(),
 
     address: Joi.array().items(Joi.object()).items(Joi.string())
         .min(1)
