@@ -89,6 +89,7 @@ exports.myVillas = async (req, res) => {
         return res.status(200).json(villa)
     } catch (err) { return res.status(422).send(err.message); }
 }
+
 exports.delete = async (req, res) => {
     try {
         const id = req.params.id
