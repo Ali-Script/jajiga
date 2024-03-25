@@ -71,14 +71,55 @@ exports.getAll = async (req, res) => {
 }
 exports.getOne = async (req, res) => {
     try {
-        const email = req.params.email
-        const validate = validator.validate(email);
-        if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+        const id = req.params.id
+        const validate = mongoose.Types.ObjectId.isValid(id);
+        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
 
-        const villa = await villaModel.find({ email }).sort({ _id: -1 }).lean()
+        const villa = await villaModel.find({ _id: id }).sort({ _id: -1 }).lean()
         if (villa.length == 0) return res.status(404).json({ message: "This user has not added a villa yet " })
 
-        return res.status(200).json(villa)
+        const comments = await commentModel.find({ villa: id, isAccept: 1 })
+            .populate("villa", "_id title")
+            .populate("creator", "UserName")
+            .sort({ _id: -1 })
+            .lean();
+
+        let orderedComment = []
+
+        comments.forEach(mainComment => {
+            comments.forEach(answerComment => {
+
+                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+                    orderedComment.push({
+                        ...mainComment,
+                        villa: answerComment.villa.title,
+                        creator: answerComment.creator.UserName,
+                        answerComment
+                    })
+                }
+            })
+        })
+
+        const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
+            .populate("villa", "_id title")
+            .populate("creator", "UserName")
+            .sort({ _id: -1 })
+            .lean();
+        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+
+
+
+
+
+
+
+
+
+
+
+        return res.status(200).json({ villa, comments: orderedComment })
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.myVillas = async (req, res) => {

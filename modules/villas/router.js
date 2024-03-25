@@ -13,7 +13,7 @@ router
     .route("/getAll")
     .get(controller.getAll)
 router
-    .route("/get/:email")
+    .route("/get/:id")
     .get(authMiddleware, isAdminMiddleware, controller.getOne)
 router
     .route("/myVillas")
