@@ -151,14 +151,14 @@ exports.authCode = async (req, res) => {
 }
 exports.login = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ user: req.user._id })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
-
         const { Identifeir, Password } = req.body;
 
         const user = await userModel.findOne({
             $or: [{ UserName: Identifeir }, { email: Identifeir }]
         })
+
+        const checkBan = await banModel.findOne({ user: user.Email })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
 
         if (!user) {
             return res.status(400).json({ message: "UserName or Email is Incrract !!" })
@@ -168,9 +168,24 @@ exports.login = async (req, res) => {
         if (!checkPassword) {
             return res.status(400).json({ message: "Password is Incrract !!" })
         }
+        const accessToken = genAccessToken(user.Email)
+        const RefreshToken = genRefreshToken(user.Email)
 
-        return res.status(200).json({ message: "Login Successfully " })
+        res.cookie("RefreshToken", RefreshToken, {
+            maxAge: 999999999999999,
+            httpOnly: true,
+            signed: true,
+            secure: true
+        })
+        res.cookie("AccessToken", accessToken, {
+            maxAge: 999999999999999,
+            httpOnly: true,
+            signed: true,
+            secure: true
+        })
+        const upUser = await userModel.updateOne({ Email: user.Email }, { $set: { RefreshToken } })
 
+        return res.json({ message: "Login Successfully " })
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.getme = async (req, res) => {
