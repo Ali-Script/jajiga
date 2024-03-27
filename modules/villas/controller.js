@@ -4,6 +4,7 @@ const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
 const validator = require("email-validator");
+const { func } = require('joi');
 
 exports.add = async (req, res) => {
     try {
@@ -78,27 +79,32 @@ exports.getOne = async (req, res) => {
         const villa = await villaModel.find({ _id: id }).sort({ _id: -1 }).lean()
         if (villa.length == 0) return res.status(404).json({ message: "villa not found 404 ! " })
 
+        let orderedComment = []
 
-
-
-        const comments = await commentModel.findOne({ _id: "6601d2d17b675b79e73fe2bb" })
+        const comments = await commentModel.find({ villa: id, isAccept: 1, haveAnswer: 1 })
             .populate("villa", "_id title")
             .populate("creator", "UserName")
+            .sort({ _id: -1 })
+            .lean();
 
+        function commentFunc(data) {
 
+            data.forEach(item => {
 
+                if (item.answer.length > 1) {
+                    let comment = item
+                    let counter = 0
+                    comment.answer.forEach(i => {
+                        console.log(i);
+                    })
+                }
+                if (item.answer.length == 1) {
+                    console.log(item.answer[0]);
+                }
+            })
 
-        console.log(comments.answer[0]);
-
-
-        // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "UserName")
-        //     .sort({ _id: -1 })
-        //     .lean();
-
-
-        // let orderedComment = []
+        }
+        commentFunc(comments)
 
         // comments.forEach(mainComment => {
         //     comments.forEach(answerComment => {

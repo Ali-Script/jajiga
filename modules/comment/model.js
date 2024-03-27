@@ -37,9 +37,11 @@ const schema = new mongoose.Schema({
         ref: 'Comment',
     },
     answer: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Comment',
-        required: false
+        id: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Comment',
+            required: false
+        }
     }]
 }, { timestamps: true })
 
