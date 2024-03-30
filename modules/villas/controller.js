@@ -109,8 +109,15 @@ exports.getOne = async (req, res) => {
             if (mainComment.answer.length > 1) {
 
                 mainComment.answer.forEach(async item => {
-                    const findAnswer = await commentModel.findOne({ _id: item[0] })
-                    console.log(item);
+                    const findAnswer = await commentModel.findOne({ _id: item })
+
+                    orderedComment.push({
+                        ...mainComment,
+                        villa: answerComment.villa.title,
+                        creator: answerComment.creator.UserName,
+                        answerComment
+                    })
+
                 })
 
 
