@@ -81,55 +81,37 @@ exports.getOne = async (req, res) => {
 
         let orderedComment = []
 
-        const comments = await commentModel.find({ villa: id, isAccept: 1, haveAnswer: 1 })
+        const comments = await commentModel.find({ villa: id, isAccept: 1 })
             .populate("villa", "_id title")
             .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
 
-        function commentFunc(data) {
+        comments.forEach(mainComment => {
+            comments.forEach(answerComment => {
 
-            data.forEach(item => {
+                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+                    console.log(mainComment);
 
-                if (item.answer.length > 1) {
-                    let comment = item
-                    let counter = 0
-                    comment.answer.forEach(i => {
-                        console.log(i);
+                    orderedComment.push({
+                        ...mainComment,
+                        villa: answerComment.villa.title,
+                        creator: answerComment.creator.UserName,
+                        answerComment
                     })
                 }
-                if (item.answer.length == 1) {
-                    console.log(item.answer[0]);
-                }
             })
+        })
 
-        }
-        commentFunc(comments)
+        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+            .populate("villa", "_id title")
+            .populate("creator", "UserName")
+            .sort({ _id: -1 })
+            .lean();
+        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        // comments.forEach(mainComment => {
-        //     comments.forEach(answerComment => {
+        return res.status(200).json({ villa, comments: orderedComment })
 
-        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: answerComment.villa.title,
-        //                 creator: answerComment.creator.UserName,
-        //                 answerComment
-        //             })
-        //         }
-        //     })
-        // })
-
-        // const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "UserName")
-        //     .sort({ _id: -1 })
-        //     .lean();
-        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
-
-        // return res.status(200).json({ villa, comments: orderedComment })
-        return res.status(200).json(comments)
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.myVillas = async (req, res) => {

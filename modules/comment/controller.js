@@ -114,6 +114,7 @@ exports.answer = async (req, res) => {
 
         const comment = await commentModel.findOne({ _id: id })
         if (!comment) return res.status(404).json({ message: 'Comment not found' })
+        else if (comment.isAnswer == 1) return res.status(422).json({ message: 'this is an answer you cant reply answers' })
         else if (comment.isAccept == 0) return res.status(422).json({ message: 'Comment has not accepted yet !' })
 
         const Updatecomment = await commentModel.updateOne({ _id: id }, { haveAnswer: 1 })
