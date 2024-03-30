@@ -87,30 +87,67 @@ exports.getOne = async (req, res) => {
             .sort({ _id: -1 })
             .lean();
 
+        // comments.forEach(mainComment => {
+        //     comments.forEach(answerComment => {
+
+        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+        //             console.log(mainComment);
+
+        //             orderedComment.push({
+        //                 ...mainComment,
+        //                 villa: answerComment.villa.title,
+        //                 creator: answerComment.creator.UserName,
+        //                 answerComment
+        //             })
+        //         }
+        //     })
+        // })
         comments.forEach(mainComment => {
-            comments.forEach(answerComment => {
 
-                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-                    console.log(mainComment);
+            console.log(mainComment.answer.length);
 
-                    orderedComment.push({
-                        ...mainComment,
-                        villa: answerComment.villa.title,
-                        creator: answerComment.creator.UserName,
-                        answerComment
-                    })
-                }
-            })
+            if (mainComment.answer.length > 1) {
+
+                mainComment.answer.forEach(async item => {
+                    const findAnswer = await commentModel.findOne({ _id: item[0] })
+                    console.log(item);
+                })
+
+
+
+            } else if (mainComment.answer.length <= 1) {
+
+
+            }
+
+
+
+
+
+            // comments.forEach(answerComment => {
+
+            //     if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+            //         console.log(mainComment);
+
+            //         orderedComment.push({
+            //             ...mainComment,
+            //             villa: answerComment.villa.title,
+            //             creator: answerComment.creator.UserName,
+            //             answerComment
+            //         })
+            //     }
+            // })
         })
 
-        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-            .populate("villa", "_id title")
-            .populate("creator", "UserName")
-            .sort({ _id: -1 })
-            .lean();
-        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+        //     .populate("villa", "_id title")
+        //     .populate("creator", "UserName")
+        //     .sort({ _id: -1 })
+        //     .lean();
+        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        return res.status(200).json({ villa, comments: orderedComment })
+        // return res.status(200).json({ villa, comments: orderedComment })
+        return res.status(200).json("f")
 
     } catch (err) { return res.status(422).send(err.message); }
 }
