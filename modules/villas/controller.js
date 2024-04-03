@@ -82,79 +82,69 @@ exports.getOne = async (req, res) => {
         let orderedComment = []
 
         const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            .populate("villa", "_id title")
-            .populate("creator", "UserName")
+            // .populate("villa", "_id title")
+            // .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
 
-        // comments.forEach(mainComment => {
-        //     comments.forEach(answerComment => {
+        comments.forEach(main => {
+            comments.forEach(answer => {
 
-        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-        //             console.log(mainComment);
-
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: answerComment.villa.title,
-        //                 creator: answerComment.creator.UserName,
-        //                 answerComment
-        //             })
-        //         }
-        //     })
-        // })
-        comments.forEach(mainComment => {
-
-            console.log(mainComment.answer.length);
-
-            if (mainComment.answer.length > 1) {
-
-                mainComment.answer.forEach(async item => {
-                    const findAnswer = await commentModel.findOne({ _id: item })
-
+                if (String(main._id) == String(answer.mainCommentID)) {
                     orderedComment.push({
-                        ...mainComment,
-                        villa: answerComment.villa.title,
-                        creator: answerComment.creator.UserName,
-                        answerComment
+                        ...main,
+                        villa: answer.villa.title,
+                        creator: answer.creator.UserName,
+                        answer: [answer]
                     })
-
-                })
-
-
-
-            } else if (mainComment.answer.length <= 1) {
-
-
-            }
-
-
-
-
-
-            // comments.forEach(answerComment => {
-
-            //     if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-            //         console.log(mainComment);
-
-            //         orderedComment.push({
-            //             ...mainComment,
-            //             villa: answerComment.villa.title,
-            //             creator: answerComment.creator.UserName,
-            //             answerComment
-            //         })
-            //     }
-            // })
+                }
+            })
         })
 
-        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "UserName")
-        //     .sort({ _id: -1 })
-        //     .lean();
-        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+        let dupAnswer = []
 
-        // return res.status(200).json({ villa, comments: orderedComment })
-        return res.status(200).json("f")
+        orderedComment.forEach(first => {
+            orderedComment.forEach(sec => {
+                if (String(first._id) == String(sec._id)) {
+                    dupAnswer.push(first.answer)
+                    dupAnswer.push(sec.answer)
+
+                }
+            })
+
+        })
+
+
+
+
+
+        const check_duplicate_in_array = (input_array) => {
+            const duplicates = input_array.filter((item, index) => input_array.indexOf(item) !== index);
+            return Array.from(new Set(duplicates));
+        }
+
+        console.log(check_duplicate_in_array(dupAnswer));
+
+
+
+
+
+
+        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+            // .populate("villa", "_id title")
+            // .populate("creator", "UserName")
+            .sort({ _id: -1 })
+            .lean();
+
+        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+
+
+
+
+
+        return res.status(200).json({ villa, comments: orderedComment })
+
 
     } catch (err) { return res.status(422).send(err.message); }
 }
@@ -166,7 +156,6 @@ exports.myVillas = async (req, res) => {
         return res.status(200).json(villa)
     } catch (err) { return res.status(422).send(err.message); }
 }
-
 exports.delete = async (req, res) => {
     try {
         const id = req.params.id
