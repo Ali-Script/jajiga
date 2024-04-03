@@ -101,29 +101,41 @@ exports.getOne = async (req, res) => {
             })
         })
 
-        let dupAnswer = []
+        const answers = await commentModel.find({ villa: id, isAccept: 1, isAnswer: 1 })
+        let parent = [comments]
 
-        orderedComment.forEach(first => {
-            orderedComment.forEach(sec => {
-                if (String(first._id) == String(sec._id)) {
-                    dupAnswer.push(first.answer)
-                    dupAnswer.push(sec.answer)
+        answers.forEach(async item => {
 
-                }
+            let findParent = parent.find(comment => {
+                return comment[0]._id == item.mainCommentID
             })
+            parent.push(findParent)
 
+            console.log(findParent);
         })
 
 
-
-
-
-        const check_duplicate_in_array = (input_array) => {
+        const check_duplicate_in_array1 = (input_array) => {
             const duplicates = input_array.filter((item, index) => input_array.indexOf(item) !== index);
             return Array.from(new Set(duplicates));
         }
 
-        console.log(check_duplicate_in_array(dupAnswer));
+        // console.log(check_duplicate_in_array1(dupAnswer));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -143,7 +155,8 @@ exports.getOne = async (req, res) => {
 
 
 
-        return res.status(200).json({ villa, comments: orderedComment })
+        return res.status(200).json(orderedComment)
+        // return res.status(200).json({ villa, comments: orderedComment })
 
 
     } catch (err) { return res.status(422).send(err.message); }
