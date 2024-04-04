@@ -152,7 +152,7 @@ exports.getAll = async (req, res) => {
 
                     orderedComment.push({
                         ...mainComment,
-                        course: answerComment.course.title,
+                        villa: answerComment.villa.title,
                         creator: answerComment.creator.UserName,
                         answerComment
                     })
@@ -161,13 +161,13 @@ exports.getAll = async (req, res) => {
         })
 
         const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
-            .populate("course", "title")
+            .populate("villa", "title")
             .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
         noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        return res.json(orderedComment)
+        return res.json({ orderedComment })
     }
     catch (err) {
         return res.status(500).json({ message: err.message })
