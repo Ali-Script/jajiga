@@ -102,7 +102,7 @@ exports.getOne = async (req, res) => {
         })
 
         const answers = await commentModel.find({ villa: id, isAccept: 1, isAnswer: 1 })
-        let parent = [comments]
+        let parent = []
 
         answers.forEach(async item => {
 
