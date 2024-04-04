@@ -79,86 +79,41 @@ exports.getOne = async (req, res) => {
         const villa = await villaModel.find({ _id: id }).sort({ _id: -1 }).lean()
         if (villa.length == 0) return res.status(404).json({ message: "villa not found 404 ! " })
 
-        let orderedComment = []
+
 
         const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            // .populate("villa", "_id title")
-            // .populate("creator", "UserName")
+            .populate("villa", "_id title")
+            .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
 
-        comments.forEach(main => {
-            comments.forEach(answer => {
+        let orderedComment = []
 
-                if (String(main._id) == String(answer.mainCommentID)) {
+        comments.forEach(mainComment => {
+            comments.forEach(answerComment => {
+
+                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
                     orderedComment.push({
-                        ...main,
-                        villa: answer.villa.title,
-                        creator: answer.creator.UserName,
-                        answer: [answer]
+                        ...mainComment,
+                        villa: answerComment.villa.title,
+                        creator: answerComment.creator.UserName,
+                        answerComment
                     })
                 }
             })
         })
 
-        const answers = await commentModel.find({ villa: id, isAccept: 1, isAnswer: 1 })
-        let parent = []
-
-        answers.forEach(async item => {
-
-            let findParent = parent.find(comment => {
-                return comment[0]._id == item.mainCommentID
-            })
-            parent.push(findParent)
-
-            console.log(findParent);
-        })
-
-
-        const check_duplicate_in_array1 = (input_array) => {
-            const duplicates = input_array.filter((item, index) => input_array.indexOf(item) !== index);
-            return Array.from(new Set(duplicates));
-        }
-
-        // console.log(check_duplicate_in_array1(dupAnswer));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-            // .populate("villa", "_id title")
-            // .populate("creator", "UserName")
+            .populate("villa", "_id title")
+            .populate("creator", "UserName")
             .sort({ _id: -1 })
             .lean();
 
         noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-
-
-
-
-
-        return res.status(200).json(orderedComment)
-        // return res.status(200).json({ villa, comments: orderedComment })
-
-
+        return res.status(200).json({ villa, comments: orderedComment })
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.myVillas = async (req, res) => {
