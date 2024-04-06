@@ -118,10 +118,14 @@ exports.getOne = async (req, res) => {
 }
 exports.myVillas = async (req, res) => {
     try {
+        let orderedComment = []
         const email = req.user.email
         const villa = await villaModel.find(email).sort({ _id: -1 }).lean()
         if (villa.length == 0) return res.status(404).json({ message: "You have not added a villa yet " })
-        return res.status(200).json(villa)
+
+        return res.status(200).json({ villa })
+
+
     } catch (err) { return res.status(422).send(err.message); }
 }
 //
@@ -141,4 +145,4 @@ exports.delete = async (req, res) => {
         return res.status(200).json("Succ !")
     } catch (err) { return res.status(422).send(err.message); }
 }
-//
+
