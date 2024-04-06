@@ -135,7 +135,7 @@ exports.delete = async (req, res) => {
         if (!villa) return res.status(404).json({ message: "Villa Not Found 404 ! " })
 
         const deleteComment = await commentModel.deleteMany({ villa: id })
-        const removeuservilla = await villaModel.findOneAndUpdate({ villa: id }, { deleted: 1 })
+        const removeuservilla = await userVilla.findOneAndUpdate({ villa: id }, { deleted: 1 })
 
 
         return res.status(200).json("Succ !")
