@@ -28,6 +28,7 @@ const villaRouter = require('./modules/villas/router')
 const newsletterRouter = require('./modules/newsletter/router')
 const notificationRouter = require('./modules/notification/router')
 const commentRouter = require('./modules/comment/router')
+const categoryRouter = require('./modules/category/router')
 
 // Routers ^
 
@@ -48,6 +49,7 @@ app.use("/notification/", notificationRouter)
  */
 app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)
+app.use("/category/", categoryRouter)
 
 // Routers Middleware ^
 
