@@ -4,7 +4,7 @@
   "description": "jajiga website",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon serve.js"
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "ali.prg01@gmail.com",
@@ -26,6 +26,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
+    "request": "^2.88.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   }

@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
         if (token == undefined) return res.status(403).json({ message: "This Route is Protect You cant Have Accsess it" })
 
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-        const user = await userModel.findOne({ Email: decoded.Email })
+        const user = await userModel.findOne({ $or: [{ Email: decoded.Identifeir }, { Phone: decoded.Identifeir }] })
 
         if (!user) return res.status(404).json({ message: "User Not Found !" })
         // const token = headers[1]

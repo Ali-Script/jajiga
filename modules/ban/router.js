@@ -6,10 +6,10 @@ const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 
 router
-    .route("/:email")
+    .route("/:Identifeir")
     .post(authMiddleware, isAdminMiddleware, controller.ban)
 router
-    .route("/unban/:email")
+    .route("/unban/:Identifeir")
     .delete(authMiddleware, isAdminMiddleware, controller.unban)
 router
     .route("/getAll")

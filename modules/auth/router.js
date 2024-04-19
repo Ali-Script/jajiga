@@ -8,14 +8,23 @@ router
     .route("/")
     .get(authMiddleware, controller.start)
 router
-    .route("/auth")
+    .route("/auth/sendEmail")
     .post(controller.auth)
 router
-    .route("/authCode")
+    .route("/auth/emailCode")
     .post(controller.authCode)
 router
-    .route("/login")
-    .post(controller.login)
+    .route("auth/sendOtp")
+    .post(controller.sendOtpPhone)
+router
+    .route("/auth/otpCode")
+    .post(controller.authOtpPhone)
+router
+    .route("/login/Phone")
+    .post(controller.loginByPhone)
+router
+    .route("/login/Email")
+    .post(controller.loginByEmail)
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)

@@ -4,13 +4,12 @@ const validator = require("email-validator")
 
 exports.ban = async (req, res) => {
     try {
-        const email = req.params.email;
+        const Identifeir = req.params.Identifeir;
         const reason = req.body.reason;
 
-        const validate = validator.validate(email);
-        if (!validate) return res.status(400).json({ error: 'Invalid Email' })
 
-        const findUser = await userModel.findOne({ Email: email }).lean()
+
+        const findUser = await userModel.findOne({ $or: [{ Email: Identifeir }, { Phone: Identifeir }] }).lean()
         if (!findUser || findUser.length == 0) {
             return res.status(404).json({ message: 'no user found' })
 
@@ -31,12 +30,9 @@ exports.ban = async (req, res) => {
 }
 exports.unban = async (req, res) => {
     try {
-        const email = req.params.email;
+        const Identifeir = req.params.Identifeir;
 
-        const validate = validator.validate(email);
-        if (!validate) return res.status(400).json({ error: 'Invalid Email' })
-
-        const findUser = await userModel.findOne({ Email: email }).lean()
+        const findUser = await userModel.findOne({ $or: [{ UserName: Identifeir }, { email: Identifeir }] }).lean()
         if (!findUser || findUser.length == 0) return res.status(404).json({ message: 'no user found' })
 
         const FindbanUser = await banModel.findOne({ user: findUser._id }).lean()
@@ -50,8 +46,8 @@ exports.unban = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const all = await banModel.find({})
-            .populate("user", " -_id Email")
-            .populate("bannedBy", "-_id Email ")
+            .populate("user")
+            .populate("bannedBy")
             .sort({ _id: -1 })
             .lean();
 

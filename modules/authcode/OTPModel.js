@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
         type: 'number',
         required: true
     },
-    Email: {
+    Phone: {
         type: 'string',
         required: true
     },
@@ -21,5 +21,5 @@ const schema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-const model = mongoose.model("Email-Code", schema);
+const model = mongoose.model("OTP-Code", schema);
 module.exports = model;

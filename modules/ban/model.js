@@ -1,7 +1,8 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    email: {
+    Identifeir: {
         type: "string",
         required: true
     },
