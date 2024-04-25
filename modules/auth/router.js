@@ -14,7 +14,7 @@ router
     .route("/auth/emailCode")
     .post(controller.authCode)
 router
-    .route("auth/sendOtp")
+    .route("/auth/sendOtp")
     .post(controller.sendOtpPhone)
 router
     .route("/auth/otpCode")

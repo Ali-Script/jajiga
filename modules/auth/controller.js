@@ -89,6 +89,9 @@ exports.authCode = async (req, res) => {
         const getCode = await codeModel.find({ Email }).sort({ _id: -1 }).lean()
         if (getCode.length == 0) return res.status(404).json({ message: `There is no Code for : ${Email}` })
 
+        // const checkUses = await codeModel.find({ Code })
+
+
         if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
 
             const salt = bcrypt.genSaltSync(10);
