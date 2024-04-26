@@ -89,8 +89,6 @@ exports.authCode = async (req, res) => {
         const getCode = await codeModel.find({ Email }).sort({ _id: -1 }).lean()
         if (getCode.length == 0) return res.status(404).json({ message: `There is no Code for : ${Email}` })
 
-        // const checkUses = await codeModel.find({ Code })
-
 
         if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
 
@@ -103,6 +101,9 @@ exports.authCode = async (req, res) => {
             if (ifDUPLC) {
                 return res.status(409).json({ message: "User Name or Email is Duplicated" })
             }
+
+            const checkUses = await codeModel.findOne({ Code })
+            if (checkUses.Used == 1) return res.status(200).json({ message: "Code has Used before!" })
 
             const user = await userModel.create({
                 UserName,
@@ -235,6 +236,9 @@ exports.authOtpPhone = async (req, res) => {
             if (ifDUPLC) {
                 return res.status(409).json({ message: "User Name or Phone is Duplicated" })
             }
+
+            const checkUses = await OtpcodeModel.findOne({ Code })
+            if (checkUses.Used == 1) return res.status(200).json({ message: "Code has Used before!" })
 
             const user = await userModel.create({
                 UserName,
