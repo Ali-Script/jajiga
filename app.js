@@ -5,10 +5,11 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
 const swagger = require('./configs/swagger');
 
 // Packages ^
-
+app.use(helmet());
 app.use(express.json())
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
