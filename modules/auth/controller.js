@@ -17,7 +17,7 @@ exports.start = async (req, res) => {
         const checkBan = await banModel.findOne({ user: req.user._id })
         if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
         return res.status(200).json({ message: "Succ" })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.auth = async (req, res) => {
     try {

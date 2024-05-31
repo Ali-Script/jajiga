@@ -7,19 +7,16 @@ const swaggerFunc = (app) => {
         definition: {
             openapi: '3.0.0',
             info: {
-                title: 'Jajiga-APIs',
+                title: 'Jajiga-APIs By Ali-Script',
                 version: '1.0.1',
             },
             explorer: true,
             servers: [{ url: 'https://localhost:4001' }]
         },
-        apis: ['./app.js'],
+        apis: ["./api.js"],
     });
 
-    let styles = {
-        customCss: '.swagger-ui {color: red; font- family: sans-serif;}'
-    };
-    const swagger = swaggerUi.setup(options, styles)
+    const swagger = swaggerUi.setup(options)
     app.use("/Api-Doc", swaggerUi.serve, swagger)
 }
 
