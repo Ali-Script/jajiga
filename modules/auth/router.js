@@ -25,7 +25,6 @@ router
 router
     .route("/login/Email")
     .post(controller.loginByEmail)
-
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)
