@@ -29,6 +29,7 @@
     "nodemon": "^3.0.3",
     "request": "^2.88.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui": "^5.0.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }

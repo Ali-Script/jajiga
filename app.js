@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
 const helmet = require('helmet');
-const swagger = require('./configs/swagger');
+const swagger = require('./configs/apiDoc/swaggerRoutes');
 const { setHeaders } = require('./middlewares/headers')
 
 app.use(helmet());
@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 app.use(morgan('combined'))
 app.use(cookieParser("rtujh57uhHG)B$&ghy073hy57hbHB)$&BH)Hb85h4b84bhe8hb*BH#$*B"))
 app.use("/course/cover", express.static(path.join(__dirname, 'public', 'multer', 'pics', 'avatars')));
-swagger(app);
+app.use("/api-doc", swagger)
 app.use(setHeaders);
 
 // Middlewares ^

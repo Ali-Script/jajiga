@@ -75,7 +75,7 @@ exports.auth = async (req, res) => {
                 return res.status(200).json({ message: "Email Sended !" })
             }
         })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.authCode = async (req, res) => {
     try {
@@ -99,7 +99,7 @@ exports.authCode = async (req, res) => {
                 $or: [{ UserName }, { Email }]
             })
             if (ifDUPLC) {
-                return res.status(409).json({ message: "User Name or Email is Duplicated" })
+                return res.status(408).json({ message: "User Name or Email is Duplicated" })
             }
 
             const checkUses = await codeModel.findOne({ Code })
@@ -155,7 +155,7 @@ exports.authCode = async (req, res) => {
             return res.status(422).json({ message: "Code Has Expired !" })
         }
         return res.status(422).json({ message: "Invalid Err" })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.sendOtpPhone = async (req, res) => {
     try {
@@ -171,7 +171,7 @@ exports.sendOtpPhone = async (req, res) => {
 
         const ifDUPLC = await userModel.findOne({ UserName })
         if (ifDUPLC) {
-            return res.status(409).json({ message: "UserName is Duplicated" })
+            return res.status(408).json({ message: "UserName is Duplicated" })
         }
         const ifDUPLCNum = await userModel.findOne({ Phone })
         if (ifDUPLCNum) {
@@ -234,7 +234,7 @@ exports.authOtpPhone = async (req, res) => {
                 $or: [{ UserName }, { Phone }]
             })
             if (ifDUPLC) {
-                return res.status(409).json({ message: "User Name or Phone is Duplicated" })
+                return res.status(408).json({ message: "User Name or Phone is Duplicated" })
             }
 
             const checkUses = await OtpcodeModel.findOne({ Code })
@@ -308,7 +308,7 @@ exports.loginByPhone = async (req, res) => {
 
         const checkPassword = await bcrypt.compare(Password, user.Password)
         if (!checkPassword) {
-            return res.status(400).json({ message: "Password is Incrract !!" })
+            return res.status(401).json({ message: "Password is Incrract !!" })
         }
         const accessToken = genAccessToken(user.Phone)
         const RefreshToken = genRefreshToken(user.Phone)
@@ -328,7 +328,7 @@ exports.loginByPhone = async (req, res) => {
         const upUser = await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
 
         return res.json({ message: "Login Successfully " })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.loginByEmail = async (req, res) => {
     try {
@@ -345,7 +345,7 @@ exports.loginByEmail = async (req, res) => {
 
         const checkPassword = await bcrypt.compare(Password, user.Password)
         if (!checkPassword) {
-            return res.status(400).json({ message: "Password is Incrract !!" })
+            return res.status(401).json({ message: "Password is Incrract !!" })
         }
         const accessToken = genAccessToken(user.Email)
         const RefreshToken = genRefreshToken(user.Email)
@@ -365,7 +365,7 @@ exports.loginByEmail = async (req, res) => {
         const upUser = await userModel.updateOne({ Email: user.Email }, { $set: { RefreshToken } })
 
         return res.json({ message: "Login Successfully " })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.getme = async (req, res) => {
     try {

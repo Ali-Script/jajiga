@@ -1,0 +1,311 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Power By Ali-Script",
+        "version": "1.0.0"
+    },
+    "tags": [
+        {
+            "name": "Authentication"
+        },
+        {
+            "name": "Login"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Home Page | (Auth Middleware)",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "No Body Set": ""
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "404": {
+                        "description": "User Not Found ! | Undefined Cookie"
+                    },
+                    "440": {
+                        "description": "Please login no user found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/sendEmail": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Up With Email And Send Verification Code To Email",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "email": "ex@gmail.com",
+                                    "UserName": "min 3 and max 30 char"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "409": {
+                        "description": "UserName is Duplicated | UserName Already Exists"
+                    },
+                    "410": {
+                        "description": "Email is Duplicated | Email Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/emailCode": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Enter Your Email Code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Code": "6 Digit Code ",
+                                    "Email": "ex@gmail.com",
+                                    "UserName": "min 3 and max 30 char",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$",
+                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$",
+                                    "SignUpMethod": "email"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "404": {
+                        "description": "There is no code for this email"
+                    },
+                    "408": {
+                        "description": "UserName is Duplicated | UserName Already Exists"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "422": {
+                        "description": "Code Has Expired !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/sendOtp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Up With Phone Number And Send Verification Code To Phone Number",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Email": "ex@gmail.com",
+                                    "Phone": "Phone Number Format"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Succ"
+                        },
+                        "400": {
+                            "description": "Invalid Code !"
+                        },
+                        "403": {
+                            "description": "Sorry u has banned from this website"
+                        },
+                        "404": {
+                            "description": "There is no code for this email"
+                        },
+                        "408": {
+                            "description": "UserName is Duplicated | UserName Already Exists"
+                        },
+                        "409": {
+                            "description": "Validator Error"
+                        },
+                        "410": {
+                            "description": "Phone Number is Duplicated"
+                        },
+                        "500": {
+                            "description": "Internal Server Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/otpCode": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Enter Your Phone Number Code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Code": "6 Digit Code ",
+                                    "Phone": "ex@gmail.com",
+                                    "UserName": "min 3 and max 30 char",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$",
+                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$",
+                                    "SignUpMethod": "phone"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "404": {
+                        "description": "There is no code for this Number"
+                    },
+                    "408": {
+                        "description": "UserName is Duplicated | UserName Already Exists"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "422": {
+                        "description": "Code Has Expired !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/login/Phone": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Login By Number",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Identifeir": "PhoneNum",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Phone is Incrract !!"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "401": {
+                        "description": "Password is Incrract !!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/login/Email": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Login By Email",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Identifeir": "Email",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Email is Incrract !!"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "401": {
+                        "description": "Password is Incrract !!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    }
+}
