@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { required } = require('../../validator/authValidator');
 
 const schema = new mongoose.Schema({
     firstName: {
@@ -17,7 +18,9 @@ const schema = new mongoose.Schema({
         type: 'string'
     },
     Phone: {
-        type: 'string'
+        type: 'string',
+        unique: true,
+        required: true
     },
     Role: {
         type: 'string',

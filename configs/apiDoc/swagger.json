@@ -164,6 +164,9 @@
                     "405": {
                         "description": "Code has Used before!"
                     },
+                    "406": {
+                        "description": "User already exists"
+                    },
                     "422": {
                         "description": "Code Has Expired !"
                     },
@@ -173,10 +176,17 @@
                 }
             }
         },
-        "/login/Phone": {
+        "/login/{phone}": {
             "post": {
                 "tags": [
                     "Login"
+                ],
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "required": "true"
+                    }
                 ],
                 "summary": "Login By Number",
                 "requestBody": {
@@ -185,7 +195,6 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Identifeir": "PhoneNum",
                                     "Password": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
@@ -198,44 +207,6 @@
                     },
                     "400": {
                         "description": "Phone is Incrract !!"
-                    },
-                    "403": {
-                        "description": "Sorry u has banned from this website"
-                    },
-                    "401": {
-                        "description": "Password is Incrract !!"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/login/Email": {
-            "post": {
-                "tags": [
-                    "Login"
-                ],
-                "summary": "Login By Email",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "Identifeir": "Email",
-                                    "Password": "^[a-zA-Z0-9]{8,999}$"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Succ"
-                    },
-                    "400": {
-                        "description": "Email is Incrract !!"
                     },
                     "403": {
                         "description": "Sorry u has banned from this website"

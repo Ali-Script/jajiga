@@ -255,8 +255,12 @@ exports.authOtpPhone = async (req, res) => {
             const hash = bcrypt.hashSync(Password, salt);
 
 
-            const checkUses = await OtpcodeModel.findOne({ Code })
-            if (checkUses.Used == 1) return res.status(405).json({ message: "Code has Used before!" })
+            const checkUses = await OtpcodeModel.find({ Code }).sort({ _id: -1 })
+            if (checkUses[0].Used == 1) return res.status(405).json({ message: "Code has Used before!" })
+
+
+            const findNum = await userModel.findOne({ Phone })
+            if (findNum) return res.status(406).json({ message: "User already exists" })
 
             const user = await userModel.create({
                 firstName,
@@ -272,32 +276,23 @@ exports.authOtpPhone = async (req, res) => {
 
 
             res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 999999999999999,
+                maxAge: 999999999999999, //14 * 24 * 60 * 60,
                 httpOnly: true,
                 signed: true,
                 secure: true
             })
             res.cookie("AccessToken", accessToken, {
-                maxAge: 999999999999999,
+                maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true
             })
-            // res.cookie("RefreshToken", RefreshToken, {
-            //     maxAge: 14 * 24 * 60 * 60,
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true
-            // })
-            // res.cookie("AccessToken", accessToken, {
-            //     maxAge: 15000,
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true
-            // })
+
 
             const upUser = await userModel.updateOne({ Phone }, { $set: { RefreshToken } })
-            await OtpcodeModel.updateOne({ Code }, { Used: 1 })
+
+
+            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { Used: 1 })
             return res.status(200).json({ message: "User Created Succ !", token: RefreshToken })
 
         } else if (getCode[0].Code != Code) {
@@ -312,17 +307,21 @@ exports.authOtpPhone = async (req, res) => {
 
     } catch (err) { return res.status(500).send(err.message); }
 }
-exports.loginByPhone = async (req, res) => {
+exports.login = async (req, res) => {
     try {
-        const { Identifeir, Password } = req.body;
+        const { Password } = req.body;
 
-        const user = await userModel.findOne({ Phone: Identifeir })
+        if (!Password) { return res.status(499).json({ message: "password is required" }) }
 
-        const checkBan = await banModel.findOne({ $or: [{ Phone: Identifeir }, { Email: Identifeir }] })
+        const Phone = req.params.phone
+
+        const user = await userModel.findOne({ Phone })
+
+        const checkBan = await banModel.findOne({ Phone })
         if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
 
         if (!user) {
-            return res.status(400).json({ message: "Phone is Incrract !!" })
+            return res.status(404).json({ message: "no user found" })
         }
 
         const checkPassword = await bcrypt.compare(Password, user.Password)
@@ -344,48 +343,48 @@ exports.loginByPhone = async (req, res) => {
             signed: true,
             secure: true
         })
-        const upUser = await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
+        await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
 
         return res.json({ message: "Login Successfully " })
     } catch (err) { return res.status(500).send(err.message); }
 }
-exports.loginByEmail = async (req, res) => {
-    try {
-        const { Identifeir, Password } = req.body;
+// exports.loginByEmail = async (req, res) => {
+//     try {
+//         const { Identifeir, Password } = req.body;
 
-        const user = await userModel.findOne({ Email: Identifeir })
+//         const user = await userModel.findOne({ Email: Identifeir })
 
-        const checkBan = await banModel.findOne({ $or: [{ Phone: Identifeir }, { Email: Identifeir }] })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+//         const checkBan = await banModel.findOne({ $or: [{ Phone: Identifeir }, { Email: Identifeir }] })
+//         if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
 
-        if (!user) {
-            return res.status(400).json({ message: "Email is Incrract !!" })
-        }
+//         if (!user) {
+//             return res.status(400).json({ message: "Email is Incrract !!" })
+//         }
 
-        const checkPassword = await bcrypt.compare(Password, user.Password)
-        if (!checkPassword) {
-            return res.status(401).json({ message: "Password is Incrract !!" })
-        }
-        const accessToken = genAccessToken(user.Email)
-        const RefreshToken = genRefreshToken(user.Email)
+//         const checkPassword = await bcrypt.compare(Password, user.Password)
+//         if (!checkPassword) {
+//             return res.status(401).json({ message: "Password is Incrract !!" })
+//         }
+//         const accessToken = genAccessToken(user.Email)
+//         const RefreshToken = genRefreshToken(user.Email)
 
-        res.cookie("RefreshToken", RefreshToken, {
-            maxAge: 999999999999999,
-            httpOnly: true,
-            signed: true,
-            secure: true
-        })
-        res.cookie("AccessToken", accessToken, {
-            maxAge: 999999999999999,
-            httpOnly: true,
-            signed: true,
-            secure: true
-        })
-        const upUser = await userModel.updateOne({ Email: user.Email }, { $set: { RefreshToken } })
+//         res.cookie("RefreshToken", RefreshToken, {
+//             maxAge: 999999999999999,
+//             httpOnly: true,
+//             signed: true,
+//             secure: true
+//         })
+//         res.cookie("AccessToken", accessToken, {
+//             maxAge: 999999999999999,
+//             httpOnly: true,
+//             signed: true,
+//             secure: true
+//         })
+//         const upUser = await userModel.updateOne({ Email: user.Email }, { $set: { RefreshToken } })
 
-        return res.json({ message: "Login Successfully " })
-    } catch (err) { return res.status(500).send(err.message); }
-}
+//         return res.json({ message: "Login Successfully " })
+//     } catch (err) { return res.status(500).send(err.message); }
+// }
 exports.getme = async (req, res) => {
     try {
         return res.status(200).json({ message: "Succ", user: req.user })

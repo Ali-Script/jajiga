@@ -23,11 +23,11 @@ router
     .route("/auth/otp")
     .post(controller.authOtpPhone)
 router
-    .route("/login/Phone")
-    .post(controller.loginByPhone)
-router
-    .route("/login/Email")
-    .post(controller.loginByEmail)
+    .route("/login/:phone")
+    .post(controller.login)
+// router
+//     .route("/login/Email")
+//     .post(controller.loginByEmail)
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)
