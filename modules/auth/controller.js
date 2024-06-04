@@ -171,7 +171,7 @@ exports.signup = async (req, res) => {
 
         const ifDUPLCNum = await userModel.findOne({ Phone })
         if (ifDUPLCNum) {
-            return res.status(411).json({ message: "Phone Number is already exist" })
+            return res.status(411).json({ message: "Phone Number is already exist please login" })
         }
 
         // const OTP_CODE = Math.floor(Math.random() * 1000000)
