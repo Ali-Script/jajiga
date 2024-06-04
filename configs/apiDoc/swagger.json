@@ -50,105 +50,18 @@
                 }
             }
         },
-        "/auth/sendEmail": {
+        "/signup": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Sign Up With Email And Send Verification Code To Email",
+                "summary": "check if user already exists redirect to login if not redirect ro register",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "email": "ex@gmail.com",
-                                    "UserName": "min 3 and max 30 char"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Succ"
-                    },
-                    "403": {
-                        "description": "Sorry u has banned from this website"
-                    },
-                    "409": {
-                        "description": "UserName is Duplicated | UserName Already Exists"
-                    },
-                    "410": {
-                        "description": "Email is Duplicated | Email Already Exists"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/auth/emailCode": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Enter Your Email Code",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "Code": "6 Digit Code ",
-                                    "Email": "ex@gmail.com",
-                                    "UserName": "min 3 and max 30 char",
-                                    "Password": "^[a-zA-Z0-9]{8,999}$",
-                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$",
-                                    "SignUpMethod": "email"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Succ"
-                    },
-                    "400": {
-                        "description": "Invalid Code !"
-                    },
-                    "404": {
-                        "description": "There is no code for this email"
-                    },
-                    "408": {
-                        "description": "UserName is Duplicated | UserName Already Exists"
-                    },
-                    "409": {
-                        "description": "Validator Error"
-                    },
-                    "422": {
-                        "description": "Code Has Expired !"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/auth/sendOtp": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Sign Up With Phone Number And Send Verification Code To Phone Number",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "Email": "ex@gmail.com",
                                     "Phone": "Phone Number Format"
                                 }
                             }
@@ -159,23 +72,17 @@
                     "200": {
                         "description": "Succ"
                     },
-                    "400": {
-                        "description": "Invalid Code !"
-                    },
                     "403": {
                         "description": "Sorry u has banned from this website"
                     },
-                    "404": {
-                        "description": "There is no code for this email"
-                    },
-                    "408": {
-                        "description": "UserName is Duplicated | UserName Already Exists"
-                    },
                     "409": {
-                        "description": "Validator Error"
+                        "description": "Phone number is required"
                     },
                     "410": {
-                        "description": "Phone Number is Duplicated"
+                        "description": "Phone Number format is wrong"
+                    },
+                    "411": {
+                        "description": "User Already Exists redirect to login page"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -183,7 +90,7 @@
                 }
             }
         },
-        "/auth/otpCode": {
+        "/otp": {
             "post": {
                 "tags": [
                     "Authentication"
@@ -195,12 +102,47 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Code": "6 Digit Code ",
-                                    "Phone": "ex@gmail.com",
-                                    "UserName": "min 3 and max 30 char",
+                                    "Phone": "phone number",
+                                    "firstName": "firstName",
+                                    "lastName": "lastName",
                                     "Password": "^[a-zA-Z0-9]{8,999}$",
-                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$",
-                                    "SignUpMethod": "phone"
+                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/otp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Enter Your Phone Number Code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Code": "otp code",
+                                    "Phone": "phone number",
+                                    "firstName": "firstName",
+                                    "lastName": "lastName",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$",
+                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
                         }
@@ -213,14 +155,14 @@
                     "400": {
                         "description": "Invalid Code !"
                     },
-                    "404": {
-                        "description": "There is no code for this Number"
-                    },
-                    "408": {
-                        "description": "UserName is Duplicated | UserName Already Exists"
-                    },
                     "409": {
                         "description": "Validator Error"
+                    },
+                    "404": {
+                        "description": "no otp code found for this number"
+                    },
+                    "405": {
+                        "description": "Code has Used before!"
                     },
                     "422": {
                         "description": "Code Has Expired !"

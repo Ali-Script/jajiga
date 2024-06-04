@@ -171,7 +171,7 @@ exports.signup = async (req, res) => {
 
         const ifDUPLCNum = await userModel.findOne({ Phone })
         if (ifDUPLCNum) {
-            return res.status(410).json({ message: "Phone Number is already exist" })
+            return res.status(411).json({ message: "Phone Number is already exist" })
         }
 
         // const OTP_CODE = Math.floor(Math.random() * 1000000)
@@ -256,7 +256,7 @@ exports.authOtpPhone = async (req, res) => {
 
 
             const checkUses = await OtpcodeModel.findOne({ Code })
-            if (checkUses.Used == 1) return res.status(200).json({ message: "Code has Used before!" })
+            if (checkUses.Used == 1) return res.status(405).json({ message: "Code has Used before!" })
 
             const user = await userModel.create({
                 firstName,
