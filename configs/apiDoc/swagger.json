@@ -153,32 +153,32 @@
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
                     },
-                    "responses": {
-                        "200": {
-                            "description": "Succ"
-                        },
-                        "400": {
-                            "description": "Invalid Code !"
-                        },
-                        "403": {
-                            "description": "Sorry u has banned from this website"
-                        },
-                        "404": {
-                            "description": "There is no code for this email"
-                        },
-                        "408": {
-                            "description": "UserName is Duplicated | UserName Already Exists"
-                        },
-                        "409": {
-                            "description": "Validator Error"
-                        },
-                        "410": {
-                            "description": "Phone Number is Duplicated"
-                        },
-                        "500": {
-                            "description": "Internal Server Error"
-                        }
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "404": {
+                        "description": "There is no code for this email"
+                    },
+                    "408": {
+                        "description": "UserName is Duplicated | UserName Already Exists"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "410": {
+                        "description": "Phone Number is Duplicated"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
