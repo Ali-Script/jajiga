@@ -7,17 +7,20 @@ const authMiddleware = require('./../../middlewares/authMiddleware')
 router
     .route("/")
     .get(authMiddleware, controller.start)
+// router
+//     .route("/auth/sendEmail")
+//     .post(controller.auth)
+// router
+//     .route("/auth/emailCode")
+//     .post(controller.authCode)
 router
-    .route("/auth/sendEmail")
-    .post(controller.auth)
+    .route("/signup")
+    .post(controller.signup)
 router
-    .route("/auth/emailCode")
-    .post(controller.authCode)
-router
-    .route("/auth/sendOtp")
+    .route("/otp")
     .post(controller.sendOtpPhone)
 router
-    .route("/auth/otpCode")
+    .route("/auth/otp")
     .post(controller.authOtpPhone)
 router
     .route("/login/Phone")

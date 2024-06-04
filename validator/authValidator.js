@@ -1,7 +1,12 @@
 const Joi = require('joi');
 
 const schema = Joi.object({
-    UserName:
+    firstName:
+        Joi.string()
+            .min(3)
+            .max(30)
+            .required(),
+    lastName:
         Joi.string()
             .min(3)
             .max(30)
@@ -15,13 +20,13 @@ const schema = Joi.object({
     ConfirmPassword:
         Joi.any().valid(Joi.ref('Password')).required(),
 
-    SignUpMethod:
-        Joi.string().required().valid("email", 'phone'),
+    // SignUpMethod:
+    //     Joi.string().required().valid("email", 'phone'),
 
-    Email:
-        Joi.string()
-            .email({ tlds: { allow: false } })
-            .when("SignUpMethod", { is: "email", then: Joi.required() }),
+    // Email:
+    //     Joi.string()
+    //         .email({ tlds: { allow: false } })
+    //         .when("SignUpMethod", { is: "email", then: Joi.required() }),
 
     Phone:
         Joi.string()
