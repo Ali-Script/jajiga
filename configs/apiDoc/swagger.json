@@ -224,7 +224,7 @@
             }
         },
         "/getMe": {
-            "post": {
+            "get": {
                 "tags": [
                     "Utils"
                 ],
@@ -249,9 +249,9 @@
             }
         },
         "/setNewAccessToken": {
-            "post": {
+            "get": {
                 "tags": [
-                    "Login"
+                    "Utils"
                 ],
                 "summary": "Set New Refresh Token",
                 "responses": {
