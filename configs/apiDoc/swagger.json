@@ -10,6 +10,9 @@
         },
         {
             "name": "Login"
+        },
+        {
+            "name": "Utils"
         }
     ],
     "paths": {
@@ -213,6 +216,53 @@
                     },
                     "401": {
                         "description": "Password is Incrract !!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/getMe": {
+            "post": {
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "GetMe",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "440": {
+                        "description": "Please login no user found !!"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "404": {
+                        "description": "User Not Found !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/setNewAccessToken": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Set New Refresh Token",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "User Not Found ! | Undefined Cookie"
+                    },
+                    "403": {
+                        "description": "Refresh Token has expired please login"
                     },
                     "500": {
                         "description": "Internal Server Error"

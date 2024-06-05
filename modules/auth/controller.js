@@ -387,6 +387,9 @@ exports.login = async (req, res) => {
 // }
 exports.getme = async (req, res) => {
     try {
+        const checkBan = await banModel.findOne({ Phone: req.user.Phone })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+
         return res.status(200).json({ message: "Succ", user: req.user })
     } catch (err) { return res.status(422).send(err.message); }
 }
@@ -397,10 +400,10 @@ exports.getAccessToken = async (req, res) => {
 
         const decode = jwt.verify(RefreshToken, process.env.JWT_REFRESH_SECRET)
 
-        const user = await userModel.findOne({ $or: [{ Email: decode.Identifeir }, { Phone: decode.Identifeir }] })
+        const user = await userModel.findOne({ Phone: decode.Identifeir })
         if (!user) return res.status(404).json({ message: "User Not Found !" })
 
-        const accessToken = genAccessToken(user.Email)
+        const accessToken = genAccessToken(user.Phone)
         res.cookie("AccessToken", accessToken, {
             maxAge: 99999999999999,
             httpOnly: true,
