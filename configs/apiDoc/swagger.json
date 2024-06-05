@@ -105,7 +105,11 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Phone": "phone number"
+                                    "Phone": "phone number",
+                                    "firstName": "firstName",
+                                    "lastName": "lastName",
+                                    "Password": "^[a-zA-Z0-9]{8,999}$",
+                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
                         }
