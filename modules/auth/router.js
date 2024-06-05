@@ -11,14 +11,17 @@ router
     .route("/signup")
     .post(controller.signup)
 router
-    .route("/otp")
+    .route("/auth/sendCode")
     .post(controller.sendOtpPhone)
 router
-    .route("/auth/otp")
+    .route("/auth/confirmCode")
     .post(controller.authOtpPhone)
 router
-    .route("/login/:phone")
-    .post(controller.login)
+    .route("/loginByPassword/:phone")
+    .post(controller.loginByPassword)
+router
+    .route("/loginByCode/:phone")
+    .post(controller.loginByCode)
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)
@@ -27,6 +30,6 @@ router
     .get(controller.getAccessToken)
 router
     .route("/resendCode/:phone")
-    .get(controller.resendCode)
+    .post(controller.resendCode)
 
 module.exports = router

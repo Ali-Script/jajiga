@@ -179,7 +179,7 @@
                 }
             }
         },
-        "/login/{phone}": {
+        "/loginByPassword/{phone}": {
             "post": {
                 "tags": [
                     "Login"
@@ -191,7 +191,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "Login By Number",
+                "summary": "Login By Password",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -216,6 +216,59 @@
                     },
                     "401": {
                         "description": "Password is Incrract !!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/loginByCode/{phone}": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Login By Otp Code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "Code": "1111"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "403": {
+                        "description": "Sorry u has banned from this website"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "405": {
+                        "description": "Code has Used before!"
+                    },
+                    "408": {
+                        "description": "There is no Code for this number"
+                    },
+                    "422": {
+                        "description": "Code Has Expired "
                     },
                     "500": {
                         "description": "Internal Server Error"
