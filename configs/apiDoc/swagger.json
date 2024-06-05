@@ -93,7 +93,7 @@
                 }
             }
         },
-        "/sendCode": {
+        "/auth/sendCode": {
             "post": {
                 "tags": [
                     "Authentication"
