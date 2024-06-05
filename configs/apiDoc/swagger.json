@@ -269,6 +269,32 @@
                     }
                 }
             }
+        },
+        "/resendCode/{phone}": {
+            "post": {
+                "tags": [
+                    "Utils"
+                ],
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "resend otp code",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }

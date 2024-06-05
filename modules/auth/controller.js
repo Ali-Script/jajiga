@@ -433,7 +433,7 @@ exports.getme = async (req, res) => {
         if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
 
         return res.status(200).json({ message: "Succ", user: req.user })
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
 }
 exports.getAccessToken = async (req, res) => {
     try {
@@ -454,5 +454,23 @@ exports.getAccessToken = async (req, res) => {
         })
 
         return res.status(200).json("succ !")
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).send(err.message); }
+}
+exports.resendCode = async (req, res) => {
+    try {
+        const { Phone } = req.params.phone
+
+        const user = await userModel.findOne({ Phone })
+        if (!user) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        await OtpcodeModel.create({
+            Code: 1111,
+            Phone,
+            ExpiresIn: Date.now() + 120000,
+        })
+
+        return res.status(200).json("succ !")
+    } catch (err) { return res.status(500).send(err.message); }
 }

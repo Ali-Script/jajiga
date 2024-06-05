@@ -7,12 +7,6 @@ const authMiddleware = require('./../../middlewares/authMiddleware')
 router
     .route("/")
     .get(authMiddleware, controller.start)
-// router
-//     .route("/auth/sendEmail")
-//     .post(controller.auth)
-// router
-//     .route("/auth/emailCode")
-//     .post(controller.authCode)
 router
     .route("/signup")
     .post(controller.signup)
@@ -25,14 +19,14 @@ router
 router
     .route("/login/:phone")
     .post(controller.login)
-// router
-//     .route("/login/Email")
-//     .post(controller.loginByEmail)
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)
 router
     .route("/setNewAccessToken")
     .get(controller.getAccessToken)
+router
+    .route("/resendCode/:phone")
+    .get(controller.resendCode)
 
 module.exports = router
