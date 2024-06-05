@@ -218,9 +218,10 @@ exports.signup = async (req, res) => {
 }
 exports.sendOtpPhone = async (req, res) => {
     try {
-        const { Phone, firstName, lastName, Password, ConfirmPassword } = req.body;
 
-        req.body = { Phone, firstName, lastName, Password, ConfirmPassword }
+        const { Phone } = req.body;
+
+        req.body = { Phone }
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ message: validator.error.details })
@@ -305,6 +306,47 @@ exports.authOtpPhone = async (req, res) => {
         }
         return res.status(500).json({ message: "Invalid Err" })
 
+    } catch (err) { return res.status(500).send(err.message); }
+}
+exports.login = async (req, res) => {
+    try {
+        const { Password } = req.body;
+
+        if (!Password) { return res.status(499).json({ message: "password is required" }) }
+
+        const Phone = req.params.phone
+
+        const user = await userModel.findOne({ Phone })
+
+        const checkBan = await banModel.findOne({ Phone })
+        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+
+        if (!user) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        const checkPassword = await bcrypt.compare(Password, user.Password)
+        if (!checkPassword) {
+            return res.status(401).json({ message: "Password is Incrract !!" })
+        }
+        const accessToken = genAccessToken(user.Phone)
+        const RefreshToken = genRefreshToken(user.Phone)
+
+        res.cookie("RefreshToken", RefreshToken, {
+            maxAge: 999999999999999,
+            httpOnly: true,
+            signed: true,
+            secure: true
+        })
+        res.cookie("AccessToken", accessToken, {
+            maxAge: 999999999999999,
+            httpOnly: true,
+            signed: true,
+            secure: true
+        })
+        await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
+
+        return res.json({ message: "Login Successfully " })
     } catch (err) { return res.status(500).send(err.message); }
 }
 exports.login = async (req, res) => {

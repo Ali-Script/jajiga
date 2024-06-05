@@ -93,23 +93,19 @@
                 }
             }
         },
-        "/otp": {
+        "/sendCode": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Enter Your Phone Number Code",
+                "summary": "Enter Your Phone Number to send Code",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Phone": "phone number",
-                                    "firstName": "firstName",
-                                    "lastName": "lastName",
-                                    "Password": "^[a-zA-Z0-9]{8,999}$",
-                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
+                                    "Phone": "phone number"
                                 }
                             }
                         }
@@ -128,12 +124,12 @@
                 }
             }
         },
-        "/auth/otp": {
+        "/auth/confirmCode": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Enter Your Phone Number Code",
+                "summary": "confirm sended code and create user",
                 "requestBody": {
                     "content": {
                         "application/json": {
