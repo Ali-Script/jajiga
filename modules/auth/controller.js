@@ -349,7 +349,7 @@ exports.login = async (req, res) => {
         return res.json({ message: "Login Successfully " })
     } catch (err) { return res.status(500).send(err.message); }
 }
-exports.login = async (req, res) => {
+exports.loginByCode = async (req, res) => {
     try {
         const { Password } = req.body;
 
