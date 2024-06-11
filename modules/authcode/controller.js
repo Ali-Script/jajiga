@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const codeModel = require('./model')
 const validator = require("email-validator");
 
 
