@@ -17,7 +17,7 @@ async function connectToServer() {
 
 function srartServer() {
     app.listen(PORT, () => {
-        console.log(`Server running on port: ${PORT}`);
+        console.log(`Server Running On Port: ${PORT}`);
     })
 }
 
