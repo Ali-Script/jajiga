@@ -12,23 +12,15 @@ const schema = Joi.object({
             .max(30)
             .required(),
 
-    Password:
+    password:
         Joi.string()
             .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))
             .required(),
 
-    ConfirmPassword:
+    confirmPassword:
         Joi.any().valid(Joi.ref('Password')).required(),
 
-    // SignUpMethod:
-    //     Joi.string().required().valid("email", 'phone'),
-
-    // Email:
-    //     Joi.string()
-    //         .email({ tlds: { allow: false } })
-    //         .when("SignUpMethod", { is: "email", then: Joi.required() }),
-
-    Phone:
+    phone:
         Joi.string()
             .min(11)
             .max(11)

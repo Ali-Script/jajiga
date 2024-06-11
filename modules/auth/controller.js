@@ -14,31 +14,32 @@ const request = require('request');
 
 exports.start = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ user: req.user._id })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+        const checkBan = await banModel.findOne({ phone: req.user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        return res.status(200).json({ message: "Succ" })
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "Succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.signup = async (req, res) => {
     try {
-        const { Phone } = req.body;
+        const { phone } = req.body;
 
-        const checkBan = await banModel.findOne({ Identifeir: Phone })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        if (!Phone) return res.status(409).json({ message: "phone number is required" })
-        if (Phone.length != "11") return res.status(410).json({ message: "format wrong" })
+        if (!phone) return res.status(409).json({ statusCode: 409, message: "phone number is required" })
+        if (phone.length != "11") return res.status(410).json({ statusCode: 410, message: "format wrong" })
 
-        const ifDUPLCNum = await userModel.findOne({ Phone })
-
+        const ifDUPLCNum = await userModel.findOne({ phone })
         if (ifDUPLCNum) {
             await OtpcodeModel.create({
-                Code: 1111,
-                Phone,
-                ExpiresIn: Date.now() + 120000,
+                code: 1111,
+                phone,
+                expiresIn: Date.now() + 120000,
             })
-            return res.status(411).json({ message: "Phone Number is already exist please login" })
+            return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
         }
 
         // const OTP_CODE = Math.floor(Math.random() * 1000000)
@@ -79,60 +80,64 @@ exports.signup = async (req, res) => {
         //     ExpiresIn: Date.now() + 120000,
         // })
 
-        return res.status(200).json("redirect ro register")
+        return res.status(200).json({ statusCode: 200, message: "redirect ro register" })
 
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }) }
 }
+//* Checked (1)
 exports.sendOtpPhone = async (req, res) => {
     try {
-        const { Phone, firstName, lastName, Password, ConfirmPassword } = req.body;
-        req.body = { Phone, firstName, lastName, Password, ConfirmPassword }
+        const { phone, firstName, lastName, password, confirmPassword } = req.body;
+        req.body = { phone, firstName, lastName, password, confirmPassword }
 
         const validator = joi.validate(req.body)
-        if (validator.error) return res.status(409).json({ message: validator.error.details })
+        if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
         await OtpcodeModel.create({
-            Code: 1111,
-            Phone,
-            ExpiresIn: Date.now() + 120000,
+            code: 1111,
+            phone,
+            expiresIn: Date.now() + 120000,
         })
-        return res.status(200).json("code sended succ")
 
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "code sended succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.authOtpPhone = async (req, res) => {
     try {
-        const { Code, Phone, firstName, lastName, Password, ConfirmPassword } = req.body;
-        req.body = { Phone, firstName, lastName, Password, ConfirmPassword }
+
+        const { code, phone, firstName, lastName, password, confirmPassword } = req.body;
+        req.body = { phone, firstName, lastName, password, confirmPassword }
 
         const validator = joi.validate(req.body)
-        if (validator.error) return res.status(409).json({ message: validator.error.details })
+        if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
-        const getCode = await OtpcodeModel.find({ Phone }).sort({ _id: -1 }).lean()
-        if (getCode.length == 0) return res.status(404).json({ message: `There is no Code for : ${Phone}` })
+        const getCode = await OtpcodeModel.find({ phone }).sort({ _id: -1 }).lean()
+        if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${Phone}` })
 
 
-        if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
+        if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {
 
             const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(Password, salt);
+            const hash = bcrypt.hashSync(password, salt);
 
-            const checkUses = await OtpcodeModel.find({ Code }).sort({ _id: -1 })
-            if (checkUses[0].Used == 1) return res.status(405).json({ message: "Code has Used before!" })
+            const checkUses = await OtpcodeModel.find({ code }).sort({ _id: -1 })
+            if (checkUses[0].used == 1) return res.status(405).json({ statusCode: 405, message: "Code has Used before!" })
 
-            const findNum = await userModel.findOne({ Phone })
-            if (findNum) return res.status(406).json({ message: "User already exists" })
+            const findNum = await userModel.findOne({ phone })
+            if (findNum) return res.status(406).json({ statusCode: 406, message: "User already exists" })
 
             const user = await userModel.create({
                 firstName,
                 lastName,
-                Phone,
-                Password: hash
+                phone,
+                password: hash
             })
 
 
-            const accessToken = genAccessToken(user.Phone)
-            const RefreshToken = genRefreshToken(user.Phone)
+            const accessToken = genAccessToken(user.phone)
+            const RefreshToken = genRefreshToken(user.phone)
 
             res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
@@ -147,45 +152,49 @@ exports.authOtpPhone = async (req, res) => {
                 secure: true
             })
 
-            await userModel.updateOne({ Phone }, { $set: { RefreshToken } })
 
-            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { Used: 1 })
-            return res.status(200).json({ message: "User Created Succ !", token: RefreshToken })
+            await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })
+            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
 
-        } else if (getCode[0].Code != Code) {
+            return res.status(200).json({ statusCode: 200, message: "User Created Succ !", token: RefreshToken })
 
-            return res.status(400).json({ message: "Invalid Code !" })
+        } else if (getCode[0].code != code) {
+            return res.status(400).json({ statusCode: 400, message: "Invalid Code !" })
         }
-        else if (getCode[0].ExpiresIn < Date.now()) {
-
-            return res.status(422).json({ message: "Code Has Expired !" })
+        else if (getCode[0].expiresIn < Date.now()) {
+            return res.status(422).json({ statusCode: 422, message: "Code Has Expired !" })
         }
-        return res.status(500).json({ message: "Invalid Err" })
 
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
+
+    } catch (err) { return res.status(500).send({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.loginByPassword = async (req, res) => {
     try {
-        const { Password } = req.body;
-        const Phone = req.params.phone
 
-        if (!Password) { return res.status(499).json({ message: "password is required" }) }
+        const { password } = req.body;
+        const phone = req.params.phone
 
-        const user = await userModel.findOne({ Phone })
+        if (!password) { return res.status(499).json({ statusCode: 499, message: "password is required" }) }
 
-        const checkBan = await banModel.findOne({ Phone })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+        const user = await userModel.findOne({ phone })
+
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         if (!user) {
-            return res.status(404).json({ message: "no user found" })
+            return res.status(404).json({ statusCode: 404, message: "no user found" })
         }
 
-        const checkPassword = await bcrypt.compare(Password, user.Password)
+        const checkPassword = await bcrypt.compare(password, user.password)
         if (!checkPassword) {
-            return res.status(401).json({ message: "Password is Incrract !!" })
+            return res.status(401).json({ statusCode: 401, message: "Password is Incrract !!" })
         }
-        const accessToken = genAccessToken(user.Phone)
-        const RefreshToken = genRefreshToken(user.Phone)
+
+
+        const accessToken = genAccessToken(user.phone)
+        const RefreshToken = genRefreshToken(user.phone)
 
         res.cookie("RefreshToken", RefreshToken, {
             maxAge: 999999999999999,
@@ -199,36 +208,39 @@ exports.loginByPassword = async (req, res) => {
             signed: true,
             secure: true
         })
-        await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
 
-        return res.json({ message: "Login Successfully " })
-    } catch (err) { return res.status(500).send(err.message); }
+        await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
+
+        return res.json({ statusCode: 200, message: "Login Successfully " })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.loginByCode = async (req, res) => {
     try {
-        const Phone = req.params.phone
-        const { Code } = req.body;
+        const phone = req.params.phone
+        const { code } = req.body;
 
-        const user = await userModel.findOne({ Phone })
+        const user = await userModel.findOne({ phone })
 
-        const checkBan = await banModel.findOne({ Phone })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         if (!user) {
-            return res.status(404).json({ message: "no user found" })
+            return res.status(404).json({ statusCode: 404, message: "no user found" })
         }
 
-        const getCode = await OtpcodeModel.find({ Phone }).sort({ _id: -1 }).lean()
-        if (getCode.length == 0) return res.status(408).json({ message: `There is no Code for : ${Phone}` })
+        const getCode = await OtpcodeModel.find({ phone }).sort({ _id: -1 }).lean()
+        if (getCode.length == 0) return res.status(408).json({ statusCode: 408, message: `There is no Code for : ${Phone}` })
 
 
-        if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
+        if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {
 
-            const checkUses = await OtpcodeModel.find({ Code }).sort({ _id: -1 })
-            if (checkUses[0].Used == 1) return res.status(405).json({ message: "Code has Used before!" })
+            const checkUses = await OtpcodeModel.find({ code }).sort({ _id: -1 })
+            if (checkUses[0].used == 1) return res.status(405).json({ statusCode: 405, message: "Code has Used before!" })
 
-            const accessToken = genAccessToken(user.Phone)
-            const RefreshToken = genRefreshToken(user.Phone)
+
+            const accessToken = genAccessToken(user.phone)
+            const RefreshToken = genRefreshToken(user.phone)
 
             res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
@@ -243,41 +255,43 @@ exports.loginByCode = async (req, res) => {
                 secure: true
             })
 
-            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { Used: 1 })
-            await userModel.updateOne({ Phone: user.Phone }, { $set: { RefreshToken } })
-            return res.json({ message: "Login Successfully " })
+
+            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
+            await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
+            return res.status(200).json({ statusCode: 200, message: "Login Successfully " })
 
 
-        } else if (getCode[0].Code != Code) {
-
-            return res.status(400).json({ message: "Invalid Code !" })
+        } else if (getCode[0].code != code) {
+            return res.status(400).json({ statusCode: 400, message: "Invalid Code !" })
         }
-        else if (getCode[0].ExpiresIn < Date.now()) {
-
-            return res.status(422).json({ message: "Code Has Expired !" })
+        else if (getCode[0].expiresIn < Date.now()) {
+            return res.status(422).json({ statusCode: 422, message: "Code Has Expired !" })
         }
 
-    } catch (err) { return res.status(500).send(err.message); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.getme = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ Phone: req.user.Phone })
-        if (checkBan) return res.status(403).json({ message: "Sorry u has banned from this website" })
+        const checkBan = await banModel.findOne({ phone: req.user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        return res.status(200).json({ message: "Succ", user: req.user })
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "Succ", user: req.user })
+
+    } catch (err) { return res.status(500).josn({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.getAccessToken = async (req, res) => {
     try {
         const RefreshToken = req.signedCookies.RefreshToken
-        if (RefreshToken == undefined) return res.status(403).json({ message: "Refresh Token has expired" })
+        if (RefreshToken == undefined) return res.status(403).json({ statusCode: 403, message: "Refresh Token has expired" })
 
         const decode = jwt.verify(RefreshToken, process.env.JWT_REFRESH_SECRET)
 
-        const user = await userModel.findOne({ Phone: decode.Identifeir })
-        if (!user) return res.status(404).json({ message: "User Not Found !" })
+        const user = await userModel.findOne({ phone: decode.Identifeir })
+        if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
 
-        const accessToken = genAccessToken(user.Phone)
+        const accessToken = genAccessToken(user.phone)
         res.cookie("AccessToken", accessToken, {
             maxAge: 99999999999999,
             httpOnly: true,
@@ -285,24 +299,28 @@ exports.getAccessToken = async (req, res) => {
             secure: true
         })
 
-        return res.status(200).json("succ !")
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "succ !" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)
 exports.resendCode = async (req, res) => {
     try {
-        const Phone = req.params.phone
+        const phone = req.params.phone
 
-        const user = await userModel.findOne({ Phone })
+        const user = await userModel.findOne({ phone })
         if (!user) {
-            return res.status(404).json({ message: "no user found" })
+            return res.status(404).json({ statusCode: 404, message: "no user found" })
         }
 
         await OtpcodeModel.create({
-            Code: 1111,
-            Phone,
-            ExpiresIn: Date.now() + 120000,
+            code: 1111,
+            phone: phone,
+            expiresIn: Date.now() + 120000,
         })
 
-        return res.status(200).json("succ !")
-    } catch (err) { return res.status(500).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "succ !" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+//* Checked (1)

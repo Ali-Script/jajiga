@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    Code: {
+    code: {
         type: 'number',
         required: true
     },
-    Phone: {
+    phone: {
         type: 'string',
         required: true
     },
-    ExpiresIn: {
+    expiresIn: {
         type: "number",
         required: true
     },
-    Used: {
+    used: {
         type: 'number',
         enum: [0, 1],
         default: 0

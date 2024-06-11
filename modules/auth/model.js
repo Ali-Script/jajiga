@@ -10,27 +10,27 @@ const schema = new mongoose.Schema({
         type: 'string',
         required: true
     },
-    Password: {
+    password: {
         type: 'string',
         required: true
     },
-    Email: {
+    email: {
         type: 'string'
     },
-    Phone: {
+    phone: {
         type: 'string',
         unique: true,
         required: true
     },
-    Role: {
+    role: {
         type: 'string',
         enum: ['admin', 'user'],
         default: 'user'
     },
-    Avatar: {
+    avatar: {
         type: 'string',
     },
-    RefreshToken: {
+    refreshToken: {
         type: 'string',
     },
 }, { timestamps: true })

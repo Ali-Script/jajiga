@@ -20,7 +20,7 @@ app.use("/course/cover", express.static(path.join(__dirname, 'public', 'multer',
 app.use("/api-doc", swagger)
 app.use(setHeaders);
 
-// Middlewares ^
+//* Middlewares ^
 
 const authRouter = require('./modules/auth/router')
 const codeRouter = require('./modules/authcode/router')

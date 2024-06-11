@@ -2,7 +2,7 @@ const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    Identifeir: {
+    phone: {
         type: "string",
         required: true
     },

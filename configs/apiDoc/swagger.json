@@ -65,7 +65,7 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Phone": "Phone Number Format"
+                                    "phone": "Phone Number Format"
                                 }
                             }
                         }
@@ -105,11 +105,11 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Phone": "phone number",
+                                    "phone": "phone number",
                                     "firstName": "firstName",
                                     "lastName": "lastName",
-                                    "Password": "^[a-zA-Z0-9]{8,999}$",
-                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
+                                    "password": "^[a-zA-Z0-9]{8,999}$",
+                                    "confirmPassword": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
                         }
@@ -140,12 +140,12 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Code": "otp code",
-                                    "Phone": "phone number",
+                                    "code": "otp code",
+                                    "phone": "phone number",
                                     "firstName": "firstName",
                                     "lastName": "lastName",
-                                    "Password": "^[a-zA-Z0-9]{8,999}$",
-                                    "ConfirmPassword": "^[a-zA-Z0-9]{8,999}$"
+                                    "password": "^[a-zA-Z0-9]{8,999}$",
+                                    "confirmPassword": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
                         }
@@ -198,7 +198,7 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Password": "^[a-zA-Z0-9]{8,999}$"
+                                    "password": "^[a-zA-Z0-9]{8,999}$"
                                 }
                             }
                         }
@@ -242,7 +242,7 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "Code": "1111"
+                                    "code": "1111"
                                 }
                             }
                         }
