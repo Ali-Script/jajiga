@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const userModel = require('./model')
-const codeModel = require('./../authcode/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
 const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
