@@ -19,7 +19,6 @@ const schema = new mongoose.Schema({
     },
     phone: {
         type: 'string',
-        unique: true,
         required: true
     },
     role: {

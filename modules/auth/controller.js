@@ -113,7 +113,7 @@ exports.authOtpPhone = async (req, res) => {
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
         const getCode = await OtpcodeModel.find({ phone }).sort({ _id: -1 }).lean()
-        if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${Phone}` })
+        if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${phone}` })
 
 
         if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {

@@ -18,7 +18,7 @@ const schema = Joi.object({
             .required(),
 
     confirmPassword:
-        Joi.any().valid(Joi.ref('Password')).required(),
+        Joi.any().valid(Joi.ref('password')).required(),
 
     phone:
         Joi.string()
