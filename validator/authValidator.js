@@ -24,7 +24,6 @@ const schema = Joi.object({
         Joi.string()
             .min(11)
             .max(11)
-            .when("SignUpMethod", { is: "phone", then: Joi.required() }),
 });
 
 module.exports = schema;

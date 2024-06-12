@@ -1,5 +1,5 @@
 module.exports = async (req, res, next) => {
-    const isadmin = req.user.Role === 'admin'
+    const isadmin = req.user.role === 'admin'
 
     if (isadmin) {
         return next();

@@ -95,7 +95,7 @@ exports.sendOtpPhone = async (req, res) => {
         await OtpcodeModel.create({
             code: 1111,
             phone,
-            expiresIn: Date.now() + 120000,
+            expiresIn: Date.now() + 99999999, // 120000
         })
 
         return res.status(200).json({ statusCode: 200, message: "code sended succ" })
@@ -115,7 +115,6 @@ exports.authOtpPhone = async (req, res) => {
         const getCode = await OtpcodeModel.find({ phone }).sort({ _id: -1 }).lean()
         if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${phone}` })
 
-
         if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {
 
             const salt = bcrypt.genSaltSync(10);
@@ -127,17 +126,20 @@ exports.authOtpPhone = async (req, res) => {
             const findNum = await userModel.findOne({ phone })
             if (findNum) return res.status(406).json({ statusCode: 406, message: "User already exists" })
 
-            const user = await userModel.create({
+
+
+
+            let user = new userModel({
                 firstName,
                 lastName,
                 phone,
                 password: hash
             })
 
+            user = await user.save();
 
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
-
             res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
                 httpOnly: true,
@@ -166,7 +168,7 @@ exports.authOtpPhone = async (req, res) => {
 
         return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
 
-    } catch (err) { return res.status(500).send({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 //* Checked (1)
 exports.loginByPassword = async (req, res) => {
