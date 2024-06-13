@@ -144,13 +144,15 @@ exports.authOtpPhone = async (req, res) => {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
                 httpOnly: true,
                 signed: true,
-                secure: true
+                secure: true,
+                sameSite: none
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
-                secure: true
+                secure: true,
+                sameSite: none
             })
 
 
@@ -201,13 +203,15 @@ exports.loginByPassword = async (req, res) => {
             maxAge: 999999999999999,
             httpOnly: true,
             signed: true,
-            secure: true
+            secure: true,
+            sameSite: none
         })
         res.cookie("AccessToken", accessToken, {
             maxAge: 999999999999999,
             httpOnly: true,
             signed: true,
-            secure: true
+            secure: true,
+            sameSite: none
         })
 
         await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
@@ -247,13 +251,15 @@ exports.loginByCode = async (req, res) => {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
                 httpOnly: true,
                 signed: true,
-                secure: true
+                secure: true,
+                sameSite: none
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
-                secure: true
+                secure: true,
+                sameSite: none
             })
 
 
@@ -297,7 +303,8 @@ exports.getAccessToken = async (req, res) => {
             maxAge: 99999999999999,
             httpOnly: true,
             signed: true,
-            secure: true
+            secure: true,
+            sameSite: none
         })
 
         return res.status(200).json({ statusCode: 200, message: "succ !" })
