@@ -23,7 +23,6 @@ exports.start = async (req, res) => {
 //* Checked (1)
 exports.signup = async (req, res) => {
     try {
-
         const { phone } = req.body;
 
         const checkBan = await banModel.findOne({ phone })
