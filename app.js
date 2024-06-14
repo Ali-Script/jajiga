@@ -11,7 +11,6 @@ const { setHeaders } = require('./middlewares/headers')
 
 app.use(helmet());
 app.use(express.json())
-app.use(cors());
 app.use(bodyParser.urlencoded({ limit: "20mb", extended: false }))
 app.use(bodyParser.json())
 app.use(morgan('combined'))
@@ -19,6 +18,7 @@ app.use(cookieParser("rtujh57uhHG)B$&ghy073hy57hbHB)$&BH)Hb85h4b84bhe8hb*BH#$*B"
 app.use("/course/cover", express.static(path.join(__dirname, 'public', 'multer', 'pics', 'avatars')));
 app.use("/api-doc", swagger)
 app.use(setHeaders);
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 //* Middlewares ^
 

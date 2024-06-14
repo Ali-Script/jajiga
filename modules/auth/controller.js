@@ -23,6 +23,7 @@ exports.start = async (req, res) => {
 //* Checked (1)
 exports.signup = async (req, res) => {
     try {
+
         const { phone } = req.body;
 
         const checkBan = await banModel.findOne({ phone })
@@ -145,14 +146,14 @@ exports.authOtpPhone = async (req, res) => {
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: none
+                sameSite: "none"
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: none
+                sameSite: "none"
             })
 
 
@@ -204,14 +205,14 @@ exports.loginByPassword = async (req, res) => {
             httpOnly: true,
             signed: true,
             secure: true,
-            sameSite: none
+            sameSite: "none"
         })
         res.cookie("AccessToken", accessToken, {
             maxAge: 999999999999999,
             httpOnly: true,
             signed: true,
             secure: true,
-            sameSite: none
+            sameSite: "none"
         })
 
         await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
@@ -252,14 +253,14 @@ exports.loginByCode = async (req, res) => {
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: none
+                sameSite: "none"
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: none
+                sameSite: "none"
             })
 
 
@@ -304,7 +305,7 @@ exports.getAccessToken = async (req, res) => {
             httpOnly: true,
             signed: true,
             secure: true,
-            sameSite: none
+            sameSite: "none"
         })
 
         return res.status(200).json({ statusCode: 200, message: "succ !" })
