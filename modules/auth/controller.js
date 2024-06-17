@@ -142,14 +142,14 @@ exports.authOtpPhone = async (req, res) => {
             const RefreshToken = genRefreshToken(user.phone)
             res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
-                // httpOnly: true,
+                httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none"
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
-                // httpOnly: true,
+                httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none"
@@ -201,14 +201,14 @@ exports.loginByPassword = async (req, res) => {
 
         res.cookie("RefreshToken", RefreshToken, {
             maxAge: 999999999999999,
-            // httpOnly: true,
+            httpOnly: true,
             signed: true,
             secure: true,
             sameSite: "none"
         })
         res.cookie("AccessToken", accessToken, {
             maxAge: 999999999999999,
-            // httpOnly: true,
+            httpOnly: true,
             signed: true,
             secure: true,
             sameSite: "none"
@@ -249,14 +249,14 @@ exports.loginByCode = async (req, res) => {
 
             res.cookie("RefreshToken", RefreshToken, {
                 maxAge: 999999999999999, //14 * 24 * 60 * 60,
-                // httpOnly: true,
+                httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none"
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
-                // httpOnly: true,
+                httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none"
@@ -301,7 +301,7 @@ exports.getAccessToken = async (req, res) => {
         const accessToken = genAccessToken(user.phone)
         res.cookie("AccessToken", accessToken, {
             maxAge: 99999999999999,
-            // httpOnly: true,
+            httpOnly: true,
             signed: true,
             secure: true,
             sameSite: "none"
