@@ -252,14 +252,14 @@ exports.loginByCode = async (req, res) => {
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: "none"
+                sameSite: "lax"
             })
             res.cookie("AccessToken", accessToken, {
                 maxAge: 999999999999999, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: "none"
+                sameSite: "lax"
             })
 
 
