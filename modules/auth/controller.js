@@ -140,26 +140,26 @@ exports.authOtpPhone = async (req, res) => {
 
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
-            res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 999999999999999, //14 * 24 * 60 * 60,
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "none"
-            })
-            res.cookie("AccessToken", accessToken, {
-                maxAge: 999999999999999, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "none"
-            })
+            // res.cookie("RefreshToken", RefreshToken, {
+            //     maxAge: 999999999999999, //14 * 24 * 60 * 60,
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true,
+            //     sameSite: "none"
+            // })
+            // res.cookie("AccessToken", accessToken, {
+            //     maxAge: 999999999999999, //15000
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true,
+            //     sameSite: "none"
+            // })
 
 
-            await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })
+            // await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
 
-            return res.status(200).json({ statusCode: 200, message: "User Created Succ !", token: RefreshToken })
+            return res.status(200).json({ statusCode: 200, message: "User Created Succ !", RefreshToken, accessToken })
 
         } else if (getCode[0].code != code) {
             return res.status(400).json({ statusCode: 400, message: "Invalid Code !" })
@@ -199,24 +199,24 @@ exports.loginByPassword = async (req, res) => {
         const accessToken = genAccessToken(user.phone)
         const RefreshToken = genRefreshToken(user.phone)
 
-        res.cookie("RefreshToken", RefreshToken, {
-            maxAge: 999999999999999,
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "none"
-        })
-        res.cookie("AccessToken", accessToken, {
-            maxAge: 999999999999999,
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "none"
-        })
+        // res.cookie("RefreshToken", RefreshToken, {
+        //     maxAge: 999999999999999,
+        //     httpOnly: true,
+        //     signed: true,
+        //     secure: true,
+        //     sameSite: "none"
+        // })
+        // res.cookie("AccessToken", accessToken, {
+        //     maxAge: 999999999999999,
+        //     httpOnly: true,
+        //     signed: true,
+        //     secure: true,
+        //     sameSite: "none"
+        // })
 
-        await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
+        // await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
 
-        return res.json({ statusCode: 200, message: "Login Successfully " })
+        return res.json({ statusCode: 200, message: "Login Successfully ", accessToken, RefreshToken })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 //* Checked (1)
@@ -247,25 +247,25 @@ exports.loginByCode = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 999999999999999, //14 * 24 * 60 * 60,
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "lax"
-            })
-            res.cookie("AccessToken", accessToken, {
-                maxAge: 999999999999999, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "lax"
-            })
+            // res.cookie("RefreshToken", RefreshToken, {
+            //     maxAge: 999999999999999, //14 * 24 * 60 * 60,
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true,
+            //     sameSite: "lax"
+            // })
+            // res.cookie("AccessToken", accessToken, {
+            //     maxAge: 999999999999999, //15000
+            //     httpOnly: true,
+            //     signed: true,
+            //     secure: true,
+            //     sameSite: "lax"
+            // })
 
 
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
-            await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
-            return res.status(200).json({ statusCode: 200, message: "Login Successfully " })
+            // await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
+            return res.status(200).json({ statusCode: 200, message: "Login Successfully ", accessToken, RefreshToken })
 
 
         } else if (getCode[0].code != code) {
@@ -299,15 +299,15 @@ exports.getAccessToken = async (req, res) => {
         if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
 
         const accessToken = genAccessToken(user.phone)
-        res.cookie("AccessToken", accessToken, {
-            maxAge: 99999999999999,
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "none"
-        })
+        // res.cookie("AccessToken", accessToken, {
+        //     maxAge: 99999999999999,
+        //     httpOnly: true,
+        //     signed: true,
+        //     secure: true,
+        //     sameSite: "none"
+        // })
 
-        return res.status(200).json({ statusCode: 200, message: "succ !" })
+        return res.status(200).json({ statusCode: 200, message: "succ !", accessToken })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
