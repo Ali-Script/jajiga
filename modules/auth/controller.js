@@ -17,8 +17,9 @@ exports.start = async (req, res) => {
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         return res.status(200).json({ statusCode: 200, message: "Succ" })
-
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.signup = async (req, res) => {
@@ -33,11 +34,13 @@ exports.signup = async (req, res) => {
 
         const ifDUPLCNum = await userModel.findOne({ phone })
         if (ifDUPLCNum) {
+
             await OtpcodeModel.create({
                 code: 1111,
                 phone,
                 expiresIn: Date.now() + 120000,
             })
+
             return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
         }
 
@@ -81,7 +84,9 @@ exports.signup = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, message: "redirect ro register" })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }) }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message })
+    }
 }
 //* Checked (1)
 exports.sendOtpPhone = async (req, res) => {
@@ -100,7 +105,9 @@ exports.sendOtpPhone = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, message: "code sended succ" })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.authOtpPhone = async (req, res) => {
@@ -125,8 +132,6 @@ exports.authOtpPhone = async (req, res) => {
 
             const findNum = await userModel.findOne({ phone })
             if (findNum) return res.status(406).json({ statusCode: 406, message: "User already exists" })
-
-
 
 
             let user = new userModel({
@@ -169,8 +174,9 @@ exports.authOtpPhone = async (req, res) => {
         }
 
         return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
-
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.loginByPassword = async (req, res) => {
@@ -217,7 +223,9 @@ exports.loginByPassword = async (req, res) => {
         // await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
 
         return res.json({ statusCode: 200, message: "Login Successfully ", accessToken, RefreshToken })
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.loginByCode = async (req, res) => {
@@ -275,7 +283,9 @@ exports.loginByCode = async (req, res) => {
             return res.status(422).json({ statusCode: 422, message: "Code Has Expired !" })
         }
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.getme = async (req, res) => {
@@ -285,20 +295,23 @@ exports.getme = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, message: "Succ", user: req.user })
 
-    } catch (err) { return res.status(500).josn({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).josn({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.getAccessToken = async (req, res) => {
     try {
-        const RefreshToken = req.signedCookies.RefreshToken
-        if (RefreshToken == undefined) return res.status(403).json({ statusCode: 403, message: "Refresh Token has expired" })
+        // const RefreshToken = req.signedCookies.RefreshToken
+        // if (RefreshToken == undefined) return res.status(403).json({ statusCode: 403, message: "Refresh Token has expired" })
 
+        const { refreshToken } = req.body;
         const decode = jwt.verify(RefreshToken, process.env.JWT_REFRESH_SECRET)
 
-        const user = await userModel.findOne({ phone: decode.Identifeir })
-        if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
+        // const user = await userModel.findOne({ phone: decode.Identifeir })
+        // if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
 
-        const accessToken = genAccessToken(user.phone)
+        // const accessToken = genAccessToken(user.phone)
         // res.cookie("AccessToken", accessToken, {
         //     maxAge: 99999999999999,
         //     httpOnly: true,
@@ -307,9 +320,37 @@ exports.getAccessToken = async (req, res) => {
         //     sameSite: "none"
         // })
 
-        return res.status(200).json({ statusCode: 200, message: "succ !", accessToken })
+        // return res.status(200).json({ statusCode: 200, message: "succ !", accessToken })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+
+
+
+        await RefreshTokenModel.findOneAndDelete({ token: refreshToken });
+
+        const user = await UserModel.findOne({ _id: userID });
+        if (!user) {
+            //! Error Codes
+        }
+
+        const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "30day",
+        });
+
+        const newRefreshToken = await RefreshTokenModel.createToken(user);
+
+        res.cookie("access-token", accessToken, {
+            maxAge: 900_000,
+            httpOnly: true,
+        });
+
+        res.cookie("refresh-token", newRefreshToken, {
+            maxAge: 900_000,
+            httpOnly: true,
+        });
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
 exports.resendCode = async (req, res) => {
@@ -329,6 +370,8 @@ exports.resendCode = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, message: "succ !" })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, error: err.message });
+    }
 }
 //* Checked (1)
