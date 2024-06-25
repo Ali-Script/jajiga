@@ -47,10 +47,10 @@ exports.add = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const villas = await villaModel.find({}).sort({ _id: -1 }).lean()
-        if (villas.length == 0) return res.status(404).json({ message: "there is no villa!" })
+        if (villas.length == 0) return res.status(404).json({ status: 404, message: "there is no villa!" })
 
-        return res.status(200).json(villas)
-    } catch (err) { return res.status(422).send(err.message); }
+        return res.status(200).json({ status: 200, villas: villas })
+    } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
 }
 exports.getOne = async (req, res) => {
     try {
