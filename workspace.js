@@ -1,114 +1,18 @@
-{
-    "title": "v1",
-        "user": "User",
-            "address": [
-                {
-                    "state": "ker",
-                    "city": "ker",
-                    "address": "blv"
-                }
-            ],
-                "map": [
-                    {
-                        "first": "1237.2.4.",
-                        "sec": "343.447.65.6"
-                    }
-                ],
-                    "cover": [
-                        "345345.of"
-                    ],
-                        "description": "rpitjhortjh",
-                            "capAndSizeAndRooms": [
-                                {
-                                    "normalcapacity": 3434,
-                                    "maxcapacity": 34,
-                                    "buildingsize": 343,
-                                    "fuundationSize": 34,
-                                    "bedRoom": 34,
-                                    "aboutBedRoom": 34
-                                }
-                            ],
-                                "facility": [
-                                    {
-                                        "facility": [
-                                            {
-                                                "title": "1",
-                                                "description": "1"
-                                            },
-                                            {
-                                                "title": "2",
-                                                "description": "2"
-                                            }
-                                        ],
-                                        "moreFacility": [
-                                            {
-                                                "description": "fogjh"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                    "sanitaryFacilities": [
-                                        {
-                                            "sanitaryFacility": [
-                                                {
-                                                    "title": "rg",
-                                                    "description": "rtpijg"
-                                                }
-                                            ],
-                                            "moreSanitaryFacility": [
-                                                {
-                                                    "description": "rtopkh"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                        "timing": [
-                                            {
-                                                "minimumStay": {
-                                                    "value": 79
-                                                },
-                                                "deliveryTime": {
-                                                    "from": 89,
-                                                    "to": 34
-                                                },
-                                                "dischargeTime": {
-                                                    "value": 34
-                                                }
-                                            }
-                                        ],
-                                            "price": [
-                                                {
-                                                    "newYear": {
-                                                        "value": 34
-                                                    },
-                                                    "spring": {
-                                                        "midWeek": 34,
-                                                        "holidays": 34,
-                                                        "peakDays": 34
-                                                    },
-                                                    "summer": {
-                                                        "midWeek": 34,
-                                                        "holidays": 34,
-                                                        "peakDays": 34
-                                                    },
-                                                    "autumn": {
-                                                        "midWeek": 34,
-                                                        "holidays": 34,
-                                                        "peakDays": 34
-                                                    },
-                                                    "winter": {
-                                                        "midWeek": 34,
-                                                        "holidays": 34,
-                                                        "peakDays": 34
-                                                    }
-                                                }
-                                            ],
-                                                "rules": [
-                                                    {
-                                                        "pet": true,
-                                                        "music": true,
-                                                        "smoke": true,
-                                                        "more": "rth"
-                                                    }
-                                                ]
-}
+const Joi = require('joi');
+
+const capacitySchema = Joi.object().keys({
+    normalCapacity: Joi.number().required(),
+    maxCapacity: Joi.number().required(),
+    buildingSize: Joi.number().required(),
+    fuundationSize: Joi.number().required(),
+    bedRoom: Joi.number().required(),
+    description: Joi.string().required()
+});
+
+const validateCapacity = (capacity) => {
+    const result = capacitySchema.validate(capacity);
+    if (result.error) {
+        throw new Error(result.error.details.map(err => err.message).join(', '));
+    }
+    return result.value;
+};

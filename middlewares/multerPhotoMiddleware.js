@@ -2,11 +2,11 @@ const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
+
     destination: function (req, file, cb) {
-
-        cb(null, path.join("public", "multer", "pics", "avatars"))
-
+        cb(null, path.join("public", "covers"))
     },
+
     filename: function (req, file, cb) {
         try {
             const fileunicname = Date.now() + Math.random() * 100
@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 
             }
         } catch (err) {
-            res.send(err)
+            return res.status(444).json({ message: err.message })
         }
     }
 })

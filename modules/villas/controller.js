@@ -3,64 +3,46 @@ const villaModel = require('./../villas/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
-const validator = require("email-validator");
+// const validator = require("email-validator");
 const { func } = require('joi');
 
 exports.add = async (req, res) => {
     try {
-        const { title, address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules } = req.body;
-        req.body = { title, address, map, cover, description, capAndSizeAndRooms, facility, sanitaryFacilities, timing, price, rules }
-        const validatorr = joi.validate(req.body)
-        console.log(validator.error);
-        if (validatorr.error) return res.status(409).json({ message: validator.error.details })
+        const { title, address, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
-        const ifDUPLC = await villaModel.find()
+        const validator = joi.validate(req.body)
+        if (validator.error) return res.status(409).json(validator.error.details)
 
-        if (ifDUPLC.length >= 1) {
-            let flag = false;
+        const ifDUPLC = await villaModel.findOne({ coordinates })
+        if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
 
-            ifDUPLC.forEach(data => {
-                let userobj = data.map[0].toObject()
-                Reflect.deleteProperty(userobj, "_id")
-                if (userobj.first === map[0].first) flag = true
-            })
-            if (flag == true) return res.status(409).json({ message: "this location is already exist" })
-        }
 
         const covers = req.files;
         const coverFiles = []
         covers.forEach(i => coverFiles.push(i.filename))
 
         const newVilla = await villaModel.create({
-            title,
             user: req.user._id,
-            email: req.user.Email,
+            title,
+            cover,
             address,
-            map,
-            cover: coverFiles,
-            description,
-            capAndSizeAndRooms,
+            coordinates,
+            aboutVilla,
+            capacity,
             facility,
-            sanitaryFacilities,
-            timing,
             price,
             rules
         })
-        if (!newVilla) return res.status(500).json({ message: "can not add data to the database" })
-
-        const isAlreadyExist = await userVilla.findOne({ User: req.user._id, Villa: newVilla._id })
-        if (isAlreadyExist) {
-            return res.status(404).json({ message: "this location is already exists!" })
-        }
+        if (!newVilla) return res.status(500).json({ status: 500, message: "can not add data to the database" })
 
         const create = await userVilla.create({
             User: req.user._id,
             Villa: newVilla._id,
         })
 
-        return res.status(200).json({ message: "Succ !" })
+        return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
 
-    } catch (err) { return res.status(422).json(err.message); }
+    } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
 }
 exports.getAll = async (req, res) => {
     try {

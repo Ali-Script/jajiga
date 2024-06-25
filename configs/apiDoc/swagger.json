@@ -13,6 +13,9 @@
         },
         {
             "name": "Utils"
+        },
+        {
+            "name": "Villa"
         }
     ],
     "paths": {
@@ -22,6 +25,13 @@
                     "Authentication"
                 ],
                 "summary": "Home Page | (Auth Middleware)",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -58,7 +68,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "check if user already exists redirect to login if not redirect ro register",
+                "summary": "Check If User Already Exists Redirect To Login If Not Redirect To Register",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -98,7 +108,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Enter Your Phone Number to send Code",
+                "summary": "Enter Your Phone Number To Send Code",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -133,7 +143,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "confirm sended code and create user",
+                "summary": "Confirm Sended Code And Create User",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -282,6 +292,13 @@
                     "Utils"
                 ],
                 "summary": "GetMe",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -335,7 +352,45 @@
                         "required": "true"
                     }
                 ],
-                "summary": "resend otp code",
+                "summary": "Resend Otp Code",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/add": {
+            "post": {
+                "tags": [
+                    "Villa"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Add New Villa",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "phone": "Phone Number Format"
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Succ"
