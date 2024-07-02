@@ -8,39 +8,92 @@ const { func } = require('joi');
 
 exports.add = async (req, res) => {
     try {
-        const { title, address, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
+        const { title, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json(validator.error.details)
 
-        const ifDUPLC = await villaModel.findOne({ coordinates })
-        if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
+        async function addnewvilla() {
+            if (coordinates == undefined) {
+                const newVilla = await villaModel.create({
+                    user: req.user._id,
+                    title,
+                    cover,
+                    address,
+                    coordinates,
+                    aboutVilla,
+                    capacity,
+                    facility,
+                    price,
+                    rules,
+                    step,
+                    finished
+                })
+
+                const create = await userVilla.create({
+                    user: req.user._id,
+                    villa: newVilla._id,
+                })
+
+                return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+            }
+            const ifDUPLC = await villaModel.findOne({ coordinates })
+            if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
+
+            const covers = req.files;
+            const coverFiles = []
+            covers.forEach(i => coverFiles.push(i.filename))
+
+            const newVilla = await villaModel.create({
+                user: req.user._id,
+                title,
+                cover,
+                address,
+                coordinates,
+                aboutVilla,
+                capacity,
+                facility,
+                price,
+                rules,
+                step,
+                finished
+            })
+
+            const create = await userVilla.create({
+                user: req.user._id,
+                villa: newVilla._id,
+            })
+
+            return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+        }
+
+        const checkExists = await userVilla.find({ user: req.user._id }).sort({ _id: -1 }).lean()
+        if (!checkExists[0]) {
+            return addnewvilla()
+        } else {
+            const findvilla = await villaModel.findOne({ _id: checkExists[0].villa })
+            if (findvilla.finished == true) {
+                return addnewvilla()
+            }
 
 
-        const covers = req.files;
-        const coverFiles = []
-        covers.forEach(i => coverFiles.push(i.filename))
+            const newVilla = await villaModel.updateOne({ _id: checkExists[0].villa }, {
+                user: req.user._id,
+                title,
+                cover,
+                address,
+                coordinates,
+                aboutVilla,
+                capacity,
+                facility,
+                price,
+                rules,
+                step,
+                finished
+            })
 
-        const newVilla = await villaModel.create({
-            user: req.user._id,
-            title,
-            cover,
-            address,
-            coordinates,
-            aboutVilla,
-            capacity,
-            facility,
-            price,
-            rules
-        })
-        if (!newVilla) return res.status(500).json({ status: 500, message: "can not add data to the database" })
-
-        const create = await userVilla.create({
-            User: req.user._id,
-            Villa: newVilla._id,
-        })
-
-        return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+            return res.status(200).json({ status: 200, message: "Succ Updated!", villa: newVilla })
+        }
 
     } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
 }

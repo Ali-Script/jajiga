@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { description } = require('../../validator/villaValidator');
+const { required } = require('joi');
 
 const schema = new mongoose.Schema({
     user: {
@@ -188,6 +189,12 @@ const schema = new mongoose.Schema({
             type: "string",
         }
     },
+    step: {
+        type: "number"
+    },
+    finished: {
+        type: Boolean
+    }
 }, { timestamps: true })
 
 const model = mongoose.model("Villa", schema);

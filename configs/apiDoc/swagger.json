@@ -526,7 +526,9 @@
                                         "music": "boolean",
                                         "smoke": "boolean",
                                         "more": "string"
-                                    }
+                                    },
+                                    "step": "number",
+                                    "finished": "boolean"
                                 }
                             }
                         }
