@@ -10,6 +10,9 @@ router
     .route("/add")
     .post(authMiddleware, multerPhotoMiddleware.array("cover", 10), controller.add)
 router
+    .route("/update/:id")
+    .put(authMiddleware, multerPhotoMiddleware.array("cover", 10), controller.update)
+router
     .route("/getAll")
     .get(controller.getAll)
 router

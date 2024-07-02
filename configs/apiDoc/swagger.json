@@ -527,8 +527,7 @@
                                         "smoke": "boolean",
                                         "more": "string"
                                     },
-                                    "step": "number",
-                                    "finished": "boolean"
+                                    "step": "number"
                                 }
                             }
                         }
@@ -543,6 +542,200 @@
                     },
                     "200": {
                         "description": "Succ !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/update/{id}": {
+            "post": {
+                "tags": [
+                    "Villa"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "update Villa",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "title": "string",
+                                    "address": {
+                                        "state": "string",
+                                        "city": "string",
+                                        "address": "string"
+                                    },
+                                    "coordinates": {
+                                        "x": "string",
+                                        "y": "string"
+                                    },
+                                    "aboutVilla": {
+                                        "villaSpace": [
+                                            "privetRoom",
+                                            "lockedRoom",
+                                            "semiClosedRoom",
+                                            "commonRoom"
+                                        ],
+                                        "villaType": "ObjectId",
+                                        "villaZone": [
+                                            "littoral",
+                                            "silvan",
+                                            "summerVilla",
+                                            "desertHouse",
+                                            "townHouse",
+                                            "suburbanHouse",
+                                            "cottage"
+                                        ],
+                                        "aboutVilla": "string"
+                                    },
+                                    "capacity": {
+                                        "normalCapacity": "number",
+                                        "maxCapacity": "number",
+                                        "buildingSize": "number",
+                                        "fuundationSize": "number",
+                                        "bedRoom": "number",
+                                        "description": "string"
+                                    },
+                                    "facility": {
+                                        "facility": {
+                                            "furniture": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "fridge": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "tv": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "diningTable": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "heatingSystem": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "coolingSystem": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "parking": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "Eightball": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "wifi": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "toilet": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "pool": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "moreFacility": "string"
+                                        },
+                                        "sanitaryFacilities": {
+                                            "changeThePillow": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "changeTheBedsheet": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "chargingToiletPaper": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "dishSoap": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "chargingDishSoap": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "antiseptics": {
+                                                "status": "boolean",
+                                                "description": "string"
+                                            },
+                                            "moreSanitaryFacilities": "string"
+                                        }
+                                    },
+                                    "price": {
+                                        "newYear": "number",
+                                        "spring": {
+                                            "midWeek": "number",
+                                            "holidays": "number",
+                                            "peakDays": "number"
+                                        },
+                                        "summer": {
+                                            "midWeek": "number",
+                                            "holidays": "number",
+                                            "peakDays": "number"
+                                        },
+                                        "autumn": {
+                                            "midWeek": "number",
+                                            "holidays": "number",
+                                            "peakDays": "number"
+                                        },
+                                        "winter": {
+                                            "midWeek": "number",
+                                            "holidays": "number",
+                                            "peakDays": "number"
+                                        }
+                                    },
+                                    "rules": {
+                                        "pet": "boolean",
+                                        "music": "boolean",
+                                        "smoke": "boolean",
+                                        "more": "string"
+                                    },
+                                    "step": "number"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ !"
+                    },
+                    "400": {
+                        "description": "Invalid Object Id"
+                    },
+                    "401": {
+                        "description": "no villa found with this id"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "422": {
+                        "description": "this location is already exist"
                     },
                     "500": {
                         "description": "Internal Server Error"

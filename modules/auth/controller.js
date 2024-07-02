@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const userModel = require('./model')
+const villaModel = require('./../villas/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
 const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
@@ -293,7 +294,9 @@ exports.getme = async (req, res) => {
         const checkBan = await banModel.findOne({ phone: req.user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        return res.status(200).json({ statusCode: 200, message: "Succ", user: req.user })
+        const findVilla = await villaModel.find({ user: req.user._id }).sort({ _id: -1 }).lean()
+
+        return res.status(200).json({ statusCode: 200, message: "Succ", user: req.user, villas: findVilla })
 
     } catch (err) {
         return res.status(500).josn({ statusCode: 500, error: err.message });
