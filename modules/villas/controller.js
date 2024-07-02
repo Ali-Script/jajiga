@@ -8,7 +8,7 @@ const { func } = require('joi');
 
 exports.add = async (req, res) => {
     try {
-        const { title, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
+        const { title, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json(validator.error.details)
@@ -34,7 +34,8 @@ exports.add = async (req, res) => {
             facility,
             price,
             rules,
-            step
+            step,
+            finished
         })
 
         const create = await userVilla.create({
@@ -138,7 +139,7 @@ exports.update = async (req, res) => {
         const findVilla = await villaModel.findOne({ _id: id }).lean()
         if (!findVilla) return res.status(401).json({ status: 401, error: 'no villa found with this id' })
 
-        const { title, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
+        const { title, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json(validator.error.details)
@@ -163,6 +164,7 @@ exports.update = async (req, res) => {
             price,
             rules,
             step,
+            finished
         })
 
         const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()

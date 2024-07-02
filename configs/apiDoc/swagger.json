@@ -527,7 +527,8 @@
                                         "smoke": "boolean",
                                         "more": "string"
                                     },
-                                    "step": "number"
+                                    "step": "number",
+                                    "finished": "boolean"
                                 }
                             }
                         }
@@ -715,7 +716,8 @@
                                         "smoke": "boolean",
                                         "more": "string"
                                     },
-                                    "step": "number"
+                                    "step": "number",
+                                    "finished": "boolean"
                                 }
                             }
                         }
