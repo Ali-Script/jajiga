@@ -550,7 +550,7 @@
             }
         },
         "/villa/update/{id}": {
-            "post": {
+            "put": {
                 "tags": [
                     "Villa"
                 ],
