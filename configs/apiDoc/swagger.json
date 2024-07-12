@@ -553,6 +553,9 @@
                     "409": {
                         "description": "Validator Error"
                     },
+                    "406": {
+                        "description": "The minimum number of photos is 3"
+                    },
                     "422": {
                         "description": "this location is already exist"
                     },
@@ -762,6 +765,9 @@
                     },
                     "401": {
                         "description": "no villa found with this id"
+                    },
+                    "406": {
+                        "description": "The minimum number of photos is 3"
                     },
                     "409": {
                         "description": "Validator Error"

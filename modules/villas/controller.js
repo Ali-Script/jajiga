@@ -15,7 +15,7 @@ exports.add = async (req, res) => {
 
         if (coordinates) {
             const ifDUPLC = await villaModel.findOne({ coordinates })
-            if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
+            if (ifDUPLC) return res.status(409).json({ status: 409, message: "this location is already exist" })
         }
 
         const coverFiles = []
@@ -24,6 +24,8 @@ exports.add = async (req, res) => {
             const covers = req.files;
             covers.forEach(i => coverFiles.push(i.filename))
         }
+
+        if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
 
         const newVilla = await villaModel.create({
             user: req.user._id,
@@ -153,6 +155,8 @@ exports.update = async (req, res) => {
             const covers = req.files;
             covers.forEach(i => coverFiles.push(i.filename))
         }
+
+        if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
 
         const newVilla = await villaModel.updateOne({ _id: id }, {
             user: req.user._id,
