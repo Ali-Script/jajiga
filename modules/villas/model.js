@@ -77,46 +77,57 @@ const schema = new mongoose.Schema({
             furniture: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             fridge: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             tv: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             diningTable: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             heatingSystem: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             coolingSystem: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             parking: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             Eightball: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             wifi: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             toilet: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             pool: {
                 status: { type: Boolean },
                 description: { type: "string" },
+                placeHolder: { type: "string" }
             },
             moreFacility: {
                 type: "string"

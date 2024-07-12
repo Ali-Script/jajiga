@@ -18,8 +18,6 @@ exports.add = async (req, res) => {
             if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
         }
 
-
-
         const coverFiles = []
 
         if (req.files != undefined) {

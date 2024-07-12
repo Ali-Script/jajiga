@@ -395,6 +395,10 @@
                                         "x": "string",
                                         "y": "string"
                                     },
+                                    "cover": [
+                                        "string",
+                                        "string"
+                                    ],
                                     "aboutVilla": {
                                         "villaSpace": [
                                             "privetRoom",
@@ -584,6 +588,10 @@
                                         "x": "string",
                                         "y": "string"
                                     },
+                                    "cover": [
+                                        "string",
+                                        "string"
+                                    ],
                                     "aboutVilla": {
                                         "villaSpace": [
                                             "privetRoom",
@@ -615,47 +623,58 @@
                                         "facility": {
                                             "furniture": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "fridge": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "tv": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "diningTable": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "heatingSystem": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "coolingSystem": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "parking": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "Eightball": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "wifi": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "toilet": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "pool": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "placeHolder": "string"
                                             },
                                             "moreFacility": "string"
                                         },

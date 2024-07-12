@@ -40,7 +40,6 @@ app.use("/users/", userRouter)
 app.use("/villa/", villaRouter)
 app.use("/ban/", banRouter)
 app.use("/notification/", notificationRouter)
-
 app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)
 app.use("/category/", categoryRouter)
@@ -54,7 +53,6 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     return res.status(500).json({ error: { message: err }, });
 });
-
 // Static Routes ^
 
 module.exports = app;
