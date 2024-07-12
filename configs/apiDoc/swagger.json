@@ -430,47 +430,58 @@
                                         "facility": {
                                             "furniture": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "fridge": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "tv": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "diningTable": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "heatingSystem": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "coolingSystem": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "parking": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "Eightball": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "wifi": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "toilet": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "pool": {
                                                 "status": "boolean",
-                                                "description": "string"
+                                                "description": "string",
+                                                "plageHolder": "string"
                                             },
                                             "moreFacility": "string"
                                         },
