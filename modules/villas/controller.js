@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
+const archiver = require('archiver');
 const villaModel = require('./../villas/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
@@ -24,8 +27,9 @@ exports.add = async (req, res) => {
             const covers = req.files;
             covers.forEach(i => coverFiles.push(i.filename))
         }
-
-        if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
+        if (coverFiles != 0) {
+            if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
+        }
 
         const newVilla = await villaModel.create({
             user: req.user._id,
@@ -155,9 +159,9 @@ exports.update = async (req, res) => {
             const covers = req.files;
             covers.forEach(i => coverFiles.push(i.filename))
         }
-
-        if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
-
+        if (coverFiles != 0) {
+            if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
+        }
         const newVilla = await villaModel.updateOne({ _id: id }, {
             user: req.user._id,
             title,
@@ -198,39 +202,40 @@ exports.getOne = async (req, res) => {
 
 
 
-        const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            .populate("villa", "_id title")
-            .populate("creator", "UserName")
-            .sort({ _id: -1 })
-            .lean();
+        // const comments = await commentModel.find({ villa: id, isAccept: 1 })
+        //     .populate("villa", "_id title")
+        //     .populate("creator", "UserName")
+        //     .sort({ _id: -1 })
+        //     .lean();
 
-        let orderedComment = []
+        // let orderedComment = []
 
-        comments.forEach(mainComment => {
-            comments.forEach(answerComment => {
+        // comments.forEach(mainComment => {
+        //     comments.forEach(answerComment => {
 
-                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
 
-                    orderedComment.push({
-                        ...mainComment,
-                        villa: answerComment.villa.title,
-                        creator: answerComment.creator.UserName,
-                        answerComment
-                    })
-                }
-            })
-        })
+        //             orderedComment.push({
+        //                 ...mainComment,
+        //                 villa: answerComment.villa.title,
+        //                 creator: answerComment.creator.UserName,
+        //                 answerComment
+        //             })
+        //         }
+        //     })
+        // })
 
 
-        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-            .populate("villa", "_id title")
-            .populate("creator", "UserName")
-            .sort({ _id: -1 })
-            .lean();
+        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+        //     .populate("villa", "_id title")
+        //     .populate("creator", "UserName")
+        //     .sort({ _id: -1 })
+        //     .lean();
 
-        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        return res.status(200).json({ villa, comments: orderedComment })
+        // return res.status(200).json({ villa, comments: orderedComment })
+        return res.status(200).json({ villa })
     } catch (err) { return res.status(422).send(err.message); }
 }
 exports.myVillas = async (req, res) => {

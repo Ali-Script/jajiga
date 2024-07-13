@@ -16,6 +16,9 @@ router
     .route("/getAll")
     .get(controller.getAll)
 router
+    .route("/cover/:filename")
+    .post(controller.getCover)
+router
     .route("/get/:id")
     .get(authMiddleware, isAdminMiddleware, controller.getOne)
 router

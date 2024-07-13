@@ -76,58 +76,69 @@ const schema = new mongoose.Schema({
         facility: {
             furniture: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "مبلمان" }
             },
             fridge: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "یخچال" }
             },
             tv: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "تلویزیون" }
             },
             diningTable: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "میز نهارخوری" }
             },
             heatingSystem: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "سیستم گرمایشی" }
             },
             coolingSystem: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "سیستم سرمایش" }
             },
             parking: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "پارکینگ" }
             },
             Eightball: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "بیلیارد" }
             },
             wifi: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "wifi اینترنت " }
             },
             toilet: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "توالت فرهنگی" }
             },
             pool: {
                 status: { type: Boolean },
-                description: { type: "string" },
-                placeHolder: { type: "string" }
+                icon: { type: "string" },
+                placeHolder: { type: "string" },
+                title: { type: "string", default: "استخر" }
             },
             moreFacility: {
                 type: "string"

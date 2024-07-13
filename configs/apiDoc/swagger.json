@@ -430,58 +430,58 @@
                                         "facility": {
                                             "furniture": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "fridge": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "tv": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "diningTable": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "heatingSystem": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "coolingSystem": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "parking": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "Eightball": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "wifi": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "toilet": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "pool": {
                                                 "status": "boolean",
-                                                "description": "string",
-                                                "plageHolder": "string"
+                                                "icon": "string",
+                                                "placeHolder": "string"
                                             },
                                             "moreFacility": "string"
                                         },
@@ -637,57 +637,57 @@
                                         "facility": {
                                             "furniture": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "fridge": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "tv": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "diningTable": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "heatingSystem": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "coolingSystem": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "parking": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "Eightball": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "wifi": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "toilet": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "pool": {
                                                 "status": "boolean",
-                                                "description": "string",
+                                                "icon": "string",
                                                 "placeHolder": "string"
                                             },
                                             "moreFacility": "string"

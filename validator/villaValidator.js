@@ -35,57 +35,57 @@ const schema = Joi.object({
         facility: Joi.object().keys({
             furniture: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             fridge: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             tv: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             diningTable: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             heatingSystem: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             coolingSystem: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             parking: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             Eightball: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             wifi: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             toilet: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             pool: Joi.object().keys({
                 status: Joi.boolean(),
-                description: Joi.string(),
+                icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
             moreFacility: Joi.string(),
