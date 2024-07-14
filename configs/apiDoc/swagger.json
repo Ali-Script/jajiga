@@ -799,6 +799,136 @@
                     }
                 }
             }
+        },
+        "/villa/myVillas": {
+            "get": {
+                "tags": [
+                    "Villa"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Return Villas That User Created",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no villa found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/get/{id}": {
+            "get": {
+                "tags": [
+                    "Villa"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Get One Villa",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no villa found"
+                    },
+                    "400": {
+                        "description": "Invalid Object Id"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/{id}/facility": {
+            "get": {
+                "tags": [
+                    "Utils"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Get Facility Of Specific Villa",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no villa found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Villa"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Delete Villa",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "no villa found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }

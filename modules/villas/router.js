@@ -5,7 +5,9 @@ const controller = require('./controller')
 const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware')
-
+router
+    .route("/:id/facility")
+    .get(authMiddleware, controller.getFacility)
 router
     .route("/add")
     .post(authMiddleware, multerPhotoMiddleware.array("cover", 10), controller.add)
@@ -16,16 +18,14 @@ router
     .route("/getAll")
     .get(controller.getAll)
 router
-    .route("/cover/:filename")
-    .post(controller.getCover)
-router
     .route("/get/:id")
-    .get(authMiddleware, isAdminMiddleware, controller.getOne)
+    .get(authMiddleware, controller.getOne)
 router
     .route("/myVillas")
     .get(authMiddleware, controller.myVillas)
 router
     .route("/delete/:id")
-    .delete(authMiddleware, isAdminMiddleware, controller.delete)
+    .delete(authMiddleware, controller.delete)
+// ! admin mid
 
 module.exports = router

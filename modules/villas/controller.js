@@ -18,7 +18,7 @@ exports.add = async (req, res) => {
 
         if (coordinates) {
             const ifDUPLC = await villaModel.findOne({ coordinates })
-            if (ifDUPLC) return res.status(409).json({ status: 409, message: "this location is already exist" })
+            if (ifDUPLC) return res.status(409).json({ statusCode: 409, message: "this location is already exist" })
         }
 
         const coverFiles = []
@@ -28,7 +28,7 @@ exports.add = async (req, res) => {
             covers.forEach(i => coverFiles.push(i.filename))
         }
         if (coverFiles != 0) {
-            if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
+            if (coverFiles.length < 3) return res.status(406).json({ statusCode: 406, message: "The minimum number of photos is 3" })
         }
 
         const newVilla = await villaModel.create({
@@ -51,7 +51,7 @@ exports.add = async (req, res) => {
             villa: newVilla._id,
         })
 
-        return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+        return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
 
         // async function addnewvilla() {
         //     if (coordinates == undefined) {
@@ -75,10 +75,10 @@ exports.add = async (req, res) => {
         //             villa: newVilla._id,
         //         })
 
-        //         return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+        //         return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
         //     }
         //     const ifDUPLC = await villaModel.findOne({ coordinates })
-        //     if (ifDUPLC) return res.status(409).json({ status: 422, message: "this location is already exist" })
+        //     if (ifDUPLC) return res.status(409).json({ statusCode: 422, message: "this location is already exist" })
 
         //     const covers = req.files;
         //     const coverFiles = []
@@ -104,7 +104,7 @@ exports.add = async (req, res) => {
         //         villa: newVilla._id,
         //     })
 
-        //     return res.status(200).json({ status: 200, message: "Succ !", villa: newVilla })
+        //     return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
         // }
 
         // const checkExists = await userVilla.find({ user: req.user._id }).sort({ _id: -1 }).lean()
@@ -132,20 +132,20 @@ exports.add = async (req, res) => {
         //         finished
         //     })
 
-        //     return res.status(200).json({ status: 200, message: "Succ Updated!", villa: newVilla })
+        //     return res.status(200).json({ statusCode: 200, message: "Succ Updated!", villa: newVilla })
         // }
 
-    } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.update = async (req, res) => {
     try {
         const id = req.params.id
 
         const validate = mongoose.Types.ObjectId.isValid(id);
-        if (!validate) return res.status(400).json({ status: 400, error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).json({ statusCode: 400, error: 'Invalid Object Id' })
 
         const findVilla = await villaModel.findOne({ _id: id }).lean()
-        if (!findVilla) return res.status(401).json({ status: 401, error: 'no villa found with this id' })
+        if (!findVilla) return res.status(401).json({ statusCode: 401, error: 'no villa found with this id' })
 
         const { title, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
@@ -160,7 +160,7 @@ exports.update = async (req, res) => {
             covers.forEach(i => coverFiles.push(i.filename))
         }
         if (coverFiles != 0) {
-            if (coverFiles.length < 3) return res.status(406).json({ status: 406, message: "The minimum number of photos is 3" })
+            if (coverFiles.length < 3) return res.status(406).json({ statusCode: 406, message: "The minimum number of photos is 3" })
         }
         const newVilla = await villaModel.updateOne({ _id: id }, {
             user: req.user._id,
@@ -179,26 +179,32 @@ exports.update = async (req, res) => {
 
         const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
 
-        return res.status(200).json({ status: 200, message: "Succ !", villa: findUpdatedVilla })
+        return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
 
-    } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.getAll = async (req, res) => {
     try {
-        const villas = await villaModel.find({}).sort({ _id: -1 }).lean()
-        if (villas.length == 0) return res.status(404).json({ status: 404, message: "there is no villa!" })
+        const villas = await villaModel.find({})
+            .populate("user", "firstName lastName role")
+            .sort({ _id: -1 })
+            .lean()
+        if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
 
-        return res.status(200).json({ status: 200, villas: villas })
-    } catch (err) { return res.status(500).json({ status: 500, message: err.message }); }
+        return res.status(200).json({ statusCode: 200, villas: villas })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.getOne = async (req, res) => {
     try {
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
-        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).json({ error: 'Invalid Object Id' })
 
-        const villa = await villaModel.find({ _id: id }).sort({ _id: -1 }).lean()
-        if (villa.length == 0) return res.status(404).json({ message: "villa not found 404 ! " })
+        const villa = await villaModel.findOne({ _id: id })
+            .populate("user", "firstName lastName role")
+            .sort({ _id: -1 })
+            .lean()
+        if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
 
 
 
@@ -235,34 +241,43 @@ exports.getOne = async (req, res) => {
         // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
         // return res.status(200).json({ villa, comments: orderedComment })
-        return res.status(200).json({ villa })
-    } catch (err) { return res.status(422).send(err.message); }
+        return res.status(200).json({ statusCode: 200, villa })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.myVillas = async (req, res) => {
     try {
-        let orderedComment = []
-        const email = req.user.email
-        const villa = await villaModel.find(email).sort({ _id: -1 }).lean()
-        if (villa.length == 0) return res.status(404).json({ message: "You have not added a villa yet " })
+        const user = req.user
+        const villa = await villaModel.find({ user: user._id }).lean()
+        if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
 
-        return res.status(200).json({ villa })
+        return res.status(200).json({ statusCode: 200, villa })
 
-    } catch (err) { return res.status(422).send(err.message); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.getFacility = async (req, res) => {
+    try {
+        const id = req.params.id
+        const villa = await villaModel.findOne({ _id: id })
+        if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
+
+        return res.status(200).json({ statusCode: 200, facility: villa.facility })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.delete = async (req, res) => {
     try {
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
-        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).json({ statusCode: 400, error: 'Invalid Object Id' })
 
         const villa = await villaModel.findOneAndDelete({ _id: id })
-        if (!villa) return res.status(404).json({ message: "Villa Not Found 404 ! " })
+        if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa Not Found 404 ! " })
 
-        const deleteComment = await commentModel.deleteMany({ villa: id })
-        const removeuservilla = await userVilla.findOneAndUpdate({ villa: id }, { deleted: 1 })
+        // const deleteComment = await commentModel.deleteMany({ villa: id })
+        const removeuservilla = await userVilla.findOneAndDelete({ villa: id })
 
 
-        return res.status(200).json("Succ !")
-    } catch (err) { return res.status(422).send(err.message); }
+        return res.status(200).json({ statusCode: 200, message: "Succ !" })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 
