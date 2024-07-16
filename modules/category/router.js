@@ -7,16 +7,16 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 
 router
-    .route("/set")
-    .post(authMiddleware, isAdmin, categoryController.setCategory)
-router
-    .route("/getOne/:id")
-    .get(categoryController.getOne)
+    .route("/add")
+    .post(authMiddleware, categoryController.setCategory)
+// router
+//     .route("/getOne/:id")
+//     .get(categoryController.getOne)
 router
     .route("/getAll")
     .get(categoryController.getAll)
 router
     .route("/remove/:id")
-    .delete(authMiddleware, isAdmin, categoryController.removeOne)
+    .delete(authMiddleware, categoryController.removeOne)
 
 module.exports = router;
