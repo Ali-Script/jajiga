@@ -372,7 +372,7 @@
         "/villa/add": {
             "post": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "parameters": [
                     {
@@ -466,7 +466,7 @@
                                                 "icon": "string",
                                                 "placeHolder": "string"
                                             },
-                                            "Eightball": {
+                                            "eightball": {
                                                 "status": "boolean",
                                                 "icon": "string",
                                                 "placeHolder": "string"
@@ -574,7 +574,7 @@
         "/villa/update/{id}": {
             "put": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "parameters": [
                     {
@@ -588,7 +588,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "update Villa",
+                "summary": "Update Villa",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -673,7 +673,7 @@
                                                 "icon": "string",
                                                 "placeHolder": "string"
                                             },
-                                            "Eightball": {
+                                            "eightball": {
                                                 "status": "boolean",
                                                 "icon": "string",
                                                 "placeHolder": "string"
@@ -787,7 +787,7 @@
         "/villa/getAll": {
             "get": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "summary": "Get All Villas",
                 "responses": {
@@ -806,7 +806,7 @@
         "/villa/myVillas": {
             "get": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "parameters": [
                     {
@@ -837,7 +837,7 @@
         "/villa/get/{id}": {
             "get": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "parameters": [
                     {
@@ -894,7 +894,7 @@
         "/villa/delete/{id}": {
             "delete": {
                 "tags": [
-                    "Villa"
+                    "Villas"
                 ],
                 "parameters": [
                     {
@@ -994,7 +994,7 @@
             }
         },
         "/category/remove/{id}": {
-            "get": {
+            "delete": {
                 "tags": [
                     "Categories"
                 ],

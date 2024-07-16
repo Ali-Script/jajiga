@@ -42,7 +42,7 @@ const facility = {
             icon: "",
             id: 7
         },
-        Eightball: {
+        eightball: {
             title: "بیلیارد",
             placeHolder: "",
             icon: "",

@@ -68,7 +68,7 @@ const schema = Joi.object({
                 icon: Joi.string(),
                 placeHolder: Joi.string()
             }),
-            Eightball: Joi.object().keys({
+            eightball: Joi.object().keys({
                 status: Joi.boolean(),
                 icon: Joi.string(),
                 placeHolder: Joi.string()

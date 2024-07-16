@@ -123,7 +123,7 @@ const schema = new mongoose.Schema({
                 title: { type: "string", default: "پارکینگ" },
                 id: { type: "number", default: 7 }
             },
-            Eightball: {
+            eightball: {
                 status: { type: Boolean },
                 icon: { type: "string" },
                 placeHolder: { type: "string" },

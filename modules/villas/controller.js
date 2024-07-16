@@ -260,67 +260,67 @@ exports.getFacility = async (req, res) => {
             facility: {
                 furniture: {
                     title: "مبلمان",
-                    placeHolder: "",
+                    placeHolder: "مثال: مبلمان راحتی برای 7 نفر",
                     icon: "",
                     id: 1
                 },
                 fridge: {
                     title: "یخچال",
-                    placeHolder: "",
+                    placeHolder: "توضیحات یخچال",
                     icon: "",
                     id: 2
                 },
                 tv: {
                     title: "تلویزیون",
-                    placeHolder: "",
+                    placeHolder: "مثال: یک عدد تلویزیون فلت سامسونگ 48 اینچ و یک عدد تلویزیون پارس 14 اینچ",
                     icon: "",
                     id: 3
                 },
                 diningTable: {
                     title: " میز نهارخوری",
-                    placeHolder: "",
+                    placeHolder: "مثال: میز نهارخوری برای 6 نفر و 6 عدد صندلی",
                     icon: "",
                     id: 4
                 },
                 heatingSystem: {
                     title: " سیستم گرمایشی",
-                    placeHolder: "",
+                    placeHolder: "مثال: سیستم پکیج / بخاری گازی",
                     icon: "",
                     id: 5
                 },
                 coolingSystem: {
                     title: " سیستم سرمایش",
-                    placeHolder: "",
+                    placeHolder: "مثال: اسپیلت 18 هزار",
                     icon: "",
                     id: 6
                 },
                 parking: {
                     title: "پارکینگ",
-                    placeHolder: "",
+                    placeHolder: "مثال: پارکینگ مسقف برای 2 عدد اتومبیل / پارکینگ روباز برای 3 عدد اتومبیل",
                     icon: "",
                     id: 7
                 },
-                Eightball: {
+                eightball: {
                     title: "بیلیارد",
-                    placeHolder: "",
+                    placeHolder: "توضیحات میز بیلیارد",
                     icon: "",
                     id: 8
                 },
                 wifi: {
                     title: " wifi اینترنت",
-                    placeHolder: "",
+                    placeHolder: "مشخص نمایید: اینترنت کابلی / بی‌سیم-وای‌فای",
                     icon: "",
                     id: 9
                 },
                 toilet: {
                     title: " توالت فرهنگی",
-                    placeHolder: "",
+                    placeHolder: "توضیحات توالت فرنگی",
                     icon: "",
                     id: 10
                 },
                 pool: {
                     title: "استخر",
-                    placeHolder: "",
+                    placeHolder: "توضیحات استخر",
                     icon: "",
                     id: 11
                 }
