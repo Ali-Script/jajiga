@@ -29,6 +29,9 @@ const schema = new mongoose.Schema({
     avatar: {
         type: 'string',
     },
+    aboutMe: {
+        type: 'string',
+    },
     refreshToken: {
         type: 'string',
     },

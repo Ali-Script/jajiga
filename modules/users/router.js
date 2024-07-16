@@ -36,6 +36,9 @@ router
 router
     .route("/forgetPasswordCode")
     .put(authMiddleware, controller.forgetPasswordConfirmCode)
+router
+    .route("/forgetPasswordCode")
+    .put(authMiddleware, controller.forgetPasswordConfirmCode)
 
 
 module.exports = router

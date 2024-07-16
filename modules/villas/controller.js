@@ -257,102 +257,102 @@ exports.myVillas = async (req, res) => {
 exports.getFacility = async (req, res) => {
     try {
         const facility = [
-            furniture = {
+            {
                 title: "مبلمان",
+                engTitle: "furniture",
                 placeHolder: "مثال: مبلمان راحتی برای 7 نفر",
-                icon: "",
                 id: 1
             },
             {
                 title: "یخچال",
+                engTitle: "fridge",
                 placeHolder: "توضیحات یخچال",
-                icon: "",
                 id: 2
             },
             {
                 title: "تلویزیون",
+                engTitle: "tv",
                 placeHolder: "مثال: یک عدد تلویزیون فلت سامسونگ 48 اینچ و یک عدد تلویزیون پارس 14 اینچ",
-                icon: "",
                 id: 3
             },
             {
                 title: " میز نهارخوری",
+                engTitle: "diningTable",
                 placeHolder: "مثال: میز نهارخوری برای 6 نفر و 6 عدد صندلی",
-                icon: "",
                 id: 4
             },
             {
                 title: " سیستم گرمایشی",
+                engTitle: "heatingSystem",
                 placeHolder: "مثال: سیستم پکیج / بخاری گازی",
-                icon: "",
                 id: 5
             },
             {
                 title: " سیستم سرمایش",
+                engTitle: "coolingSystem",
                 placeHolder: "مثال: اسپیلت 18 هزار",
-                icon: "",
                 id: 6
             },
             {
                 title: "پارکینگ",
+                engTitle: "parking",
                 placeHolder: "مثال: پارکینگ مسقف برای 2 عدد اتومبیل / پارکینگ روباز برای 3 عدد اتومبیل",
-                icon: "",
                 id: 7
             },
             {
                 title: "بیلیارد",
+                engTitle: "eightball",
                 placeHolder: "توضیحات میز بیلیارد",
-                icon: "",
                 id: 8
             },
             {
                 title: " wifi اینترنت",
+                engTitle: "wifi",
                 placeHolder: "مشخص نمایید: اینترنت کابلی / بی‌سیم-وای‌فای",
-                icon: "",
                 id: 9
             },
             {
                 title: " توالت فرهنگی",
+                engTitle: "toilet",
                 placeHolder: "توضیحات توالت فرنگی",
-                icon: "",
                 id: 10
             },
             {
                 title: "استخر",
+                engTitle: "pool",
                 placeHolder: "توضیحات استخر",
-                icon: "",
                 id: 11
             }
         ]
         const sanitaryFacilities = [
             {
                 title: " تعویض رو بالشتی و رو تختی",
-                icon: "",
+                engTitle: "changeThePillow",
                 id: 1
             },
             {
                 title: " تعویض ملحفه",
-                icon: "",
+                engTitle: "changeTheBedsheet",
                 id: 2
             },
             {
                 title: " شارژ کاغد توالت",
-                icon: "",
+                engTitle: "chargingToiletPaper",
                 id: 3
             },
             {
                 title: " مایع ظرفشویی",
-                icon: "",
+                engTitle: "dishSoap",
                 id: 4
             },
             {
                 title: " شارژ مایع دستشویی با صابون",
-                icon: "",
+                engTitle: "chargingDishSoap",
                 id: 5
             },
             {
                 title: " مواد ضدعفونی کننده",
-                icon: "",
+                engTitle: "antiseptics",
                 id: 6
             }
         ]

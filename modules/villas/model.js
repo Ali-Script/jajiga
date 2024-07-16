@@ -76,80 +76,47 @@ const schema = new mongoose.Schema({
         facility: {
             furniture: {
                 status: { type: Boolean },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "مبلمان" },
-                icon: { type: "string", default: "" },
-                id: { type: "number", default: 1 }
+                description: { type: "string" },
             },
             fridge: {
                 status: { type: Boolean },
-                icon: { type: "string", default: "" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "یخچال" },
-                id: { type: "number", default: 2 }
+                description: { type: "string" },
             },
             tv: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "تلویزیون" },
-                id: { type: "number", default: 3 }
+                description: { type: "string" },
             },
             diningTable: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "میز نهارخوری" },
-                id: { type: "number", default: 4 }
+                description: { type: "string" },
             },
             heatingSystem: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "سیستم گرمایشی" },
-                id: { type: "number", default: 5 }
+                description: { type: "string" },
             },
             coolingSystem: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "سیستم سرمایش" },
-                id: { type: "number", default: 6 }
+                description: { type: "string" },
             },
             parking: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "پارکینگ" },
-                id: { type: "number", default: 7 }
+                description: { type: "string" },
             },
             eightball: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "بیلیارد" },
-                id: { type: "number", default: 8 }
+                description: { type: "string" },
             },
             wifi: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "wifi اینترنت " },
-                id: { type: "number", default: 9 }
+                description: { type: "string" },
             },
             toilet: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "توالت فرهنگی" },
-                id: { type: "number", default: 10 }
+                description: { type: "string" },
             },
             pool: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "استخر" },
-                id: { type: "number", default: 11 }
+                description: { type: "string" },
             },
             moreFacility: {
                 type: "string"
@@ -158,45 +125,21 @@ const schema = new mongoose.Schema({
         sanitaryFacilities: {
             changeThePillow: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "تعویض رو بالشتی و رو تختی" },
-                id: { type: "number", default: 1 }
             },
             changeTheBedsheet: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "تعویض ملحفه" },
-                id: { type: "number", default: 2 }
             },
             chargingToiletPaper: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "شارژ کاغد توالت" },
-                id: { type: "number", default: 3 }
             },
             dishSoap: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "مایع ظرفشویی" },
-                id: { type: "number", default: 4 }
             },
             chargingDishSoap: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "شارژ مایع دستشویی با صابون" },
-                id: { type: "number", default: 5 }
             },
             antiseptics: {
                 status: { type: Boolean },
-                icon: { type: "string" },
-                placeHolder: { type: "string" },
-                title: { type: "string", default: "مواد ضدعفونی کننده" },
-                id: { type: "number", default: 6 }
             },
             moreSanitaryFacilities: {
                 type: "string"
