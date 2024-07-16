@@ -865,7 +865,7 @@
                 }
             }
         },
-        "/villa/{id}/facility": {
+        "/villa/facility": {
             "get": {
                 "tags": [
                     "Utils"
@@ -875,20 +875,12 @@
                         "name": "Authorization Token",
                         "in": "header",
                         "required": "true"
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": "true"
                     }
                 ],
-                "summary": "Get Facility Of Specific Villa",
+                "summary": "Get Facility",
                 "responses": {
                     "200": {
                         "description": "Succ"
-                    },
-                    "404": {
-                        "description": "no villa found"
                     },
                     "500": {
                         "description": "Internal Server Error"
