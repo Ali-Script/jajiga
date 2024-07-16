@@ -291,12 +291,13 @@ exports.loginByCode = async (req, res) => {
 //* Checked (1)
 exports.getme = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ phone: req.user.phone })
+        const user = req.user;
+        Reflect.deleteProperty(user, "password")
+        const checkBan = await banModel.findOne({ phone: user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        const findVilla = await villaModel.find({ user: req.user._id }).sort({ _id: -1 }).lean()
-
-        return res.status(200).json({ statusCode: 200, message: "Succ", user: req.user, villas: findVilla })
+        const findVilla = await villaModel.find({ user: user._id }).sort({ _id: -1 }).lean()
+        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla })
 
     } catch (err) {
         return res.status(500).josn({ statusCode: 500, error: err.message });

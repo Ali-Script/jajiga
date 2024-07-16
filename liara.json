@@ -3,6 +3,10 @@
         {
             "name": "covers",
             "mountTo": "public/covers"
+        },
+        {
+            "name": "avatars",
+            "mountTo": "public/avatars"
         }
     ]
 }

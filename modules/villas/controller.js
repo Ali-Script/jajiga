@@ -256,109 +256,12 @@ exports.myVillas = async (req, res) => {
 }
 exports.getFacility = async (req, res) => {
     try {
-        const facility = {
-            facility: {
-                furniture: {
-                    title: "مبلمان",
-                    placeHolder: "مثال: مبلمان راحتی برای 7 نفر",
-                    icon: "",
-                    id: 1
-                },
-                fridge: {
-                    title: "یخچال",
-                    placeHolder: "توضیحات یخچال",
-                    icon: "",
-                    id: 2
-                },
-                tv: {
-                    title: "تلویزیون",
-                    placeHolder: "مثال: یک عدد تلویزیون فلت سامسونگ 48 اینچ و یک عدد تلویزیون پارس 14 اینچ",
-                    icon: "",
-                    id: 3
-                },
-                diningTable: {
-                    title: " میز نهارخوری",
-                    placeHolder: "مثال: میز نهارخوری برای 6 نفر و 6 عدد صندلی",
-                    icon: "",
-                    id: 4
-                },
-                heatingSystem: {
-                    title: " سیستم گرمایشی",
-                    placeHolder: "مثال: سیستم پکیج / بخاری گازی",
-                    icon: "",
-                    id: 5
-                },
-                coolingSystem: {
-                    title: " سیستم سرمایش",
-                    placeHolder: "مثال: اسپیلت 18 هزار",
-                    icon: "",
-                    id: 6
-                },
-                parking: {
-                    title: "پارکینگ",
-                    placeHolder: "مثال: پارکینگ مسقف برای 2 عدد اتومبیل / پارکینگ روباز برای 3 عدد اتومبیل",
-                    icon: "",
-                    id: 7
-                },
-                eightball: {
-                    title: "بیلیارد",
-                    placeHolder: "توضیحات میز بیلیارد",
-                    icon: "",
-                    id: 8
-                },
-                wifi: {
-                    title: " wifi اینترنت",
-                    placeHolder: "مشخص نمایید: اینترنت کابلی / بی‌سیم-وای‌فای",
-                    icon: "",
-                    id: 9
-                },
-                toilet: {
-                    title: " توالت فرهنگی",
-                    placeHolder: "توضیحات توالت فرنگی",
-                    icon: "",
-                    id: 10
-                },
-                pool: {
-                    title: "استخر",
-                    placeHolder: "توضیحات استخر",
-                    icon: "",
-                    id: 11
-                }
-            },
-            sanitaryFacilities: {
-                changeThePillow: {
-                    title: " تعویض رو بالشتی و رو تختی",
-                    icon: "",
-                    id: 1
-                },
-                changeTheBedsheet: {
-                    title: " تعویض ملحفه",
-                    icon: "",
-                    id: 2
-                },
-                chargingToiletPaper: {
-                    title: " شارژ کاغد توالت",
-                    icon: "",
-                    id: 3
-                },
-                dishSoap: {
-                    title: " مایع ظرفشویی",
-                    icon: "",
-                    id: 4
-                },
-                chargingDishSoap: {
-                    title: " شارژ مایع دستشویی با صابون",
-                    icon: "",
-                    id: 5
-                },
-                antiseptics: {
-                    title: " مواد ضدعفونی کننده",
-                    icon: "",
-                    id: 6
-                }
-            }
-        }
-        return res.status(200).json({ statusCode: 200, facility })
+        const id = req.params.id
+        const villa = await villaModel.findOne({ _id: id })
+        if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
+
+        return res.status(200).json({ statusCode: 200, facility: villa.facility })
+
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.delete = async (req, res) => {

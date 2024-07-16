@@ -4,23 +4,23 @@ const router = express.Router()
 const controller = require('./controller')
 const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
-const multerPhotoMiddleware = require('./../../middlewares/multerPhotoMiddleware')
+const addAvatarMiddleware = require('./../../middlewares/addAvatarMiddleware')
 
 router
     .route("/getAll")
-    .get(authMiddleware, isAdminMiddleware, controller.getAll)
+    .get(authMiddleware, controller.getAll)
 router
-    .route("/get/:email")
-    .get(authMiddleware, isAdminMiddleware, controller.getOne)
+    .route("/get/:phone")
+    .get(authMiddleware, controller.getOne)
 router
-    .route("/delete/:email")
-    .delete(authMiddleware, isAdminMiddleware, controller.delete)
+    .route("/remove/:phone")
+    .delete(authMiddleware, controller.delete)
 router
     .route("/setAvatar")
-    .post(authMiddleware, multerPhotoMiddleware.single("Avatar"), controller.setAvatar)
+    .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.setAvatar)
 router
-    .route("/update/")
-    .put(authMiddleware, controller.update)
+    .route("/changeName")
+    .put(authMiddleware, controller.changeName)
 router
     .route("/promotion/:email")
     .put(authMiddleware, isAdminMiddleware, controller.promotion)

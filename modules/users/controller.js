@@ -1,68 +1,77 @@
 const mongoose = require('mongoose');
 const userModel = require('./../auth/model');
+const villaModel = require('./../villas/model');
+const userVillaModel = require('./../user-villa/model');
 // const codeModel = require('./../authcode/model');
 const validator = require("email-validator");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const joi = require("./../../validator/authValidator");
 
 exports.getAll = async (req, res) => {
-    // try {
-    //     const users = await userModel.find().sort({ _id: -1 }).lean();
-    //     if (users.length == 0) return res.status(404).json({ status: false, message: 'No user found !' })
+    try {
+        const users = await userModel.find().sort({ _id: -1 }).lean();
+        if (users.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
-    //     return res.status(200).json({ status: true, users })
-    // } catch (err) { return res.status(422).send(err.message); }
+        const allUsers = []
+
+        users.forEach(user => {
+            Reflect.deleteProperty(user, "password")
+            allUsers.push(user)
+        })
+
+        return res.status(200).json({ statusCode: 200, users: allUsers })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.getOne = async (req, res) => {
-    // try {
-    //     const email = req.params.email
-    //     const validate = validator.validate(email);
-    //     if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+    try {
+        const phone = req.params.phone
 
-    //     const user = await userModel.findOne({ Email: email }).lean();
-    //     if (!user || user.length == 0) return res.status(404).json({ status: false, message: 'No user found !' })
+        const user = await userModel.findOne({ phone }).lean();
+        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
-    //     Reflect.deleteProperty(user, "Password")
+        Reflect.deleteProperty(user, "password")
 
-    //     return res.status(200).json({ status: true, user })
-    // } catch (err) { return res.status(422).send(err.message); }
+        return res.status(200).json({ statusCode: 200, user })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.delete = async (req, res) => {
-    // try {
-    //     const email = req.params.email
-    //     const validate = validator.validate(email);
-    //     if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+    try {
+        const phone = req.params.phone
 
-    //     const user = await userModel.findOneAndDelete({ Email: email }).lean();
-    //     if (!user || user.length == 0) return res.status(404).json({ status: false, message: 'No user found !' })
+        const user = await userModel.findOne({ phone }).lean();
+        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
-    //     return res.status(200).json("succ !")
-    // } catch (err) { return res.status(422).send(err.message); }
+        const villa = await villaModel.deleteMany({ user: user._id }).lean()
+        const userVilla = await userVillaModel.deleteMany({ user: user._id }).lean()
+        const removeuser = await userModel.findOneAndDelete({ phone }).lean()
+
+        return res.status(200).json({ statusCode: 200, message: "succ !" })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.setAvatar = async (req, res) => {
-    // try {
-    //     const user = await userModel.updateOne({ _id: req.user._id }, { $set: { Avatar: req.file.filename } })
-    //     if (!user || user.length == 0) return res.status(404).json({ status: false, message: 'No user found !' })
-
-    //     return res.status(200).json("succ !")
-    // } catch (err) { return res.status(422).send(err.message); }
-}
-exports.update = async (req, res) => {
     try {
-        // const { Email, UserName, Password, ConfirmPassword } = req.body
+        const user = await userModel.updateOne({ _id: req.user._id }, { $set: { avatar: req.file.filename } })
+        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
-        // const validator = joi.validate(req.body)
-        // if (validator.error) return res.status(409).json({ message: validator.error.details })
+        return res.status(200).json({ statusCode: 200, message: "succ !" })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.changeName = async (req, res) => {
+    try {
+        const user = req.user
+        const { firstName, lastName } = req.body
 
+        const regex = /[0-9]+/;
+        if (regex.test(firstName) | regex.test(lastName)) return res.status(406).json({ statusCode: 406, message: "number is not allowed in name" })
 
-        // const salt = bcrypt.genSaltSync(10);
-        // const hash = bcrypt.hashSync(Password, salt);
+        const update = await userModel.findOneAndUpdate({ _id: user._id }, { firstName, lastName })
 
-        // const user = await userModel.updateOne({ email: Email }, {
-        //     UserName,
-        //     Password: hash
-        // })
-    } catch (err) { return res.status(422).send(err.message); }
+        const finduser = await userModel.findOne({ _id: user._id }).lean()
+        Reflect.deleteProperty(finduser, "password")
+
+        return res.status(200).json({ statusCode: 200, message: "user updated succ !", user: finduser })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.promotion = async (req, res) => {
     // try {
@@ -76,7 +85,7 @@ exports.promotion = async (req, res) => {
 
     //     const makeadmin = await userModel.updateOne({ Email }, { Role: "admin" })
     //     return res.status(200).send({ message: "succ" })
-    // } catch (err) { return res.status(422).send(err.message); }
+    //} catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.demotion = async (req, res) => {
     // try {
@@ -90,7 +99,7 @@ exports.demotion = async (req, res) => {
 
     //     const makeadmin = await userModel.updateOne({ Email }, { Role: "user" })
     //     return res.status(200).send({ message: "succ" })
-    // } catch (err) { return res.status(422).send(err.message); }
+    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.forgetPassword = async (req, res) => {
     // try {
@@ -136,7 +145,7 @@ exports.forgetPassword = async (req, res) => {
     //         }
     //     })
 
-    // } catch (err) { return res.status(422).send(err.message); }
+    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.forgetPasswordCode = async (req, res) => {
     // try {
@@ -167,7 +176,7 @@ exports.forgetPasswordCode = async (req, res) => {
     //         return res.status(422).json({ message: "Code Has Expired !" })
     //     }
     //     return res.status(200).send({ message: "Password changed" })
-    // } catch (err) { return res.status(422).send(err.message); }
+    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 
 

@@ -36,7 +36,7 @@ const categoryRouter = require('./modules/category/router')
 
 app.use("/", authRouter)
 app.use("/auth/E-code", codeRouter)
-app.use("/users/", userRouter)
+app.use("/user/", userRouter)
 app.use("/villa/", villaRouter)
 app.use("/ban/", banRouter)
 app.use("/notification/", notificationRouter)
