@@ -1293,7 +1293,7 @@
             }
         },
         "/user/forgetPasswordCode": {
-            "post": {
+            "put": {
                 "tags": [
                     "Users"
                 ],
