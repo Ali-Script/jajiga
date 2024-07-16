@@ -1130,6 +1130,18 @@
                         "required": "true"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "avatar": "file"
+                                }
+                            }
+                        }
+                    }
+                },
                 "summary": "set Avatar | Change Avatar",
                 "responses": {
                     "200": {
@@ -1137,6 +1149,200 @@
                     },
                     "404": {
                         "description": "no user found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/promotion/{phone}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Promotion User To Admin",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "422": {
+                        "description": "this user is already admin"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/demotion/{phone}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "demotion User To NormalUser",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "422": {
+                        "description": "this user is already NormalUser"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/changePassword": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "currentPassword": "َ^[a-zA-Z0-9]{8,999}$",
+                                    "newPassword": "َ^[a-zA-Z0-9]{8,999}$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Change Password",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "401": {
+                        "description": "Password is Incrract"
+                    },
+                    "402": {
+                        "description": "You cannot reset your last password to a new password"
+                    },
+                    "406": {
+                        "description": "The password must contain 8 characters or more and contain at least one number and one capital letter"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/forgetPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Send Code To Change The Password",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/forgetPasswordCode": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "code": "َ1111",
+                                    "password": "َ^[a-zA-Z0-9]{8,999}$",
+                                    "confirmPassword": "َ^[a-zA-Z0-9]{8,999}$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Confirm Code And Change The Password",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "402": {
+                        "description": "You cannot reset your last password to a new password"
+                    },
+                    "404": {
+                        "description": "no otp code found for this number"
+                    },
+                    "405": {
+                        "description": "Code has Used before!"
+                    },
+                    "406": {
+                        "description": "The password must contain 8 characters or more and contain at least one number and one capital letter"
+                    },
+                    "416": {
+                        "description": "password and confirmPassword are not same"
+                    },
+                    "422": {
+                        "description": "Code Has Expired !"
                     },
                     "500": {
                         "description": "Internal Server Error"

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const userModel = require('./../auth/model');
 const villaModel = require('./../villas/model');
+const OtpcodeModel = require('./../authcode/OTPModel');
 const userVillaModel = require('./../user-villa/model');
 // const codeModel = require('./../authcode/model');
 const validator = require("email-validator");
@@ -74,109 +75,105 @@ exports.changeName = async (req, res) => {
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.promotion = async (req, res) => {
-    // try {
-    //     const Email = req.params.email;
-    //     const validate = validator.validate(Email);
-    //     if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+    try {
+        const phone = req.params.phone;
 
-    //     const user = await userModel.findOne({ Email })
-    //     if (!user || user.length == 0) return res.status(404).send({ message: "user not found" })
-    //     if (user.Role === "admin") return res.status(422).send({ message: "this user is already admin" })
+        const user = await userModel.findOne({ phone })
+        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
+        if (user.role === "admin") return res.status(422).json({ statusCode: 422, message: "this user is already admin" })
 
-    //     const makeadmin = await userModel.updateOne({ Email }, { Role: "admin" })
-    //     return res.status(200).send({ message: "succ" })
-    //} catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+        const makeadmin = await userModel.updateOne({ phone }, { role: "admin" })
+        return res.status(200).json({ statusCode: 200, message: "succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.demotion = async (req, res) => {
-    // try {
-    //     const Email = req.params.email;
-    //     const validate = validator.validate(Email);
-    //     if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+    try {
+        const phone = req.params.phone;
 
-    //     const user = await userModel.findOne({ Email })
-    //     if (!user || user.length == 0) return res.status(404).send({ message: "user not found" })
-    //     if (user.Role === "user") return res.status(422).send({ message: "this user is already user" })
+        const user = await userModel.findOne({ phone })
+        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
+        if (user.role === "user") return res.status(422).json({ statusCode: 422, message: "this user is already NormalUser" })
 
-    //     const makeadmin = await userModel.updateOne({ Email }, { Role: "user" })
-    //     return res.status(200).send({ message: "succ" })
-    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+        const makeadmin = await userModel.updateOne({ phone }, { role: "user" })
+        return res.status(200).json({ statusCode: 200, message: "succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.changePassword = async (req, res) => {
+    try {
+        const user = req.user
+        const { currentPassword, newPassword } = req.body
+
+        const checkPassword = await bcrypt.compare(currentPassword, user.password)
+        if (!checkPassword) {
+            return res.status(401).json({ statusCode: 401, message: "Password is Incrract !!" })
+        }
+
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(newPassword, salt);
+
+        if (await bcrypt.compare(newPassword, user.password)) return res.status(402).json({ statusCode: 402, message: "You cannot reset your last password to a new password" })
+
+        const regex = /^[a-zA-Z0-9]{8,999}$/;
+        if (regex.test(newPassword)) return res.status(406).json({ statusCode: 406, message: "The password must contain 8 characters or more and contain at least one number and one capital letter" })
+
+        const updatePass = await userModel.findOneAndUpdate({ _id: user._id }, { password: hash })
+        return res.status(200).json({ statusCode: 200, message: "Succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.forgetPassword = async (req, res) => {
-    // try {
-    //     const Email = req.body.Email;
-    //     const validate = validator.validate(Email);
-    //     if (!validate) return res.status(400).send({ error: 'Invalid Email' })
+    try {
 
-    //     const user = await userModel.findOne({ Email })
-    //     if (!user || user.length == 0) return res.status(404).send({ message: "user not found" })
+        await OtpcodeModel.create({
+            code: 1111,
+            phone: req.user.phone,
+            expiresIn: Date.now() + 99999999, // 120000
+            for: "pssword"
+        })
+        return res.status(200).json({ statusCode: 200, message: "code sended succ" })
 
-    //     const code = Math.floor(Math.random() * 1000000)
-
-
-    //     let transport = nodemailer.createTransport({
-    //         service: "gmail",
-    //         auth: {
-    //             user: "ali.prg01@gmail.com",
-    //             pass: "eopj hyfz fyha nduv"
-    //         }
-    //     })
-
-    //     const mailOptions = {
-    //         from: "ali.prg01@gmail.com",
-    //         to: req.body.Email,
-    //         subject: "jajigacode",
-    //         text: `${code}`,
-    //     }
-
-    //     transport.sendMail(mailOptions, async (e, i) => {
-
-    //         if (e) {
-    //             return res.status(500).json({ error: e.message })
-    //         }
-    //         else {
-    //             const setcode = await codeModel.create({
-    //                 Code: code,
-    //                 Email,
-    //                 ExpiresIn: Date.now() + 120000,
-    //             })
-    //             if (!setcode) return res.status(500).json({ err: "Server Err" })
-
-    //             return res.status(200).json({ message: "Email Sended !" })
-    //         }
-    //     })
-
-    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
-exports.forgetPasswordCode = async (req, res) => {
-    // try {
-    //     const { Code, Password, ConfirmPassword, Email } = req.body
+exports.forgetPasswordConfirmCode = async (req, res) => {
+    try {
+        const user = req.user
 
-    //     const Passregex = new RegExp('^[a-zA-Z0-9]{8,999}$')
-    //     const test = Password.match(Passregex)
+        const { code, password, confirmPassword } = req.body;
+        if (password != confirmPassword) return res.status(416).json({ statusCode: 416, message: "password and confirmPassword are not same" })
 
-    //     if (test == null) return res.status(422).send({ message: "Password mus have a number and captal letter and more than 8 char" })
-    //     if (Password != ConfirmPassword) return res.status(422).send({ message: "Confirm password is not equal with password!" });
+        const getCode = await OtpcodeModel.find({ phone: user.phone }).sort({ _id: -1 }).lean()
+        if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${user.phone}` })
 
+        if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {
 
-    //     const getCode = await codeModel.find({ Email }).sort({ _id: -1 }).lean()
-    //     if (getCode.length == 0) return res.status(404).json({ message: `There is no Code for : ${Email}` })
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(password, salt);
 
-    //     if (getCode[0].Code == Code && getCode[0].ExpiresIn > Date.now()) {
-    //         const salt = bcrypt.genSaltSync(10);
-    //         const hash = bcrypt.hashSync(Password, salt);
+            const checkUses = await OtpcodeModel.find({ code }).sort({ _id: -1 })
+            if (checkUses[0].used == 1) return res.status(405).json({ statusCode: 405, message: "Code has Used before!" })
 
-    //         const changePass = await userModel.updateOne({ Email }, { Password: hash })
-    //     }
-    //     else if (getCode[0].Code != Code) {
+            const regex = /^[a-zA-Z0-9]{8,999}$/
+            if (!regex.test(password)) return res.status(406).json({ statusCode: 406, message: "The password must contain 8 characters or more and contain at least one number and one capital letter" })
 
-    //         return res.status(400).json({ message: "Invalid Code !" })
-    //     }
-    //     else if (getCode[0].ExpiresIn < Date.now()) {
+            if (await bcrypt.compare(password, user.password)) return res.status(402).json({ statusCode: 402, message: "You cannot reset your last password to a new password" })
 
-    //         return res.status(422).json({ message: "Code Has Expired !" })
-    //     }
-    //     return res.status(200).send({ message: "Password changed" })
-    // } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+            const updateUser = await userModel.findOneAndUpdate({ _id: user._id }, { password: hash })
+            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
+
+            return res.status(200).json({ statusCode: 200, message: "Password Changed !" })
+
+        } else if (getCode[0].code != code) {
+            return res.status(400).json({ statusCode: 400, message: "Invalid Code !" })
+        }
+        else if (getCode[0].expiresIn < Date.now()) {
+            return res.status(422).json({ statusCode: 422, message: "Code Has Expired !" })
+        }
+
+        return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 
 

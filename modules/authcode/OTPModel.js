@@ -5,6 +5,11 @@ const schema = new mongoose.Schema({
         type: 'number',
         required: true
     },
+    for: {
+        type: 'string',
+        enum: ["auth", "pssword"],
+        required: true
+    },
     phone: {
         type: 'string',
         required: true

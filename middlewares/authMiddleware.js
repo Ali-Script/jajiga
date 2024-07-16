@@ -22,9 +22,11 @@ module.exports = async (req, res, next) => {
         if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
 
         const userobj = user.toObject()
-        Reflect.deleteProperty(userobj, "Password")
+        // Reflect.deleteProperty(userobj, "Password")
 
+        // req.user = userobj
         req.user = userobj
+
         return next();
     }
     catch (err) {

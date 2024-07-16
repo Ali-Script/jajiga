@@ -10,7 +10,7 @@ const joi = require('./../../validator/authValidator');
 const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
 const { signedCookie } = require('cookie-parser');
 require("dotenv").config()
-const request = require('request');
+
 
 exports.start = async (req, res) => {
     try {
@@ -40,6 +40,7 @@ exports.signup = async (req, res) => {
                 code: 1111,
                 phone,
                 expiresIn: Date.now() + 120000,
+                for: "auth"
             })
 
             return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
@@ -102,6 +103,7 @@ exports.sendOtpPhone = async (req, res) => {
             code: 1111,
             phone,
             expiresIn: Date.now() + 99999999, // 120000
+            for: "auth"
         })
 
         return res.status(200).json({ statusCode: 200, message: "code sended succ" })
@@ -370,6 +372,7 @@ exports.resendCode = async (req, res) => {
             code: 1111,
             phone: phone,
             expiresIn: Date.now() + 120000,
+            for: "auth"
         })
 
         return res.status(200).json({ statusCode: 200, message: "succ !" })
