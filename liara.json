@@ -1,0 +1,8 @@
+{
+    "disks": [
+        {
+            "name": "covers",
+            "mountTo": "public/covers"
+        }
+    ]
+}
