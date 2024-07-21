@@ -16,6 +16,9 @@ router
     .route("/getAll")
     .get(controller.getAll)
 router
+    .route("/getAllActivated")
+    .get(controller.getAllActivated)
+router
     .route("/get/:id")
     .get(authMiddleware, controller.getOne)
 router

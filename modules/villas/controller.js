@@ -153,55 +153,71 @@ exports.update = async (req, res) => {
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json(validator.error.details)
 
+        if (req.files != undefined) {
 
-        if (req.files.length != 0) {
+            if (req.files.length != 0) {
 
-            let coverFiles = []
-            const covers = req.files;
-            covers.forEach(i => coverFiles.push(i.filename))
+                let coverFiles = []
+                const covers = req.files;
+                covers.forEach(i => coverFiles.push(i.filename))
 
-            if (coverFiles.length < 3) return res.status(406).json({ statusCode: 406, message: "The minimum number of photos is 3" })
+                if (coverFiles.length < 3) return res.status(406).json({ statusCode: 406, message: "The minimum number of photos is 3" })
 
-            const newVilla = await villaModel.updateOne({ _id: id }, {
-                user: req.user._id,
-                title,
-                cover: coverFiles,
-                address,
-                coordinates,
-                aboutVilla,
-                capacity,
-                facility,
-                price,
-                rules,
-                step,
-                finished,
-                disable
-            })
+                const newVilla = await villaModel.updateOne({ _id: id }, {
+                    user: req.user._id,
+                    title,
+                    cover: coverFiles,
+                    address,
+                    coordinates,
+                    aboutVilla,
+                    capacity,
+                    facility,
+                    price,
+                    rules,
+                    step,
+                    finished,
+                    disable
+                })
 
-            const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
-            return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
+                const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
+                return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
 
-        } else {
+            } else {
 
-            const newVilla = await villaModel.updateOne({ _id: id }, {
-                user: req.user._id,
-                title,
-                address,
-                coordinates,
-                aboutVilla,
-                capacity,
-                facility,
-                price,
-                rules,
-                step,
-                finished
-            })
+                const newVilla = await villaModel.updateOne({ _id: id }, {
+                    user: req.user._id,
+                    title,
+                    address,
+                    coordinates,
+                    aboutVilla,
+                    capacity,
+                    facility,
+                    price,
+                    rules,
+                    step,
+                    finished
+                })
 
-            const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
-            return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
+                const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
+                return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
+            }
         }
+        const newVilla = await villaModel.updateOne({ _id: id }, {
+            user: req.user._id,
+            title,
+            address,
+            coordinates,
+            aboutVilla,
+            capacity,
+            facility,
+            price,
+            rules,
+            step,
+            finished
+        })
 
-
+        const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
+        return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
@@ -212,6 +228,17 @@ exports.getAll = async (req, res) => {
             .sort({ _id: -1 })
             .lean()
         if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+
+        return res.status(200).json({ statusCode: 200, villas: villas })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.getAllActivated = async (req, res) => {
+    try {
+        const villas = await villaModel.find({ disable: false })
+            .populate("user", "firstName lastName role")
+            .sort({ _id: -1 })
+            .lean()
+        if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no Activated villa!" })
 
         return res.status(200).json({ statusCode: 200, villas: villas })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }

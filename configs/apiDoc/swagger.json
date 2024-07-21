@@ -772,6 +772,25 @@
                 }
             }
         },
+        "/villa/getAllActivated": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "summary": "Get All Activated Villas",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no villa found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/villa/myVillas": {
             "get": {
                 "tags": [
