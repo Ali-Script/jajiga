@@ -131,7 +131,8 @@ const schema = Joi.object({
         more: Joi.string(),
     }),
     step: Joi.number().required(),
-    finished: Joi.boolean().required()
+    finished: Joi.boolean().required(),
+    disable: Joi.boolean()
 });
 
 module.exports = schema;

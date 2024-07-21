@@ -188,6 +188,10 @@ const schema = new mongoose.Schema({
     },
     finished: {
         type: Boolean
+    },
+    disable: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true })
 
