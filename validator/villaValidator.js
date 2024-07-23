@@ -130,8 +130,8 @@ const schema = Joi.object({
         smoke: Joi.boolean(),
         more: Joi.string(),
     }),
-    step: Joi.number().required(),
     finished: Joi.boolean().required(),
+    step: Joi.number().when("finished", { is: false, then: Joi.required() }),
     disable: Joi.boolean()
 });
 

@@ -195,7 +195,8 @@ exports.update = async (req, res) => {
                     price,
                     rules,
                     step,
-                    finished
+                    finished,
+                    disable
                 })
 
                 const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
@@ -213,7 +214,8 @@ exports.update = async (req, res) => {
             price,
             rules,
             step,
-            finished
+            finished,
+            disable
         })
 
         const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
