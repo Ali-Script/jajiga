@@ -191,7 +191,7 @@ const schema = new mongoose.Schema({
     },
     disable: {
         type: Boolean,
-        default: true
+        default: false
     }
 }, { timestamps: true })
 
