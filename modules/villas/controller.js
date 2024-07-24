@@ -141,14 +141,14 @@ exports.add = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const id = req.params.id
-
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ statusCode: 400, error: 'Invalid Object Id' })
 
         const findVilla = await villaModel.findOne({ _id: id }).lean()
         if (!findVilla) return res.status(401).json({ statusCode: 401, error: 'no villa found with this id' })
 
-        const { title, disable, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
+        const { title, disable, oldPics, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
+        let oldPicsArray = oldPics.split(";")
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json(validator.error.details)
@@ -158,10 +158,15 @@ exports.update = async (req, res) => {
             if (req.files.length != 0) {
 
                 let coverFiles = []
+
+                if (oldPicsArray) {
+                    oldPicsArray.forEach(i => coverFiles.push(i))
+                }
+
                 const covers = req.files;
                 covers.forEach(i => coverFiles.push(i.filename))
 
-                if (coverFiles.length < 3) return res.status(406).json({ statusCode: 406, message: "The minimum number of photos is 3" })
+                if (coverFiles.length > 10) return res.status(406).json({ statusCode: 406, message: "The maximum number of photos is 10" })
 
                 const newVilla = await villaModel.updateOne({ _id: id }, {
                     user: req.user._id,
@@ -189,6 +194,7 @@ exports.update = async (req, res) => {
                     title,
                     address,
                     coordinates,
+                    cover: oldPicsArray,
                     aboutVilla,
                     capacity,
                     facility,
@@ -208,6 +214,7 @@ exports.update = async (req, res) => {
             title,
             address,
             coordinates,
+            cover: oldPicsArray,
             aboutVilla,
             capacity,
             facility,

@@ -13,10 +13,7 @@ const schema = Joi.object({
         x: Joi.string(),
         y: Joi.string(),
     }),
-    cover: Joi.array().items(Joi.string())
-        .min(3)
-        .max(10)
-    ,
+    cover: Joi.array().items(Joi.string()),
     aboutVilla: Joi.object().keys({
         villaSpace: Joi.string().valid("privetRoom", "lockedRoom", "semiClosedRoom", "commonRoom"),
         villaType: Joi.objectId(),
@@ -132,7 +129,8 @@ const schema = Joi.object({
     }),
     finished: Joi.boolean().required(),
     step: Joi.number().when("finished", { is: false, then: Joi.required() }),
-    disable: Joi.boolean()
+    disable: Joi.boolean(),
+    oldPics: Joi.string()
 });
 
 module.exports = schema;

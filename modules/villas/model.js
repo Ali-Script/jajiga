@@ -192,6 +192,9 @@ const schema = new mongoose.Schema({
     disable: {
         type: Boolean,
         default: false
+    },
+    oldPics: {
+        type: "string",
     }
 }, { timestamps: true })
 
