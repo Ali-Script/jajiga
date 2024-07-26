@@ -1345,6 +1345,51 @@
                     }
                 }
             }
+        },
+        "/user/changeName": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "firstName": "firstName",
+                                    "lastName": "lastName"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Change FullName",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "406": {
+                        "description": "number is not allowed in name"
+                    },
+                    "420": {
+                        "description": "Minimum 3 characters"
+                    },
+                    "421": {
+                        "description": "You cannot reset your last name to a new name"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }

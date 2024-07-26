@@ -63,6 +63,14 @@ exports.changeName = async (req, res) => {
         const user = req.user
         const { firstName, lastName } = req.body
 
+        if (firstName.length < 3 || lastName.length < 3) {
+            return res.status(420).json({ statusCode: 420, message: "Minimum 3 characters" })
+        }
+
+        if (firstName == user.firstName & lastName == user.lastName) {
+            return res.status(421).json({ statusCode: 421, message: "You cannot reset your last name to a new name" })
+        }
+
         const regex = /[0-9]+/;
         if (regex.test(firstName) | regex.test(lastName)) return res.status(406).json({ statusCode: 406, message: "number is not allowed in name" })
 
@@ -160,7 +168,7 @@ exports.forgetPasswordConfirmCode = async (req, res) => {
             const checkUses = await OtpcodeModel.find({ code }).sort({ _id: -1 })
             if (checkUses[0].used == 1) return res.status(405).json({ statusCode: 405, message: "Code has Used before!" })
 
-            const regex = /^[a-zA-Z0-9]{8,999}$/
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9.@$\-_#]{8,}$/
             if (!regex.test(password)) return res.status(406).json({ statusCode: 406, message: "The password must contain 8 characters or more and contain at least one number and one capital letter" })
 
             if (await bcrypt.compare(password, user.password)) return res.status(402).json({ statusCode: 402, message: "You cannot reset your last password to a new password" })
