@@ -16,11 +16,8 @@ router
     .route("/remove/:phone")
     .delete(authMiddleware, controller.delete)
 router
-    .route("/setAvatar")
-    .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.setAvatar)
-router
-    .route("/changeName")
-    .put(authMiddleware, controller.changeName)
+    .route("/edit")
+    .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.edit)
 router
     .route("/changeRole/:key/:phone")
     .put(authMiddleware, controller.changeRole)
@@ -33,6 +30,12 @@ router
 router
     .route("/forgotPasswordCode")
     .put(authMiddleware, controller.forgetPasswordConfirmCode)
+router
+    .route("/addEmail")
+    .post(authMiddleware, controller.addEmail)
+router
+    .route("/authEmail")
+    .put(authMiddleware, controller.authEmail)
 
 
 

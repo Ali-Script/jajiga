@@ -3,26 +3,24 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
     code: {
         type: 'number',
-        required: true
     },
     for: {
         type: 'string',
-        enum: ["auth", "pssword"],
-        required: true
+        enum: ["auth", "password", "email"],
     },
     phone: {
         type: 'string',
-        required: true
+    },
+    email: {
+        type: 'string',
     },
     expiresIn: {
         type: "number",
-        required: true
     },
     used: {
         type: 'number',
         enum: [0, 1],
         default: 0
-
     },
 }, { timestamps: true })
 

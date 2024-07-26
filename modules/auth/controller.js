@@ -39,6 +39,7 @@ exports.signup = async (req, res) => {
             await OtpcodeModel.create({
                 code: 1111,
                 phone,
+                email: null,
                 expiresIn: Date.now() + 120000,
                 for: "auth"
             })
@@ -102,6 +103,7 @@ exports.sendOtpPhone = async (req, res) => {
         await OtpcodeModel.create({
             code: 1111,
             phone,
+            email: null,
             expiresIn: Date.now() + 99999999, // 120000
             for: "auth"
         })
@@ -141,7 +143,10 @@ exports.authOtpPhone = async (req, res) => {
                 firstName,
                 lastName,
                 phone,
-                password: hash
+                password: hash,
+                gender: null,
+                aboutMe: null,
+                avatar: null,
             })
 
             user = await user.save();

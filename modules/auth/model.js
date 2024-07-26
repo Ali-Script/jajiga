@@ -32,6 +32,10 @@ const schema = new mongoose.Schema({
     aboutMe: {
         type: 'string',
     },
+    gender: {
+        type: 'string',
+        enum: ['male', 'female'],
+    },
     refreshToken: {
         type: 'string',
     },

@@ -3,9 +3,10 @@ const userModel = require('./../auth/model');
 const villaModel = require('./../villas/model');
 const OtpcodeModel = require('./../authcode/OTPModel');
 const userVillaModel = require('./../user-villa/model');
-// const codeModel = require('./../authcode/model');
-const validator = require("email-validator");
+const newsletter = require('./../newsletter/model');
+const emailValidator = require("email-validator");
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv").config();
 const bcrypt = require("bcrypt");
 const joi = require("./../../validator/authValidator");
 
@@ -48,38 +49,6 @@ exports.delete = async (req, res) => {
         const removeuser = await userModel.findOneAndDelete({ phone }).lean()
 
         return res.status(200).json({ statusCode: 200, message: "succ !" })
-    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
-}
-exports.setAvatar = async (req, res) => {
-    try {
-        const user = await userModel.updateOne({ _id: req.user._id }, { $set: { avatar: req.file.filename } })
-        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
-
-        return res.status(200).json({ statusCode: 200, message: "succ !" })
-    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
-}
-exports.changeName = async (req, res) => {
-    try {
-        const user = req.user
-        const { firstName, lastName } = req.body
-
-        if (firstName.length < 3 || lastName.length < 3) {
-            return res.status(420).json({ statusCode: 420, message: "Minimum 3 characters" })
-        }
-
-        if (firstName == user.firstName & lastName == user.lastName) {
-            return res.status(421).json({ statusCode: 421, message: "You cannot reset your last name to a new name" })
-        }
-
-        const regex = /[0-9]+/;
-        if (regex.test(firstName) | regex.test(lastName)) return res.status(406).json({ statusCode: 406, message: "number is not allowed in name" })
-
-        const update = await userModel.findOneAndUpdate({ _id: user._id }, { firstName, lastName })
-
-        const finduser = await userModel.findOne({ _id: user._id }).lean()
-        Reflect.deleteProperty(finduser, "password")
-
-        return res.status(200).json({ statusCode: 200, message: "user updated succ !", user: finduser })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.changeRole = async (req, res) => {
@@ -143,8 +112,9 @@ exports.forgetPassword = async (req, res) => {
         await OtpcodeModel.create({
             code: 1111,
             phone: req.user.phone,
+            email: null,
             expiresIn: Date.now() + 99999999, // 120000
-            for: "pssword"
+            for: "password"
         })
         return res.status(200).json({ statusCode: 200, message: "code sended succ" })
 
@@ -189,5 +159,120 @@ exports.forgetPasswordConfirmCode = async (req, res) => {
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
+exports.edit = async (req, res) => {
+    try {
+        const user = req.user
+        const { avatar, firstName, lastName, gender, aboutMe } = req.body;
+
+        const regex = /[0-9]+/;
+
+        if (regex.test(firstName) | regex.test(lastName)) return res.status(406).json({ statusCode: 406, message: "number is not allowed in name" })
+        else if (firstName == user.firstName) return res.status(421).json({ statusCode: 421, message: "You cannot reset your last name to a new name" })
+        else if (lastName == user.lastName) return res.status(421).json({ statusCode: 421, message: "You cannot reset your last name to a new name" })
+        else if (gender !== "male" && gender !== "female") {
+            return res.status(400).json({ statusCode: 400, message: "Invalid gendet. Only 'male' or 'female' is allowed." });
+        }
+
+        if (req.file != undefined) {
+
+            const update = await userModel.findOneAndUpdate({ _id: user._id }, {
+                firstName,
+                lastName,
+                avatar: req.file.filename,
+                gender,
+                aboutMe
+            })
+            const finduser = await userModel.findOne({ _id: user._id }).lean()
+            Reflect.deleteProperty(finduser, "password")
+
+            return res.status(200).json({ statusCode: 200, message: "user updated succ !", user: finduser })
+        }
+
+        const update = await userModel.findOneAndUpdate({ _id: user._id }, {
+            firstName,
+            lastName,
+            gender,
+            aboutMe
+        })
+
+        const finduser = await userModel.findOne({ _id: user._id }).lean()
+        Reflect.deleteProperty(finduser, "password")
+
+        return res.status(200).json({ statusCode: 200, message: "user updated succ !", user: finduser })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.addEmail = async (req, res) => {
+    try {
+        const user = req.user
+        const { email } = req.body;
+
+        if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 422, message: "Invalid email" })
+
+        await OtpcodeModel.create({
+            code: 1111,
+            phone: null,
+            email,
+            expiresIn: Date.now() + 99999999, // 120000
+            for: "email"
+        })
+
+        let transport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.NODEMAILER_EMAIL,
+                pass: process.env.NODEMAILER_EMAIL_PASSWORD
+            }
+        })
+
+        const mailOptions = {
+            from: process.env.NODEMAILER_EMAIL,
+            to: req.body.email,
+            subject: "Add Email in Jajiga",
+            text: "1111",
+        }
+
+        transport.sendMail(mailOptions, async (e, i) => {
+            if (e) {
+                return res.status(400).json({ statusCode: 400, message: e.message })
+            }
+            else {
+                return res.status(200).json({ statusCode: 200, message: "code sended succ" })
+            }
+        })
+
+        // return res.status(422).json({ statusCode: 422, message: "unknown error" })
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.authEmail = async (req, res) => {
+    try {
+        const user = req.user
+        const { email, code } = req.body;
+
+        if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 422, message: "Invalid email" })
+
+        const getCode = await OtpcodeModel.find({ email }).sort({ _id: -1 }).lean()
+        if (getCode.length == 0) return res.status(404).json({ statusCode: 404, message: `There is no Code for : ${email}` })
+
+        if (getCode[0].code == code && getCode[0].expiresIn > Date.now()) {
+
+            const checkUses = await OtpcodeModel.find({ code }).sort({ _id: -1 })
+            if (checkUses[0].used == 1) return res.status(405).json({ statusCode: 405, message: "Code has Used before!" })
 
 
+            const updateUser = await userModel.findOneAndUpdate({ _id: user._id }, { $set: { email } })
+            await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
+            const news = await newsletter.create({ email })
+            return res.status(200).json({ statusCode: 200, message: "email Changed !" })
+
+        } else if (getCode[0].code != code) {
+            return res.status(400).json({ statusCode: 400, message: "Invalid Code !" })
+        }
+        else if (getCode[0].expiresIn < Date.now()) {
+            return res.status(422).json({ statusCode: 422, message: "Code Has Expired !" })
+        }
+
+        return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
