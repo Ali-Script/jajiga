@@ -124,8 +124,8 @@
                                     "phone": "phone number",
                                     "firstName": "firstName",
                                     "lastName": "lastName",
-                                    "password": "^[a-zA-Z0-9]{8,999}$",
-                                    "confirmPassword": "^[a-zA-Z0-9]{8,999}$"
+                                    "password": "min 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special characters . - _ @ $ #",
+                                    "confirmPassword": "min 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special characters . - _ @ $ #"
                                 }
                             }
                         }
@@ -1175,7 +1175,7 @@
                 }
             }
         },
-        "/user/demotion/{phone}": {
+        "/user/changeRole/{key}/{phone}": {
             "put": {
                 "tags": [
                     "Users"
@@ -1190,12 +1190,23 @@
                         "name": "phone",
                         "in": "path",
                         "required": "true"
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": "true"
                     }
                 ],
-                "summary": "demotion User To NormalUser",
+                "summary": "Change User Role (Only 'promotion' or 'demotion' is allowed in key parameter.)",
                 "responses": {
                     "200": {
                         "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid key. Only 'promotion' or 'demotion' is allowed."
+                    },
+                    "401": {
+                        "description": "unknown error"
                     },
                     "404": {
                         "description": "no user found"
@@ -1227,8 +1238,8 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "currentPassword": "َ^[a-zA-Z0-9]{8,999}$",
-                                    "newPassword": "َ^[a-zA-Z0-9]{8,999}$"
+                                    "currentPassword": "َmin 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special character . - _ @ $ #",
+                                    "newPassword": "َmin 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special character . - _ @ $ #"
                                 }
                             }
                         }
@@ -1254,7 +1265,7 @@
                 }
             }
         },
-        "/user/forgetPassword": {
+        "/user/forgotPassword": {
             "post": {
                 "tags": [
                     "Users"
@@ -1277,7 +1288,7 @@
                 }
             }
         },
-        "/user/forgetPasswordCode": {
+        "/user/forgotPasswordCode": {
             "put": {
                 "tags": [
                     "Users"
@@ -1296,8 +1307,8 @@
                                 "type": "object",
                                 "example": {
                                     "code": "َ1111",
-                                    "password": "َ^[a-zA-Z0-9]{8,999}$",
-                                    "confirmPassword": "َ^[a-zA-Z0-9]{8,999}$"
+                                    "password": "َmin 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special character . - _ @ $ #",
+                                    "confirmPassword": "َmin 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special character . - _ @ $ #"
                                 }
                             }
                         }
@@ -1321,7 +1332,7 @@
                         "description": "Code has Used before!"
                     },
                     "406": {
-                        "description": "The password must contain 8 characters or more and contain at least one number and one capital letter"
+                        "description": "min 8 character at least one lowercase letter and one uppercase letter, at least one number and accept special character . - _ @ $ #"
                     },
                     "416": {
                         "description": "password and confirmPassword are not same"

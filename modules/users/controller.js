@@ -74,29 +74,35 @@ exports.changeName = async (req, res) => {
         return res.status(200).json({ statusCode: 200, message: "user updated succ !", user: finduser })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
-exports.promotion = async (req, res) => {
+exports.changeRole = async (req, res) => {
     try {
         const phone = req.params.phone;
+        const key = req.params.key;
 
+        if (key !== "promotion" && key !== "demotion") {
+            return res.status(400).json({ statusCode: 400, message: "Invalid key. Only 'promotion' or 'demotion' is allowed." });
+        }
         const user = await userModel.findOne({ phone })
-        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
-        if (user.role === "admin") return res.status(422).json({ statusCode: 422, message: "this user is already admin" })
 
-        const makeadmin = await userModel.updateOne({ phone }, { role: "admin" })
-        return res.status(200).json({ statusCode: 200, message: "succ" })
+        if (key == "promotion") {
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
-}
-exports.demotion = async (req, res) => {
-    try {
-        const phone = req.params.phone;
+            if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
+            if (user.role === "admin") return res.status(422).json({ statusCode: 422, message: "this user is already admin" })
 
-        const user = await userModel.findOne({ phone })
-        if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
-        if (user.role === "user") return res.status(422).json({ statusCode: 422, message: "this user is already NormalUser" })
+            const makeadmin = await userModel.updateOne({ phone }, { role: "admin" })
+            return res.status(200).json({ statusCode: 200, message: "succ" })
 
-        const makeadmin = await userModel.updateOne({ phone }, { role: "user" })
-        return res.status(200).json({ statusCode: 200, message: "succ" })
+        } else if (key == "demotion") {
+
+            if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: "user not found" })
+            if (user.role === "user") return res.status(422).json({ statusCode: 422, message: "this user is already NormalUser" })
+
+            const makeadmin = await userModel.updateOne({ phone }, { role: "user" })
+            return res.status(200).json({ statusCode: 200, message: "succ" })
+
+        } else {
+            return res.status(400).json({ statusCode: 401, message: "unknown error" })
+        }
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
@@ -115,8 +121,8 @@ exports.changePassword = async (req, res) => {
 
         if (await bcrypt.compare(newPassword, user.password)) return res.status(402).json({ statusCode: 402, message: "You cannot reset your last password to a new password" })
 
-        const regex = /^[a-zA-Z0-9]{8,999}$/;
-        if (regex.test(newPassword)) return res.status(406).json({ statusCode: 406, message: "The password must contain 8 characters or more and contain at least one number and one capital letter" })
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9.@$\-_#]{8,}$/;
+        if (!regex.test(newPassword)) return res.status(406).json({ statusCode: 406, message: "The password must contain 8 characters or more and contain at least one number and one capital letter" })
 
         const updatePass = await userModel.findOneAndUpdate({ _id: user._id }, { password: hash })
         return res.status(200).json({ statusCode: 200, message: "Succ" })

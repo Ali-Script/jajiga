@@ -22,23 +22,18 @@ router
     .route("/changeName")
     .put(authMiddleware, controller.changeName)
 router
-    .route("/promotion/:phone")
-    .put(authMiddleware, controller.promotion)
-router
-    .route("/demotion/:phone")
-    .put(authMiddleware, controller.demotion)
+    .route("/changeRole/:key/:phone")
+    .put(authMiddleware, controller.changeRole)
 router
     .route("/changePassword")
     .put(authMiddleware, controller.changePassword)
 router
-    .route("/forgetPassword")
+    .route("/forgotPassword")
     .post(authMiddleware, controller.forgetPassword)
 router
-    .route("/forgetPasswordCode")
+    .route("/forgotPasswordCode")
     .put(authMiddleware, controller.forgetPasswordConfirmCode)
-router
-    .route("/forgetPasswordCode")
-    .put(authMiddleware, controller.forgetPasswordConfirmCode)
+
 
 
 module.exports = router

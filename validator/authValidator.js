@@ -14,7 +14,7 @@ const schema = Joi.object({
 
     password:
         Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{8,999}$'))
+            .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9.@$\-_#]{8,}$'))
             .required(),
 
     confirmPassword:
