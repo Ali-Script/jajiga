@@ -1417,6 +1417,95 @@
                     }
                 }
             }
+        },
+        "/user/changeNumber": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "phone": "phone number"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Send Code To PhoneNumber",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "406": {
+                        "description": "phone have to be a number"
+                    },
+                    "422": {
+                        "description": "phoneNumber is Required"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/authNumber": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "phone": "phone number",
+                                    "code": "1111"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Auth Number",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Code !"
+                    },
+                    "404": {
+                        "description": "There is no Code for this number"
+                    },
+                    "405": {
+                        "description": "Code has Used before!"
+                    },
+                    "422": {
+                        "description": "Code Has Expired !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }
