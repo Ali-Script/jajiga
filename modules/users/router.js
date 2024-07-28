@@ -36,6 +36,12 @@ router
 router
     .route("/authEmail")
     .put(authMiddleware, controller.authEmail)
+router
+    .route("/changeNumber")
+    .post(authMiddleware, controller.changeNumber)
+router
+    .route("/authNumber")
+    .put(authMiddleware, controller.authNumber)
 
 
 

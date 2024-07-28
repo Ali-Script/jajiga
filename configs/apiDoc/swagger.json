@@ -1381,7 +1381,9 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "email": "email format"
+                                    "email": "email format",
+                                    "code": "1111",
+                                    "newsletter": "boolean"
                                 }
                             }
                         }
@@ -1406,6 +1408,9 @@
                     },
                     "423": {
                         "description": "Invalid email"
+                    },
+                    "465": {
+                        "description": "newsletter required"
                     },
                     "500": {
                         "description": "Internal Server Error"
