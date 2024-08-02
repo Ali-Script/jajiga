@@ -40,7 +40,7 @@ const schema = new mongoose.Schema({
         },
         villaType: {
             type: mongoose.Types.ObjectId,
-            ref: "Users",
+            ref: "Categories",
 
         },
         villaZone: {
@@ -49,7 +49,7 @@ const schema = new mongoose.Schema({
 
         },
         aboutVilla: {
-            type: "string", require: true
+            type: "string",
         }
     },
     capacity: {

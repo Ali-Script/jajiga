@@ -304,6 +304,7 @@ exports.getOne = async (req, res) => {
 
         const villa = await villaModel.findOne({ _id: id })
             .populate("user", "firstName lastName role")
+            .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
@@ -477,6 +478,230 @@ exports.delete = async (req, res) => {
 
 
         return res.status(200).json({ statusCode: 200, message: "Succ !" })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.filtring = async (req, res) => {
+    try {
+
+        const allVillas = await villaModel.find({ finished: true }).sort({ _id: -1 }).lean()
+        let villas = []
+
+
+        if (req.query.city) {
+            let result = allVillas.filter(i => {
+                return i.address.city == req.query.city
+            });
+            villas.push(result)
+            villas = villas[0]
+        }
+        if (villas.length == 0) villas = allVillas
+
+        if (req.query.gstnum) {
+            let result = villas.filter(i => {
+                return i.capacity.normalCapacity >= req.query.gstnum
+            });
+            villas = result
+        }
+        if (req.query.minp & req.query.maxp) {
+
+            let Allprice = []
+            let AvrgVilla = []
+            villas.forEach(villa => {
+                let price = villa.price.newYear +
+                    villa.price.spring.midWeek +
+                    villa.price.spring.holidays +
+                    villa.price.spring.peakDays +
+                    villa.price.summer.midWeek +
+                    villa.price.summer.holidays +
+                    villa.price.summer.peakDays +
+                    villa.price.autumn.midWeek +
+                    villa.price.autumn.holidays +
+                    villa.price.autumn.peakDays +
+                    villa.price.winter.midWeek +
+                    villa.price.winter.holidays +
+                    villa.price.winter.peakDays
+
+                let x = { id: villa._id, price: price / 13 }
+
+                if (x.price >= req.query.minp & x.price <= req.query.maxp) Allprice.push(x)
+            })
+            Allprice = Allprice.sort((a, b) => b.price - a.price);
+
+            const promises = Allprice.map(async item => {
+                return await villaModel.findOne({ _id: item.id })
+            })
+            AvrgVilla = await Promise.all(promises)
+
+            villas = AvrgVilla
+
+        } else if (req.query.minp) {
+
+            let Allprice = []
+            let AvrgVilla = []
+            villas.forEach(villa => {
+                let price = villa.price.newYear +
+                    villa.price.spring.midWeek +
+                    villa.price.spring.holidays +
+                    villa.price.spring.peakDays +
+                    villa.price.summer.midWeek +
+                    villa.price.summer.holidays +
+                    villa.price.summer.peakDays +
+                    villa.price.autumn.midWeek +
+                    villa.price.autumn.holidays +
+                    villa.price.autumn.peakDays +
+                    villa.price.winter.midWeek +
+                    villa.price.winter.holidays +
+                    villa.price.winter.peakDays
+
+                let x = { id: villa._id, price: price / 13 }
+
+                if (x.price >= req.query.minp) Allprice.push(x)
+            })
+            Allprice = Allprice.sort((a, b) => b.price - a.price);
+
+            const promises = Allprice.map(async item => {
+                return await villaModel.findOne({ _id: item.id })
+            })
+            AvrgVilla = await Promise.all(promises)
+
+            villas = AvrgVilla
+
+        } else if (req.query.maxp) {
+            let Allprice = []
+            let AvrgVilla = []
+
+            villas.forEach(villa => {
+                let price = villa.price.newYear +
+                    villa.price.spring.midWeek +
+                    villa.price.spring.holidays +
+                    villa.price.spring.peakDays +
+                    villa.price.summer.midWeek +
+                    villa.price.summer.holidays +
+                    villa.price.summer.peakDays +
+                    villa.price.autumn.midWeek +
+                    villa.price.autumn.holidays +
+                    villa.price.autumn.peakDays +
+                    villa.price.winter.midWeek +
+                    villa.price.winter.holidays +
+                    villa.price.winter.peakDays
+
+                let x = { id: villa._id, price: price / 13 }
+
+                if (x.price <= req.query.maxp) Allprice.push(x)
+            })
+
+            const promises = Allprice.map(async item => {
+                return await villaModel.findOne({ _id: item.id })
+            })
+            AvrgVilla = await Promise.all(promises)
+
+            villas = AvrgVilla
+        }
+        if (req.query.order) {
+            if (req.query.order == "newest") { }
+            else if (req.query.order == "oldest") { villas.reverse(); }
+            else if (req.query.order == "high_price") {
+                let AvrgVilla = []
+                let Allprice = []
+
+                villas.forEach(villa => {
+                    let price = villa.price.newYear +
+                        villa.price.spring.midWeek +
+                        villa.price.spring.holidays +
+                        villa.price.spring.peakDays +
+                        villa.price.summer.midWeek +
+                        villa.price.summer.holidays +
+                        villa.price.summer.peakDays +
+                        villa.price.autumn.midWeek +
+                        villa.price.autumn.holidays +
+                        villa.price.autumn.peakDays +
+                        villa.price.winter.midWeek +
+                        villa.price.winter.holidays +
+                        villa.price.winter.peakDays
+
+                    let x = { id: villa._id, price: price / 13 }
+                    Allprice.push(x)
+                })
+                Allprice = Allprice.sort((a, b) => b.price - a.price);
+
+                const promises = Allprice.map(async item => {
+                    return await villaModel.findOne({ _id: item.id })
+                })
+                AvrgVilla = await Promise.all(promises)
+                villas = AvrgVilla
+            }
+            else if (req.query.order == "low_price") {
+                let Allprice = []
+                let AvrgVilla = []
+                villas.forEach(villa => {
+                    let price = villa.price.newYear +
+                        villa.price.spring.midWeek +
+                        villa.price.spring.holidays +
+                        villa.price.spring.peakDays +
+                        villa.price.summer.midWeek +
+                        villa.price.summer.holidays +
+                        villa.price.summer.peakDays +
+                        villa.price.autumn.midWeek +
+                        villa.price.autumn.holidays +
+                        villa.price.autumn.peakDays +
+                        villa.price.winter.midWeek +
+                        villa.price.winter.holidays +
+                        villa.price.winter.peakDays
+
+                    let x = { id: villa._id, price: price / 13 }
+                    Allprice.push(x)
+                })
+                Allprice = Allprice.sort((a, b) => b.price - a.price);
+
+                const promises = Allprice.map(async item => {
+                    return await villaModel.findOne({ _id: item.id })
+                })
+                AvrgVilla = await Promise.all(promises)
+                AvrgVilla.reverse();
+                villas = AvrgVilla
+            }
+        }
+        if (req.query.zone) {
+            let zone = req.query.zone.split("-")
+            let newVillas = []
+            villas.forEach(villa => {
+                zone.forEach(word => {
+                    if (villa.aboutVilla.villaZone == word) newVillas.push(villa)
+                })
+            })
+            if (newVillas.length != 0) villas = newVillas
+
+        }
+        if (req.query.type) {
+            let cat = req.query.type.split("-")
+            let villaByCat = []
+            let newVillas = []
+
+            const promises = villas.map(async item => {
+                return await villaModel.findOne({ _id: item._id }).populate("aboutVilla.villaType")
+            })
+            villaByCat = await Promise.all(promises)
+
+            if (villaByCat.length != 0) {
+
+                villaByCat.forEach(villa => {
+                    cat.forEach(word => {
+                        console.log(villa.aboutVilla.villaType.href);
+                        if (villa.aboutVilla.villaType.href == word) newVillas.push(villa)
+                    })
+                })
+                if (newVillas.length != 0) villas = newVillas
+            }
+        }
+        if (req.query.feature) {
+            let feature = req.query.feature.split("-")
+            let villaByfeature = []
+
+        }
+
+        return res.json(villas)
+
+
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 

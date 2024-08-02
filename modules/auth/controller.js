@@ -377,10 +377,6 @@ exports.resendCode = async (req, res) => {
     try {
         const phone = req.params.phone
 
-        const user = await userModel.findOne({ phone })
-        if (!user) {
-            return res.status(404).json({ statusCode: 404, message: "no user found" })
-        }
 
         await OtpcodeModel.create({
             code: 1111,

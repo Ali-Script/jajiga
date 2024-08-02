@@ -31,5 +31,8 @@ router
 router
     .route("/facility")
     .get(authMiddleware, controller.getFacility)
+router
+    .route("/s")
+    .get(authMiddleware, controller.filtring)
 
 module.exports = router
