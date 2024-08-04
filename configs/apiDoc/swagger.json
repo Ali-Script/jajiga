@@ -913,6 +913,29 @@
                 }
             }
         },
+        "/villa/s": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "summary": "filtring villas",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/category/add": {
             "post": {
                 "tags": [
