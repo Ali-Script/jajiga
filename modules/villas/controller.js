@@ -495,7 +495,6 @@ exports.filtring = async (req, res) => {
             villas = villas[0]
         }
         if (villas.length == 0) villas = allVillas
-
         if (req.query.gstnum) {
             let result = villas.filter(i => {
                 return i.capacity.normalCapacity >= req.query.gstnum
@@ -695,13 +694,39 @@ exports.filtring = async (req, res) => {
         }
         if (req.query.feature) {
             let feature = req.query.feature.split("-")
-            let villaByfeature = []
+            let newVillas = []
 
+            villas.forEach(villa => {
+
+                let fac = {
+                    heatingSystem: villa.facility.facility.heatingSystem,
+                    coolingSystem: villa.facility.facility.coolingSystem,
+                    parking: villa.facility.facility.parking,
+                    eightball: villa.facility.facility.eightball,
+                    wifi: villa.facility.facility.wifi,
+                    pool: villa.facility.facility.pool
+                }
+
+                const trueKeys = Object.keys(fac).filter(key => fac[key].status === true);
+
+                let flag;
+                feature.forEach(data => {
+                    if (trueKeys.includes(data)) flag = true
+                    else flag = false
+                })
+                if (flag) newVillas.push(villa)
+            })
+            villas = newVillas
         }
 
-        return res.json(villas)
+        villas.forEach(villa => {
+            const trueKeys = Object.keys(villa.facility.facility).filter(key => {
+                if (key !== "moreFacility") return villa.facility.facility[key].status === true
+            });
+            if (trueKeys.length >= 5) villa.costly = true
+        })
 
-
+        return res.status(200).json({ statusCode: 200, villas })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 
