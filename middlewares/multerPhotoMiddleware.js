@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
             const fileunicname = Date.now() + Math.random() * 100
             const extname = path.extname(file.originalname)
 
-            const validFormat = [".jpg", ".png", ".jpeg", ".jfif", ".pjpeg", ".pjp"]
+            const validFormat = [".jpg", ".png", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".webp"]
 
             if (validFormat.includes(extname)) {
                 cb(null, fileunicname + extname)

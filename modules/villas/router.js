@@ -33,6 +33,6 @@ router
     .get(authMiddleware, controller.getFacility)
 router
     .route("/s")
-    .get(authMiddleware, controller.filtring)
+    .get(controller.filtring)
 
 module.exports = router

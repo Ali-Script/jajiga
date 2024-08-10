@@ -486,7 +486,6 @@ exports.filtring = async (req, res) => {
         const allVillas = await villaModel.find({ finished: true }).sort({ _id: -1 }).lean()
         let villas = []
 
-
         if (req.query.city) {
             let result = allVillas.filter(i => {
                 return i.address.city == req.query.city
@@ -499,6 +498,7 @@ exports.filtring = async (req, res) => {
             let result = villas.filter(i => {
                 return i.capacity.normalCapacity >= req.query.gstnum
             });
+            if (result.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
             villas = result
         }
         if (req.query.minp & req.query.maxp) {
@@ -669,6 +669,7 @@ exports.filtring = async (req, res) => {
                 })
             })
             if (newVillas.length != 0) villas = newVillas
+            else if (newVillas.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
 
         }
         if (req.query.type) {
@@ -682,14 +683,15 @@ exports.filtring = async (req, res) => {
             villaByCat = await Promise.all(promises)
 
             if (villaByCat.length != 0) {
-
+                let flag = true
                 villaByCat.forEach(villa => {
+
                     cat.forEach(word => {
-                        console.log(villa.aboutVilla.villaType.href);
                         if (villa.aboutVilla.villaType.href == word) newVillas.push(villa)
                     })
                 })
                 if (newVillas.length != 0) villas = newVillas
+                else if (newVillas.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
             }
         }
         if (req.query.feature) {
@@ -729,4 +731,3 @@ exports.filtring = async (req, res) => {
         return res.status(200).json({ statusCode: 200, villas })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-
