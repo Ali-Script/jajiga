@@ -490,6 +490,7 @@ exports.filtring = async (req, res) => {
             let result = allVillas.filter(i => {
                 return i.address.city == req.query.city
             });
+            if (req.query.city == "all" & result.length == 0) result = allVillas
             if (result.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
             villas.push(result)
             villas = villas[0]
