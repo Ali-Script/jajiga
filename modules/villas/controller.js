@@ -498,7 +498,7 @@ exports.filtring = async (req, res) => {
         if (villas.length == 0) villas = allVillas
         if (req.query.gstnum) {
             let result = villas.filter(i => {
-                return i.capacity.normalCapacity >= req.query.gstnum
+                return i.capacity.minCapacity >= req.query.gstnum
             });
             if (result.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
             villas = result

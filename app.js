@@ -32,18 +32,20 @@ const newsletterRouter = require('./modules/newsletter/router')
 const notificationRouter = require('./modules/notification/router')
 const commentRouter = require('./modules/comment/router')
 const categoryRouter = require('./modules/category/router')
+const reserveRouter = require('./modules/reserve/router')
 
 // Routers ^
 
 app.use("/", authRouter)
 app.use("/auth/E-code", codeRouter)
 app.use("/user/", userRouter)
-app.use("/villa/", villaRouter)
+app.use("/villa/", villaRouter, reserveRouter)
 app.use("/ban/", banRouter)
 app.use("/notification/", notificationRouter)
 app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)
 app.use("/category/", categoryRouter)
+
 
 // Routers Middleware ^
 
