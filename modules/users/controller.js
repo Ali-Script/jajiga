@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const userModel = require('./../auth/model');
 const villaModel = require('./../villas/model');
+const reserveModel = require('./../reserve/model');
 const OtpcodeModel = require('./../authcode/OTPModel');
 const userVillaModel = require('./../user-villa/model');
 const newsletterModel = require('./../newsletter/model');
@@ -34,7 +35,8 @@ exports.getOne = async (req, res) => {
         if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
         Reflect.deleteProperty(user, "password")
-
+        const findVilla = await villaModel.find({ user: user._id }).sort({ _id: -1 }).lean()
+        const books = await reserveModel.find({ user: user._id })
         return res.status(200).json({ statusCode: 200, user })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }

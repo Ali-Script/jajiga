@@ -7,7 +7,7 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 
 router
-    .route("/reserve/:villaID")
+    .route("/book/:villaID")
     .post(authMiddleware, controller.reserve)
 
 module.exports = router;

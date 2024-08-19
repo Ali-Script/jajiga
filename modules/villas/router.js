@@ -34,5 +34,9 @@ router
 router
     .route("/s")
     .get(controller.filtring)
+router
+    .route("/privilegedVillas")
+    .get(controller.privilegedVillas)
+// * add to sw
 
 module.exports = router

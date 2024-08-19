@@ -195,6 +195,10 @@ const schema = new mongoose.Schema({
     },
     oldPics: {
         type: "string",
+    },
+    isAccepted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "title": "Power By Ali-Script",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     "tags": [
         {
@@ -929,6 +929,72 @@
                 "responses": {
                     "200": {
                         "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/privilegedVillas": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "summary": "privilegedVillas",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/book/{villaID}": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "date": {
+                                        "from": "1403/5/27",
+                                        "to": "1403/5/29"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "book villa",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "402": {
+                        "description": "date>to  should greater than date>from"
+                    },
+                    "404": {
+                        "description": "Villa not found 404 !"
+                    },
+                    "409": {
+                        "description": "validator error"
+                    },
+                    "422": {
+                        "description": "Villa is already booked"
                     },
                     "500": {
                         "description": "Internal Server Error"

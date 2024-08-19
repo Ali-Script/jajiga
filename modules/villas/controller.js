@@ -6,6 +6,10 @@ const villaModel = require('./../villas/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
+const date = new Date()
+const shamsiDate = new Intl.DateTimeFormat('en-US-u-ca-persian', { dateStyle: 'full', timeStyle: 'long' }).format(date)
+
+
 // const validator = require("email-validator");
 const { func } = require('joi');
 
@@ -44,7 +48,7 @@ exports.add = async (req, res) => {
             price,
             rules,
             step,
-            finished
+            finished,
         })
 
         const create = await userVilla.create({
@@ -508,21 +512,45 @@ exports.filtring = async (req, res) => {
             let Allprice = []
             let AvrgVilla = []
             villas.forEach(villa => {
-                let price = villa.price.newYear +
-                    villa.price.spring.midWeek +
-                    villa.price.spring.holidays +
-                    villa.price.spring.peakDays +
-                    villa.price.summer.midWeek +
-                    villa.price.summer.holidays +
-                    villa.price.summer.peakDays +
-                    villa.price.autumn.midWeek +
-                    villa.price.autumn.holidays +
-                    villa.price.autumn.peakDays +
-                    villa.price.winter.midWeek +
-                    villa.price.winter.holidays +
-                    villa.price.winter.peakDays
 
-                let x = { id: villa._id, price: price / 13 }
+                let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(date)
+
+                if (month == 1 | month == 2 | month == 3) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.spring.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.spring.midWeek }
+                    }
+                }
+                // * بهار
+                else if (month == 4 | month == 5 | month == 6) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.summer.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.summer.midWeek }
+                    }
+                }
+                // * تابستان
+                else if (month == 7 | month == 8 | month == 9) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.autumn.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.autumn.midWeek }
+                    }
+                }
+                // * پاییز
+                else if (month == 10 | month == 11 | month == 12) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.winter.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.winter.midWeek }
+                    }
+                }
+                // * زمستان
 
                 if (x.price >= req.query.minp & x.price <= req.query.maxp) Allprice.push(x)
             })
@@ -540,21 +568,44 @@ exports.filtring = async (req, res) => {
             let Allprice = []
             let AvrgVilla = []
             villas.forEach(villa => {
-                let price = villa.price.newYear +
-                    villa.price.spring.midWeek +
-                    villa.price.spring.holidays +
-                    villa.price.spring.peakDays +
-                    villa.price.summer.midWeek +
-                    villa.price.summer.holidays +
-                    villa.price.summer.peakDays +
-                    villa.price.autumn.midWeek +
-                    villa.price.autumn.holidays +
-                    villa.price.autumn.peakDays +
-                    villa.price.winter.midWeek +
-                    villa.price.winter.holidays +
-                    villa.price.winter.peakDays
+                let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(date)
 
-                let x = { id: villa._id, price: price / 13 }
+                if (month == 1 | month == 2 | month == 3) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.spring.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.spring.midWeek }
+                    }
+                }
+                // * بهار
+                else if (month == 4 | month == 5 | month == 6) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.summer.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.summer.midWeek }
+                    }
+                }
+                // * تابستان
+                else if (month == 7 | month == 8 | month == 9) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.autumn.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.autumn.midWeek }
+                    }
+                }
+                // * پاییز
+                else if (month == 10 | month == 11 | month == 12) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.winter.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.winter.midWeek }
+                    }
+                }
+                // * زمستان
 
                 if (x.price >= req.query.minp) Allprice.push(x)
             })
@@ -572,23 +623,46 @@ exports.filtring = async (req, res) => {
             let AvrgVilla = []
 
             villas.forEach(villa => {
-                let price = villa.price.newYear +
-                    villa.price.spring.midWeek +
-                    villa.price.spring.holidays +
-                    villa.price.spring.peakDays +
-                    villa.price.summer.midWeek +
-                    villa.price.summer.holidays +
-                    villa.price.summer.peakDays +
-                    villa.price.autumn.midWeek +
-                    villa.price.autumn.holidays +
-                    villa.price.autumn.peakDays +
-                    villa.price.winter.midWeek +
-                    villa.price.winter.holidays +
-                    villa.price.winter.peakDays
+                let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(date)
 
-                let x = { id: villa._id, price: price / 13 }
+                if (month == 1 | month == 2 | month == 3) {
 
-                if (x.price <= req.query.maxp) Allprice.push(x)
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.spring.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.spring.midWeek }
+                    }
+                }
+                // * بهار
+                else if (month == 4 | month == 5 | month == 6) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.summer.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.summer.midWeek }
+                    }
+                }
+                // * تابستان
+                else if (month == 7 | month == 8 | month == 9) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.autumn.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.autumn.midWeek }
+                    }
+                }
+                // * پاییز
+                else if (month == 10 | month == 11 | month == 12) {
+
+                    if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                        var x = { id: villa._id, price: villa.price.winter.holidays }
+                    } else {
+                        var x = { id: villa._id, price: villa.price.winter.midWeek }
+                    }
+                }
+                // * زمستان
+
+                if (x.price >= req.query.maxp) Allprice.push(x)
             })
 
             const promises = Allprice.map(async item => {
@@ -731,5 +805,23 @@ exports.filtring = async (req, res) => {
         })
 
         return res.status(200).json({ statusCode: 200, villas })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.privilegedVillas = async (req, res) => {
+    try {
+        let costlyVillas = []
+
+        const villas = await villaModel.find({}).lean();
+
+        villas.forEach(villa => {
+            const trueKeys = Object.keys(villa.facility.facility).filter(key => {
+                if (key !== "moreFacility") return villa.facility.facility[key].status === true
+            });
+            if (trueKeys.length >= 5) costlyVillas.push(villa)
+        })
+
+
+        return res.status(200).json({ statusCode: 200, villas: costlyVillas })
+
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
