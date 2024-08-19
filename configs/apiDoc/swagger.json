@@ -953,7 +953,7 @@
             }
         },
         "/villa/book/{villaID}": {
-            "get": {
+            "post": {
                 "tags": [
                     "Villas"
                 ],
