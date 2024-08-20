@@ -962,6 +962,11 @@
                         "name": "Authorization Token",
                         "in": "header",
                         "required": "true"
+                    },
+                    {
+                        "name": "villaID",
+                        "in": "path",
+                        "required": "true"
                     }
                 ],
                 "requestBody": {

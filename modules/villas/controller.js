@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
-const path = require('path');
-const fs = require('fs');
-const archiver = require('archiver');
 const villaModel = require('./../villas/model');
+const reserveModel = require('./../reserve/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const joi = require("./../../validator/villaValidator");
@@ -309,11 +307,10 @@ exports.getOne = async (req, res) => {
         const villa = await villaModel.findOne({ _id: id })
             .populate("user", "firstName lastName role")
             .populate("aboutVilla.villaType")
-            .sort({ _id: -1 })
             .lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
 
-
+        const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
         //     .populate("villa", "_id title")
@@ -348,7 +345,7 @@ exports.getOne = async (req, res) => {
         // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
         // return res.status(200).json({ villa, comments: orderedComment })
-        return res.status(200).json({ statusCode: 200, villa })
+        return res.status(200).json({ statusCode: 200, villa, bookedDate: getReserved[0].date })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.myVillas = async (req, res) => {
@@ -356,6 +353,22 @@ exports.myVillas = async (req, res) => {
         const user = req.user
         const villa = await villaModel.find({ user: user._id }).lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
+        // let newVillas = []
+
+        // villa.forEach(async item => {
+
+        //     const getReserved = await reserveModel.find({ villa: item._id }).sort({ _id: -1 })
+        //     if (getReserved[0]) {
+        //         var index = villa.findIndex(data => {
+        //             return data._id == item._id
+        //         })
+        //         villa[index].bookedDate = 1
+        //     }
+
+        // })
+        // console.log(newVillas);
+
+
 
         return res.status(200).json({ statusCode: 200, villa })
 
@@ -807,21 +820,22 @@ exports.filtring = async (req, res) => {
         return res.status(200).json({ statusCode: 200, villas })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-exports.privilegedVillas = async (req, res) => {
-    try {
-        let costlyVillas = []
+// exports.privilegedVillas = async (req, res) => {
+//     try {
+//         // const villas = await villaModel.find({}).lean();
+//         let costlyVillas = []
 
-        const villas = await villaModel.find({}).lean();
+//         const villas = ["all villas"]
 
-        villas.forEach(villa => {
-            const trueKeys = Object.keys(villa.facility.facility).filter(key => {
-                if (key !== "moreFacility") return villa.facility.facility[key].status === true
-            });
-            if (trueKeys.length >= 5) costlyVillas.push(villa)
-        })
+//         villas.forEach(villa => {
+//             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
+//                 if (key !== "moreFacility") return villa.facility.facility[key].status === true
+//             });
+//             if (trueKeys.length >= 5) costlyVillas.push(villa)
+//         })
 
 
-        return res.status(200).json({ statusCode: 200, villas: costlyVillas })
+//         return res.status(200).json({ statusCode: 200, villas: costlyVillas })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
-}
+//     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+// }
