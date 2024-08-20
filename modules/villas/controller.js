@@ -820,22 +820,55 @@ exports.filtring = async (req, res) => {
         return res.status(200).json({ statusCode: 200, villas })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-// exports.privilegedVillas = async (req, res) => {
-//     try {
-//         // const villas = await villaModel.find({}).lean();
-//         let costlyVillas = []
+exports.privilegedVillas = async (req, res) => {
+    try {
+        let costlyVillas = []
+        const villas = await villaModel.find({}).lean();
 
-//         const villas = ["all villas"]
+        villas.forEach(villa => {
+            const trueKeys = Object.keys(villa.facility.facility).filter(key => {
+                if (key !== "moreFacility") return villa.facility.facility[key].status === true
+            });
+            if (trueKeys.length >= 5) costlyVillas.push(villa)
+        })
 
-//         villas.forEach(villa => {
-//             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
-//                 if (key !== "moreFacility") return villa.facility.facility[key].status === true
-//             });
-//             if (trueKeys.length >= 5) costlyVillas.push(villa)
-//         })
+        return res.status(200).json({ statusCode: 200, villas: costlyVillas })
 
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.popularTowns = async (req, res) => {
+    try {
+        let towns = []
+        const villas = await villaModel.find({}).lean();
 
-//         return res.status(200).json({ statusCode: 200, villas: costlyVillas })
+        villas.forEach(villa => {
+            towns.push(villa.address.city)
+        })
 
-//     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
-// }
+        let townCounts = towns.reduce((acc, town) => {
+            acc[town] = (acc[town] || 0) + 1;
+            return acc;
+        }, {});
+
+        let sortedTowns = Object.keys(townCounts).sort((a, b) => townCounts[b] - townCounts[a]);
+
+        return res.status(200).json({ statusCode: 200, sortedTowns })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}
+exports.quickSearchByZone = async (req, res) => {
+    try {
+        const villas = await villaModel.find({}).lean();
+
+        let orderByZone = villas.reduce((acc, villa) => {
+            if (!acc[villa.aboutVilla.villaZone]) {
+                acc[villa.aboutVilla.villaZone] = [];
+            }
+            acc[villa.aboutVilla.villaZone].push(villa);
+            return acc;
+        }, {});
+
+        return res.status(200).json({ statusCode: 200, orderByZone })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+}

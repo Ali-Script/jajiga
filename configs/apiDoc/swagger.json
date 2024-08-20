@@ -952,6 +952,38 @@
                 }
             }
         },
+        "/villa/popularTowns": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "summary": "array of popularTowns",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/quickSearchByZone": {
+            "get": {
+                "tags": [
+                    "Villas"
+                ],
+                "summary": "Sorted list of villas sort by villaZone",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/villa/book/{villaID}": {
             "post": {
                 "tags": [

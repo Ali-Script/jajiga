@@ -37,6 +37,12 @@ router
 router
     .route("/privilegedVillas")
     .get(controller.privilegedVillas)
+router
+    .route("/popularTowns")
+    .get(controller.popularTowns)
+router
+    .route("/quickSearchByZone")
+    .get(controller.quickSearchByZone)
 // * add to sw
 
 module.exports = router
