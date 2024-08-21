@@ -1011,7 +1011,7 @@ exports.popularTowns = async (req, res) => {
 
         const sortedCities = city.map((city) => ({
             ...city,
-            count: cityCounts[city.title] || 0,
+            count: cityCounts[city.persianTitle] || 0,
         })).sort((a, b) => b.count - a.count);
 
         return res.status(200).json({ statusCode: 200, sortedCities })
