@@ -1,3 +1,0 @@
-def profile
-hash pass in model by pre mid
-refresh token

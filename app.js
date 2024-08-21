@@ -17,6 +17,8 @@ app.use(morgan('combined'))
 app.use(cookieParser("rtujh57uhHG)B$&ghy073hy57hbHB)$&BH)Hb85h4b84bhe8hb*BH#$*B"))
 app.use("/villa/covers", express.static(path.join(__dirname, 'public', 'covers')));
 app.use("/user/avatars", express.static(path.join(__dirname, 'public', 'avatars')));
+app.use("/static/zone", express.static(path.join(__dirname, 'public', 'static', 'zone')));
+app.use("/static/city", express.static(path.join(__dirname, 'public', 'static', 'city')));
 app.use("/api-doc", swagger)
 app.use(setHeaders);
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
@@ -33,6 +35,7 @@ const notificationRouter = require('./modules/notification/router')
 const commentRouter = require('./modules/comment/router')
 const categoryRouter = require('./modules/category/router')
 const reserveRouter = require('./modules/reserve/router')
+const wishesRouter = require('./modules/wishes/router')
 
 // Routers ^
 
@@ -45,6 +48,7 @@ app.use("/notification/", notificationRouter)
 app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)
 app.use("/category/", categoryRouter)
+app.use("/wishes/", wishesRouter)
 
 
 // Routers Middleware ^

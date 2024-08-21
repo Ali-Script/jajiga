@@ -35,9 +35,9 @@ exports.getOne = async (req, res) => {
         if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
         Reflect.deleteProperty(user, "password")
-        const findVilla = await villaModel.find({ user: user._id }).sort({ _id: -1 }).lean()
-        const books = await reserveModel.find({ user: user._id })
-        return res.status(200).json({ statusCode: 200, user })
+        const villas = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
+        const books = await reserveModel.find({ user: user._id }).populate("villa")
+        return res.status(200).json({ statusCode: 200, user, villas, books })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.delete = async (req, res) => {

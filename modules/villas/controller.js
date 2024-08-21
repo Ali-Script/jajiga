@@ -308,10 +308,11 @@ exports.getOne = async (req, res) => {
             .populate("user", "firstName lastName role")
             .populate("aboutVilla.villaType")
             .lean()
-        if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
+        if (!villa) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
 
         const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
+        return res.status(200).json({ statusCode: 200, villa, bookedDate: getReserved[0] ? getReserved[0].date : [] })
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
         //     .populate("villa", "_id title")
         //     .populate("creator", "UserName")
@@ -345,13 +346,12 @@ exports.getOne = async (req, res) => {
         // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
         // return res.status(200).json({ villa, comments: orderedComment })
-        return res.status(200).json({ statusCode: 200, villa, bookedDate: getReserved[0].date })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.myVillas = async (req, res) => {
     try {
         const user = req.user
-        const villa = await villaModel.find({ user: user._id }).lean()
+        const villa = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
         // let newVillas = []
 
@@ -367,7 +367,7 @@ exports.myVillas = async (req, res) => {
 
         // })
         // console.log(newVillas);
-
+        //!fghsssssssssssss
 
 
         return res.status(200).json({ statusCode: 200, villa })
@@ -500,7 +500,7 @@ exports.delete = async (req, res) => {
 exports.filtring = async (req, res) => {
     try {
 
-        const allVillas = await villaModel.find({ finished: true }).sort({ _id: -1 }).lean()
+        const allVillas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
         let villas = []
 
         if (req.query.city) {
@@ -823,7 +823,7 @@ exports.filtring = async (req, res) => {
 exports.privilegedVillas = async (req, res) => {
     try {
         let costlyVillas = []
-        const villas = await villaModel.find({}).lean();
+        const villas = await villaModel.find({}).populate("aboutVilla.villaType").lean();
 
         villas.forEach(villa => {
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
@@ -839,7 +839,7 @@ exports.privilegedVillas = async (req, res) => {
 exports.popularTowns = async (req, res) => {
     try {
         let towns = []
-        const villas = await villaModel.find({}).lean();
+        const villas = await villaModel.find({}).populate("aboutVilla.villaType").lean();
 
         villas.forEach(villa => {
             towns.push(villa.address.city)
@@ -858,17 +858,58 @@ exports.popularTowns = async (req, res) => {
 }
 exports.quickSearchByZone = async (req, res) => {
     try {
+
         const villas = await villaModel.find({}).lean();
 
-        let orderByZone = villas.reduce((acc, villa) => {
-            if (!acc[villa.aboutVilla.villaZone]) {
-                acc[villa.aboutVilla.villaZone] = [];
-            }
-            acc[villa.aboutVilla.villaZone].push(villa);
+        let allZoneWithVillas = {
+            littoral: {
+                cover: "littoral.webp",
+                count: null,
+            },
+            silvan: {
+                cover: "silvan.webp",
+                count: null,
+            },
+            summerVilla: {
+                cover: "summerVilla.webp",
+                count: null,
+            },
+            desertHouse: {
+                cover: "desertHouse.webp",
+                count: null,
+            },
+            townHouse: {
+                cover: "townHouse.webp",
+                count: null,
+            },
+            suburbanHouse: {
+                cover: "suburbanHouse.webp",
+                count: null,
+            },
+            cottage: {
+                cover: "cottage.webp",
+                count: null,
+            },
+        }
+
+        const villasByZone = villas.reduce((acc, villa) => {
+            const zone = villa.aboutVilla.villaZone;
+            acc[zone] = (acc[zone] || 0) + 1;
             return acc;
         }, {});
 
-        return res.status(200).json({ statusCode: 200, orderByZone })
+        const orderedVillas = Object.keys(allZoneWithVillas).reduce((acc, zone) => {
+            acc[zone] = {
+                cover: allZoneWithVillas[zone].cover,
+                count: villasByZone[zone] || 0,
+            };
+            return acc;
+        }, {});
+
+        const sortedOrderedVillas = Object.fromEntries(
+            Object.entries(orderedVillas).sort((a, b) => b[1].count - a[1].count)
+        );
+        return res.status(200).json({ statusCode: 200, sortedOrderedVillas })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }

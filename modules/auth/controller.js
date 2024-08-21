@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const villaModel = require('./../villas/model')
 const reserveModel = require('./../reserve/model')
+const wishesModel = require('./../wishes/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
 const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
@@ -313,12 +314,25 @@ exports.getme = async (req, res) => {
         const checkBan = await banModel.findOne({ phone: user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        const findVilla = await villaModel.find({ user: user._id }).sort({ _id: -1 }).lean()
+        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
         const books = await reserveModel.find({ user: user._id })
-        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books })
+        const wishes = await wishesModel.find({ user: user._id })
+        let getfaveVillas = []
+        if (wishes.length != 0) {
+
+            const getfaveVillas = await Promise.all(
+                wishes.map(async (data) => {
+                    const find = await villaModel.findOne({ _id: data.villa }).populate("aboutVilla.villaType").lean();
+                    return find;
+                })
+            );
+
+            return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: getfaveVillas })
+        }
+        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: [] })
 
     } catch (err) {
-        return res.status(500).josn({ statusCode: 500, error: err.message });
+        return res.status(500).json({ statusCode: 500, error: err.message });
     }
 }
 //* Checked (1)
