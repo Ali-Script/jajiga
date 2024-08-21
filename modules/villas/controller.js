@@ -280,6 +280,7 @@ exports.getAll = async (req, res) => {
     try {
         const villas = await villaModel.find({})
             .populate("user", "firstName lastName role")
+            .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
         if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
@@ -291,6 +292,7 @@ exports.getAllActivated = async (req, res) => {
     try {
         const villas = await villaModel.find({ disable: false })
             .populate("user", "firstName lastName role")
+            .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
         if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no Activated villa!" })
@@ -861,36 +863,50 @@ exports.quickSearchByZone = async (req, res) => {
 
         const villas = await villaModel.find({}).lean();
 
-        let allZoneWithVillas = {
-            littoral: {
+        let allZone = [
+            {
+                title: "littoral",
                 cover: "littoral.webp",
-                count: null,
+                persianTitle: "ویلا ساحلی",
+                count: null
             },
-            silvan: {
+            {
+                title: "silvan",
                 cover: "silvan.webp",
-                count: null,
+                persianTitle: "ویلا ییلاقی",
+                count: null
             },
-            summerVilla: {
+            {
+                title: "summerVilla",
                 cover: "summerVilla.webp",
-                count: null,
+                persianTitle: "اقامتگاه تابستانه",
+                count: null
             },
-            desertHouse: {
+            {
+                title: "desertHouse",
                 cover: "desertHouse.webp",
-                count: null,
+                persianTitle: "اقامتگاه صحرایی",
+                count: null
             },
-            townHouse: {
+            {
+                title: "townHouse",
                 cover: "townHouse.webp",
-                count: null,
+                persianTitle: "ویلا شهری",
+                count: null
             },
-            suburbanHouse: {
-                cover: "suburbanHouse.webp",
-                count: null,
-            },
-            cottage: {
+            {
+                title: "cottage",
                 cover: "cottage.webp",
-                count: null,
+                persianTitle: "کلبه چوبی جنگلی",
+                count: null
             },
-        }
+            {
+                title: "suburbanHouse",
+                cover: "suburbanHouse.webp",
+                persianTitle: "ویلا حومه شهر",
+                count: null
+            },
+        ]
 
         const villasByZone = villas.reduce((acc, villa) => {
             const zone = villa.aboutVilla.villaZone;
@@ -898,18 +914,13 @@ exports.quickSearchByZone = async (req, res) => {
             return acc;
         }, {});
 
-        const orderedVillas = Object.keys(allZoneWithVillas).reduce((acc, zone) => {
-            acc[zone] = {
-                cover: allZoneWithVillas[zone].cover,
-                count: villasByZone[zone] || 0,
-            };
-            return acc;
-        }, {});
+        const orderedVillas = allZone.map((zone) => ({
+            ...zone,
+            count: villasByZone[zone.title] || 0,
+        })).sort((a, b) => b.count - a.count);
 
-        const sortedOrderedVillas = Object.fromEntries(
-            Object.entries(orderedVillas).sort((a, b) => b[1].count - a[1].count)
-        );
-        return res.status(200).json({ statusCode: 200, sortedOrderedVillas })
+
+        return res.status(200).json({ statusCode: 200, orderedVillas })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
