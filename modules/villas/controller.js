@@ -507,7 +507,7 @@ exports.filtring = async (req, res) => {
 
         if (req.query.city) {
             let result = allVillas.filter(i => {
-                return i.address.city == req.query.city
+                return i.address.city == req.query.city || i.address.state == req.query.city
             });
             if (req.query.city == "all" & result.length == 0) result = allVillas
             if (result.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
@@ -840,21 +840,181 @@ exports.privilegedVillas = async (req, res) => {
 }
 exports.popularTowns = async (req, res) => {
     try {
-        let towns = []
         const villas = await villaModel.find({}).populate("aboutVilla.villaType").lean();
 
-        villas.forEach(villa => {
-            towns.push(villa.address.city)
-        })
+        let city = [
+            {
+                title: "babolsar",
+                cover: "babolsar.webp",
+                persianTitle: "بابلسر",
+                count: null
+            },
+            {
+                title: "bandaranzali",
+                cover: "bandaranzali.webp",
+                persianTitle: "بندر انزلی",
+                count: null
+            },
+            {
+                title: "chalus",
+                cover: "chalus.webp",
+                persianTitle: "چالوس",
+                count: null
+            },
+            {
+                title: "filband",
+                cover: "filband.webp",
+                persianTitle: "فیلبند",
+                count: null
+            },
+            {
+                title: "fuman",
+                cover: "fuman.webp",
+                persianTitle: "فومن",
+                count: null
+            },
+            {
+                title: "gorgan",
+                cover: "gorgan.webp",
+                persianTitle: "گرگان",
+                count: null
+            },
+            {
+                title: "isfahan",
+                cover: "isfahan.webp",
+                persianTitle: "اصفهان",
+                count: null
+            },
+            {
+                title: "kelardasht",
+                cover: "kelardasht.webp",
+                persianTitle: "کلاردشت",
+                count: null
+            },
+            {
+                title: "kish",
+                cover: "kish.webp",
+                persianTitle: "کیش",
+                count: null
+            },
+            {
+                title: "kordan",
+                cover: "kordan.webp",
+                persianTitle: "کردان",
+                count: null
+            },
+            {
+                title: "lahijan",
+                cover: "lahijan.webp",
+                persianTitle: "لاهیجان",
+                count: null
+            },
+            {
+                title: "mahmudabad",
+                cover: "mahmudabad.webp",
+                persianTitle: "محمود آباد",
+                count: null
+            },
+            {
+                title: "masal",
+                cover: "masal.webp",
+                persianTitle: "ماسال",
+                count: null
+            },
+            {
+                title: "mashhad",
+                cover: "mashhad.webp",
+                persianTitle: "مشهد",
+                count: null
+            },
+            {
+                title: "motelqoo",
+                cover: "motelqoo.webp",
+                persianTitle: "متل قو",
+                count: null
+            },
+            {
+                title: "nowshahr",
+                cover: "nowshahr.webp",
+                persianTitle: "نوشهر",
+                count: null
+            },
+            {
+                title: "ramsar",
+                cover: "ramsar.webp",
+                persianTitle: "رامسر",
+                count: null
+            },
+            {
+                title: "rasht",
+                cover: "rasht.webp",
+                persianTitle: "رشت",
+                count: null
+            },
+            {
+                title: "sareyn",
+                cover: "sareyn.webp",
+                persianTitle: "سرعین",
+                count: null
+            },
+            {
+                title: "sari",
+                cover: "sari.webp",
+                persianTitle: "ساری",
+                count: null
+            },
+            {
+                title: "savadkuh",
+                cover: "savadkuh.webp",
+                persianTitle: "سواد کوه",
+                count: null
+            },
+            {
+                title: "shahriar",
+                cover: "shahriar.webp",
+                persianTitle: "شهریار",
+                count: null
+            },
+            {
+                title: "shiraz",
+                cover: "shiraz.webp",
+                persianTitle: "شیراز",
+                count: null
+            },
+            {
+                title: "tabriz",
+                cover: "tabriz.webp",
+                persianTitle: "تبریز",
+                count: null
+            },
+            {
+                title: "talesh",
+                cover: "talesh.webp",
+                persianTitle: "تالش",
+                count: null
+            },
+            {
+                title: "tehran",
+                cover: "tehran.webp",
+                persianTitle: "تهران",
+                count: null
+            },
+        ]
 
-        let townCounts = towns.reduce((acc, town) => {
-            acc[town] = (acc[town] || 0) + 1;
+        const cityCounts = villas.reduce((acc, villa) => {
+            const city = villa.address.city;
+            const state = villa.address.state;
+            acc[city] = (acc[city] || 0) + 1;
+            acc[state] = (acc[state] || 0) + 1;
             return acc;
         }, {});
 
-        let sortedTowns = Object.keys(townCounts).sort((a, b) => townCounts[b] - townCounts[a]);
+        const sortedCities = city.map((city) => ({
+            ...city,
+            count: cityCounts[city.title] || 0,
+        })).sort((a, b) => b.count - a.count);
 
-        return res.status(200).json({ statusCode: 200, sortedTowns })
+        return res.status(200).json({ statusCode: 200, sortedCities })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
