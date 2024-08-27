@@ -984,6 +984,53 @@
                 }
             }
         },
+        "/villa/book/price/{villaID}": {
+            "post": {
+                "tags": [
+                    "Villas"
+                ],
+                "parameters": [
+                    {
+                        "name": "villaID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "date": {
+                                        "from": "1403/5/27",
+                                        "to": "1403/5/29"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "price of booking",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "402": {
+                        "description": "date>to  should greater than date>from"
+                    },
+                    "404": {
+                        "description": "Villa not found 404 !"
+                    },
+                    "409": {
+                        "description": "validator error"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/villa/book/{villaID}": {
             "post": {
                 "tags": [

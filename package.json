@@ -23,6 +23,7 @@
     "express": "^4.18.2",
     "helmet": "^7.1.0",
     "jalaali-js": "^1.2.7",
+    "jalali-date": "^1.1.5",
     "jalali-moment": "^3.3.11",
     "joi": "^17.12.1",
     "joi-objectid": "^4.0.2",

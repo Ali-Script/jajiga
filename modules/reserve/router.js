@@ -7,6 +7,9 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 
 router
+    .route("/book/price/:villaID")
+    .post(controller.reservePrice)
+router
     .route("/book/:villaID")
     .post(authMiddleware, controller.reserve)
 
