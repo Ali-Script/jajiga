@@ -64,8 +64,12 @@ exports.reservePrice = async (req, res) => {
         let splitedFrom = from.split("/").join('')
         let splitedTo = to.split("/").join('')
 
-        if (+splitedFrom >= +splitedTo) return res.status(402).json({ statusCode: 402, message: "date>to  should greater than date>from" })
+        const [fromYear, fromMonth, fromDay] = from.split('/').map(Number);
+        const [toYear, toMonth, toDay] = to.split('/').map(Number);
 
+        if (new Date(fromYear, fromMonth - 1, fromDay) >= new Date(toYear, toMonth - 1, toDay)) {
+            return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
+        }
 
         const villa = await villaModel.findOne({ _id: villaID })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
@@ -119,7 +123,7 @@ exports.reservePrice = async (req, res) => {
         let diffInMilliseconds = toGregorian - fromGregorian;
 
 
-        let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+        let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24) + 1;
         let holyDays = result.thursdays + result.fridays
         let midWeeks = diffInDays - holyDays
 
@@ -127,8 +131,9 @@ exports.reservePrice = async (req, res) => {
         let holyDaysTotalPrice = 0
         let totalPrice = 0
 
-        let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(realTimeDate)
-
+        // let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(realTimeDate)
+        let month = from.split("/")[1]
+        console.log(month);
         if (month == 1 | month == 2 | month == 3) {
             let holidaysPrice = villa.price.spring.holidays * holyDays
             let midWeekPrice = villa.price.spring.midWeek * midWeeks
@@ -175,6 +180,73 @@ exports.reservePrice = async (req, res) => {
             totalPrice
 
         })
+
+
+
+
+
+        // const villaID = req.params.villaID
+        // const { date } = req.body;
+
+        // const validator = joi.validate({ villa: villaID, date });
+        // if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details });
+
+        // let from = date.from;
+        // let to = date.to;
+
+        // const [fromYear, fromMonth, fromDay] = from.split('/').map(Number);
+        // const [toYear, toMonth, toDay] = to.split('/').map(Number);
+
+        // if (new Date(fromYear, fromMonth - 1, fromDay) >= new Date(toYear, toMonth - 1, toDay)) {
+        //     return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
+        // }
+
+        // const villa = await villaModel.findOne({ _id: villaID });
+        // if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" });
+
+        // function persianToGregorian(persianDate) {
+        //     const [year, month, day] = persianDate.split('/').map(Number);
+        //     const jd = new JalaliDate(year, month, day);
+        //     return jd.toGregorian();
+        // }
+
+        // function countDaysAndWeekdays(dateRange) {
+        //     const startDate = persianToGregorian(dateRange.from);
+        //     const endDate = persianToGregorian(dateRange.to);
+
+        //     let currentDate = new Date(startDate);
+        //     const end = new Date(endDate);
+
+        //     let monthDays = {};
+        //     while (currentDate <= end) {
+        //         const persianDate = new JalaliDate(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
+        //         const month = `month${persianDate.getMonth()}`;
+        //         const dayOfWeek = currentDate.getDay();
+
+        //         if (!monthDays[month]) {
+        //             monthDays[month] = { days: 0, midWeeks: 0, thursdays: 0, fridays: 0 };
+        //         }
+
+        //         monthDays[month].days++;
+        //         if (dayOfWeek >= 1 && dayOfWeek <= 3) {
+        //             monthDays[month].midWeeks++;
+        //         } else if (dayOfWeek === 4) {
+        //             monthDays[month].thursdays++;
+        //         } else if (dayOfWeek === 5) {
+        //             monthDays[month].fridays++;
+        //         }
+
+        //         currentDate.setDate(currentDate.getDate() + 1);
+        //     }
+
+        //     return monthDays;
+        // }
+
+        // let dateRange = { from, to };
+        // let result = countDaysAndWeekdays(dateRange);
+
+        // res.json({ day: result });
+
 
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
