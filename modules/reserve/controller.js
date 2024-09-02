@@ -310,39 +310,39 @@ exports.reservePrice = async (req, res) => {
         let holyDaysTotalPrice = 0
         let totalPrice = 0
 
-
+        console.log("object");
         let month = from.split("/")[1]
 
         if (month == 1 | month == 2 | month == 3) {
             let holidaysPrice = villa.price.spring.holidays * holyDays
             let midWeekPrice = villa.price.spring.midWeek * midWeeks
-            midWeekTotalPrice = villa.price.spring.holidays
-            holyDaysTotalPrice = villa.price.spring.midWeek
-            totalPrice = midWeekPrice + holidaysPrice
+            midWeekTotalPrice = villa.price.spring.midWeek
+            holyDaysTotalPrice = villa.price.spring.holidays
+            totalPrice += midWeekPrice + holidaysPrice
         }
         // * بهار
         else if (month == 4 | month == 5 | month == 6) {
             let holidaysPrice = villa.price.summer.holidays * holyDays
             let midWeekPrice = villa.price.summer.midWeek * midWeeks
-            midWeekTotalPrice = villa.price.summer.holidays
-            holyDaysTotalPrice = villa.price.summer.midWeek
-            totalPrice = midWeekPrice + holidaysPrice
+            midWeekTotalPrice = villa.price.summer.midWeek
+            holyDaysTotalPrice = villa.price.summer.holidays
+            totalPrice += midWeekPrice + holidaysPrice
         }
         // * تابستان
         else if (month == 7 | month == 8 | month == 9) {
             let holidaysPrice = villa.price.autumn.holidays * holyDays
             let midWeekPrice = villa.price.autumn.midWeek * midWeeks
-            midWeekTotalPrice = villa.price.autumn.holidays
-            holyDaysTotalPrice = villa.price.autumn.midWeek
-            totalPrice = midWeekPrice + holidaysPrice
+            midWeekTotalPrice = villa.price.autumn.midWeek
+            holyDaysTotalPrice = villa.price.autumn.holidays
+            totalPrice += midWeekPrice + holidaysPrice
         }
         // * پاییز
         else if (month == 10 | month == 11 | month == 12) {
             let holidaysPrice = villa.price.winter.holidays * holyDays
             let midWeekPrice = villa.price.winter.midWeek * midWeeks
-            midWeekTotalPrice = villa.price.winter.holidays
-            holyDaysTotalPrice = villa.price.winter.midWeek
-            totalPrice = midWeekPrice + holidaysPrice
+            midWeekTotalPrice = villa.price.winter.midWeek
+            holyDaysTotalPrice = villa.price.winter.holidays
+            totalPrice += midWeekPrice + holidaysPrice
         }
         // * زمستان
 

@@ -22,6 +22,9 @@
         },
         {
             "name": "Utils"
+        },
+        {
+            "name": "Comments"
         }
     ],
     "paths": {
@@ -1673,6 +1676,271 @@
                     },
                     "422": {
                         "description": "Code Has Expired !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/wishes/{villaID}": {
+            "post": {
+                "tags": [
+                    "Utils"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "villaID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Add Villa to Favorite",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Villa not found 404 !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/create": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Add Comment",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "body": "Comment Body",
+                                    "score": "[1,2,3,4,5]",
+                                    "villa": "Villa ObjectId"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Villa not found 404 !"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "425": {
+                        "description": "You cannot register a comment for your own villa"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/accept/{commentID}": {
+            "put": {
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "commentID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Accept Comment",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "422": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Comment not found 404 !"
+                    },
+                    "421": {
+                        "description": "Comment is Already Accepted !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/reject/{commentID}": {
+            "put": {
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "commentID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Reject Comment",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "422": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Comment not found 404 !"
+                    },
+                    "421": {
+                        "description": "Comment is Already Rejected !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/delete/{commentID}": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "commentID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Delete Comment",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "422": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Comment not found 404 !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/answer/{mainCommentID}": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "mainCommentID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Answer Comment",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "body": "Comment Body"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "422": {
+                        "description": "Invalid Object Id"
+                    },
+                    "424": {
+                        "description": "The comment has not been accepted yet"
+                    },
+                    "421": {
+                        "description": "this is an answer you cant reply answers"
+                    },
+                    "423": {
+                        "description": "this comment already have a answer"
+                    },
+                    "425": {
+                        "description": "you are not the author of this comment"
+                    },
+                    "404": {
+                        "description": "Comment not found 404 !"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comment/getAll": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "getAll Comments",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
                     },
                     "500": {
                         "description": "Internal Server Error"

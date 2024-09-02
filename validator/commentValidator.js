@@ -3,7 +3,8 @@ Joi.objectId = require('joi-objectid')(Joi)
 
 const schema = Joi.object({
     body: Joi.string()
-        .max(80)
+        .min(3)
+        .max(120)
         .required(),
 
     villa: Joi.objectId()

@@ -314,7 +314,8 @@ exports.getme = async (req, res) => {
         const checkBan = await banModel.findOne({ phone: user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
-        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
+        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
+            .sort({ _id: -1 }).lean()
         const books = await reserveModel.find({ user: user._id })
         const wishes = await wishesModel.find({ user: user._id })
         let getfaveVillas = []

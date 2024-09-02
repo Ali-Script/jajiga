@@ -25,7 +25,6 @@ const schema = new mongoose.Schema({
     isAnswer: {
         type: Number,
         enum: [0, 1],
-        required: true
     },
     haveAnswer: {
         type: Number,
@@ -37,12 +36,12 @@ const schema = new mongoose.Schema({
         ref: 'Comment',
     },
     answer: [{
-
         type: mongoose.Types.ObjectId,
         ref: 'Comment',
-        required: false
-
-    }]
+    }],
+    date: {
+        type: String,
+    }
 }, { timestamps: true })
 
 const commentModel = mongoose.model('Comment ', schema)

@@ -20,7 +20,7 @@ router
     .get(controller.getAllActivated)
 router
     .route("/get/:id")
-    .get(authMiddleware, controller.getOne)
+    .get(controller.getOne)
 router
     .route("/myVillas")
     .get(authMiddleware, controller.myVillas)
@@ -30,7 +30,7 @@ router
 // ! admin mid
 router
     .route("/facility")
-    .get(authMiddleware, controller.getFacility)
+    .get(controller.getFacility)
 router
     .route("/s")
     .get(controller.filtring)

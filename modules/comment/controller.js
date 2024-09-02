@@ -1,23 +1,25 @@
 const mongoose = require('mongoose');
+const moment = require('jalali-moment');
 const commentModel = require("./model")
 const villaModel = require("./../villas/model")
 const joi = require("./../../validator/commentValidator")
-
+let realTimeShamsiDate = moment().locale('fa').format('jYYYY/jM/jD');
 
 exports.create = async (req, res) => {
     try {
         const { body, villa, score } = req.body;
 
         const validatorr = joi.validate(req.body)
-        if (validatorr.error) return res.status(409).json({ message: validatorr.error.details })
+        if (validatorr.error) return res.status(409).json({ statusCode: 409, message: validatorr.error.details })
 
         const validate = mongoose.Types.ObjectId.isValid(villa);
-        if (!validate) return res.status(400).send({ error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).send({ statusCode: 400, message: 'Invalid Object Id' })
 
         const villaId = await villaModel.findOne({ _id: villa })
-        if (!villaId) return res.status(404).json({ message: "villa Not Found", err: 404 })
+        if (!villaId) return res.status(404).json({ statusCode: 404, message: "villa Not Found", })
+        else if (String(villaId.user) == String(req.user._id)) return res.status(425).json({ statusCode: 425, message: 'You cannot register a comment for your own villa' })
 
-        const comment = await commentModel.create({
+        let comment = new commentModel({
             body,
             creator: req.user._id,
             villa: villaId._id,
@@ -25,25 +27,28 @@ exports.create = async (req, res) => {
             isAccept: 0,
             isAnswer: 0,
             haveAnswer: 0,
+            date: realTimeShamsiDate
         })
-        return res.status(200).json(comment)
-    } catch (err) { return res.status(422).json(err.message) }
+        comment = await comment.save();
+
+        return res.status(200).json({ statusCode: 200, message: 'succ' })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.remove = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { commentID } = req.params;
 
-        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
+        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.commentID)
         if (!isvalidID) {
-            return res.status(422).json({ message: "Invalid ObjectId !!" })
+            return res.status(422).json({ statusCode: 422, message: "Invalid ObjectId !!" })
         }
 
-        const comment = await commentModel.findOneAndDelete({ _id: id })
+        const comment = await commentModel.findOneAndDelete({ _id: commentID })
 
         if (!comment) {
-            return res.status(404).json({ message: 'Comment not found' })
+            return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
         }
-        if (comment.isAnswer === 1) {
+        if (comment.isAnswer == 1) {
             const commentt = await commentModel.findOneAndUpdate({ _id: comment.mainCommentID }, { haveAnswer: 0 })
         }
 
@@ -51,95 +56,89 @@ exports.remove = async (req, res) => {
             const deleteanswer = await commentModel.findOneAndDelete({ _id: comment.answer })
         }
 
-        return res.json({ message: `Comment removed `, id: comment._id })
-    }
-    catch (err) {
-        return res.status(422).json(err.message)
-    }
+        return res.status(200).json({ statusCode: 200, message: "Comment removed " })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-// test 1
 exports.accept = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { commentID } = req.params;
 
-        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
+        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.commentID)
         if (!isvalidID) {
-            return res.status(422).json({ message: "Invalid ObjectId !!" })
+            return res.status(422).json({ statusCode: 422, message: "Invalid ObjectId !!" })
         }
 
-        const comment = await commentModel.findOneAndUpdate({ _id: id }, { isAccept: 1 })
+        const comment = await commentModel.findOneAndUpdate({ _id: commentID }, { isAccept: 1 })
 
         if (!comment) {
-            return res.status(404).json({ message: 'Comment not found' })
+            return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
         }
         else if (comment.isAccept == 1) {
-            return res.status(422).json({ message: 'Comment is Already Accepted ! ' })
+            return res.status(421).json({ statusCode: 421, message: 'Comment is Already Accepted ! ' })
         }
 
-        return res.json({ message: 'Comment Accepted (:' })
-    } catch (err) { return res.status(422).json(err.message) }
+        return res.status(200).json({ statusCode: 200, message: 'Comment Accepted' })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.reject = async (req, res) => {
     try {
 
-        const { id } = req.params;
+        const { commentID } = req.params;
 
-        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
-        if (!isvalidID) {
-            return res.status(422).json({ message: "Invalid ObjectId !!" })
-        }
+        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.commentID)
+        if (!isvalidID) return res.status(422).json({ statusCode: 422, message: "Invalid ObjectId !!" })
 
-        const comment = await commentModel.findOneAndUpdate({ _id: id }, { isAccept: 0 })
+        const comment = await commentModel.findOneAndUpdate({ _id: commentID }, { isAccept: 0 })
 
-        if (!comment) {
-            return res.status(404).json({ message: 'Comment not found' })
-        }
-        else if (comment.isAccept == 0) {
-            return res.status(422).json({ message: 'Comment is Already Rejected ! ' })
-        }
+        if (!comment) return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
+        else if (comment.isAccept == 0) return res.status(421).json({ statusCode: 421, message: 'Comment is Already Rejected ! ' })
 
-        return res.json({ message: 'Comment Rejected (:' })
-    }
-    catch (err) {
-        return res.status(422).json(err.message)
-    }
+        return res.status(200).json({ statusCode: 200, message: 'Comment Rejected' })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.answer = async (req, res) => {
     try {
+
         const { body } = req.body;
-        const { id } = req.params;
+        const { mainCommentID } = req.params;
 
-        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
-        if (!isvalidID) return res.status(422).json({ message: "Invalid ObjectId !!" })
+        const isvalidID = mongoose.Types.ObjectId.isValid(req.params.mainCommentID)
+        if (!isvalidID) return res.status(422).json({ statusCode: 422, message: "Invalid ObjectId !!" })
 
-        const comment = await commentModel.findOne({ _id: id })
-        if (!comment) return res.status(404).json({ message: 'Comment not found' })
-        else if (comment.isAnswer == 1) return res.status(422).json({ message: 'this is an answer you cant reply answers' })
-        else if (comment.answer.length >= 1) return res.status(422).json({ message: 'this comment already have a answer' })
-        else if (comment.isAccept == 0) return res.status(422).json({ message: 'Comment has not accepted yet !' })
+        const comment = await commentModel.findOne({ _id: mainCommentID })
+        if (!comment) return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
+        else if (comment.isAccept == 0) return res.status(424).json({ statusCode: 424, message: 'The comment has not been accepted yet' })
+        else if (comment.isAnswer == 1) return res.status(421).json({ statusCode: 421, message: 'this is an answer you cant reply answers' })
+        else if (comment.answer.length >= 1) return res.status(423).json({ statusCode: 423, message: 'this comment already have a answer' })
+        else if (String(comment.creator) != String(req.user._id)) return res.status(425).json({ statusCode: 425, message: 'you are not the author of this comment' })
 
-        const Updatecomment = await commentModel.updateOne({ _id: id }, { haveAnswer: 1 })
+        const Updatecomment = await commentModel.updateOne({ _id: mainCommentID }, { haveAnswer: 1 })
 
-        const answer = await commentModel.create({
+        let answer = new commentModel({
             body,
             creator: req.user._id,
             villa: comment.villa,
             isAccept: 0,
             isAnswer: 1,
-            mainCommentID: comment._id
+            mainCommentID: comment._id,
+            date: realTimeShamsiDate
         })
 
-        const setnswer = await commentModel.findOneAndUpdate({ _id: id }, { $push: { answer: answer._id } })
-        return res.status(200).json(answer)
+        answer = await answer.save();
 
-    } catch (err) { return res.status(422).json({ message: err.message }) }
+
+
+        await commentModel.findOneAndUpdate({ _id: mainCommentID }, { $push: { answer: answer._id } })
+        return res.status(200).json({ statusCode: 200, message: "succ" })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.getAll = async (req, res) => {
     try {
 
         const comments = await commentModel.find({})
-            .populate("villa", "title")
-            .populate("creator", "UserName")
+            .populate("villa", "_id title")
+            .populate("creator", "firstName avatar")
             .sort({ _id: -1 })
             .lean();
 
@@ -161,16 +160,12 @@ exports.getAll = async (req, res) => {
         })
 
         const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
-            .populate("villa", "title")
-            .populate("creator", "UserName")
+            .populate("villa", "_id title")
+            .populate("creator", "firstName avatar")
             .sort({ _id: -1 })
             .lean();
         noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        return res.json({ orderedComment })
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message })
-    }
+        return res.status(200).json({ statusCode: 200, Comment: orderedComment })
+    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-// test 1

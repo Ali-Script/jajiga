@@ -5,6 +5,7 @@ const reserveModel = require('./../reserve/model');
 const OtpcodeModel = require('./../authcode/OTPModel');
 const userVillaModel = require('./../user-villa/model');
 const newsletterModel = require('./../newsletter/model');
+const wishesModel = require('./../wishes/model');
 const emailValidator = require("email-validator");
 const nodemailer = require("nodemailer");
 const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
@@ -34,10 +35,24 @@ exports.getOne = async (req, res) => {
         const user = await userModel.findOne({ phone }).lean();
         if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
-        Reflect.deleteProperty(user, "password")
-        const villas = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
-        const books = await reserveModel.find({ user: user._id }).populate("villa")
-        return res.status(200).json({ statusCode: 200, user, villas, books })
+        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
+            .sort({ _id: -1 }).lean()
+        const books = await reserveModel.find({ user: user._id })
+        const wishes = await wishesModel.find({ user: user._id })
+        let getfaveVillas = []
+        if (wishes.length != 0) {
+
+            const getfaveVillas = await Promise.all(
+                wishes.map(async (data) => {
+                    const find = await villaModel.findOne({ _id: data.villa }).populate("aboutVilla.villaType").lean();
+                    return find;
+                })
+            );
+
+            return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: getfaveVillas })
+        }
+        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: [] })
+
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.delete = async (req, res) => {

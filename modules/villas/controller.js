@@ -270,7 +270,8 @@ exports.update = async (req, res) => {
                 disable
             })
 
-            const findUpdatedVilla = await villaModel.findOne({ _id: id }).lean()
+            const findUpdatedVilla = await villaModel.findOne({ _id: id }).populate("user", "firstName lastName role avatar")
+                .populate("aboutVilla.villaType").lean()
             return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
         }
 
@@ -279,7 +280,7 @@ exports.update = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const villas = await villaModel.find({})
-            .populate("user", "firstName lastName role")
+            .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
@@ -291,7 +292,7 @@ exports.getAll = async (req, res) => {
 exports.getAllActivated = async (req, res) => {
     try {
         const villas = await villaModel.find({ disable: false })
-            .populate("user", "firstName lastName role")
+            .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
@@ -307,53 +308,62 @@ exports.getOne = async (req, res) => {
         if (!validate) return res.status(400).json({ error: 'Invalid Object Id' })
 
         const villa = await villaModel.findOne({ _id: id })
-            .populate("user", "firstName lastName role")
+            .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .lean()
         if (!villa) return res.status(404).json({ statusCode: 404, message: "villa not found 404 ! " })
 
         const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
-        return res.status(200).json({ statusCode: 200, villa, bookedDate: getReserved[0] ? getReserved[0].date : [] })
+        let bookDate = []
+
+        getReserved.forEach(data => {
+            let obj = data.date
+            console.log(data);
+            bookDate.push(obj)
+        })
+
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "UserName")
-        //     .sort({ _id: -1 })
-        //     .lean();
+        const comments = await commentModel.find({ villa: id })
+            .populate("villa", "_id title")
+            .populate("creator", "firstName avatar")
+            .sort({ _id: -1 })
+            .lean();
 
-        // let orderedComment = []
+        let orderedComment = []
 
-        // comments.forEach(mainComment => {
-        //     comments.forEach(answerComment => {
+        comments.forEach(mainComment => {
+            comments.forEach(answerComment => {
 
-        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
 
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: answerComment.villa.title,
-        //                 creator: answerComment.creator.UserName,
-        //                 answerComment
-        //             })
-        //         }
-        //     })
-        // })
+                    orderedComment.push({
+                        ...mainComment,
+                        villa: answerComment.villa.title,
+                        creator: answerComment.creator.UserName,
+                        answerComment
+                    })
+                }
+            })
+        })
 
 
-        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "UserName")
-        //     .sort({ _id: -1 })
-        //     .lean();
+        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+            .populate("villa", "_id title")
+            .populate("creator", "firstName avatar")
+            .sort({ _id: -1 })
+            .lean();
 
-        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        // return res.status(200).json({ villa, comments: orderedComment })
+        return res.status(200).json({ statusCode: 200, villa, bookDate, comments: orderedComment })
+
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.myVillas = async (req, res) => {
     try {
         const user = req.user
-        const villa = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").lean()
+        const villa = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
         // let newVillas = []
 
@@ -370,9 +380,17 @@ exports.myVillas = async (req, res) => {
         // })
         // console.log(newVillas);
         //!fghsssssssssssss
+        const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
+        let bookDate = []
 
-        return res.status(200).json({ statusCode: 200, villa })
+        getReserved.forEach(data => {
+            let obj = data.date
+            console.log(data);
+            bookDate.push(obj)
+        })
+
+        return res.status(200).json({ statusCode: 200, villa, bookDate })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
@@ -825,7 +843,7 @@ exports.filtring = async (req, res) => {
 exports.privilegedVillas = async (req, res) => {
     try {
         let costlyVillas = []
-        const villas = await villaModel.find({}).populate("aboutVilla.villaType").lean();
+        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         villas.forEach(villa => {
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
@@ -840,7 +858,7 @@ exports.privilegedVillas = async (req, res) => {
 }
 exports.popularTowns = async (req, res) => {
     try {
-        const villas = await villaModel.find({}).populate("aboutVilla.villaType").lean();
+        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         let city = [
             {
@@ -1021,7 +1039,7 @@ exports.popularTowns = async (req, res) => {
 exports.quickSearchByZone = async (req, res) => {
     try {
 
-        const villas = await villaModel.find({}).lean();
+        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         let allZone = [
             {
