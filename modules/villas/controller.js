@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const villaModel = require('./../villas/model');
 const reserveModel = require('./../reserve/model');
+const wishesModel = require('./../wishes/model');
+const userModel = require('./../auth/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
+const jwt = require('jsonwebtoken');
 const joi = require("./../../validator/villaValidator");
+require("dotenv").config()
 const date = new Date()
 const shamsiDate = new Intl.DateTimeFormat('en-US-u-ca-persian', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
@@ -285,24 +289,138 @@ exports.getAll = async (req, res) => {
             .sort({ _id: -1 })
             .lean()
         if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+        let ordered = []
 
-        return res.status(200).json({ statusCode: 200, villas: villas })
+        for (const villa of villas) {
+
+            const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
+
+            let bookDate = []
+
+            getReserved.forEach(data => {
+                let obj = { date: data.date, price: data.price }
+                bookDate.push(obj)
+            })
+
+            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
+            const comments = await commentModel.find({ villa: villa._id })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            let orderedComment = []
+
+            comments.forEach(mainComment => {
+                comments.forEach(answerComment => {
+
+                    if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+                        orderedComment.push({
+                            ...mainComment,
+                            villa: answerComment.villa.title,
+                            creator: answerComment.creator,
+                            answerComment
+                        })
+                    }
+                })
+            })
+
+
+
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+            let obj = { villa, booked: bookDate.length, comments: orderedComment.length }
+            ordered.push(obj);
+        }
+
+
+        return res.status(200).json({ statusCode: 200, villas: ordered })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.getAllActivated = async (req, res) => {
     try {
-        const villas = await villaModel.find({ disable: false })
+        const villas = await villaModel.find({})
             .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
-        if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no Activated villa!" })
+        if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+        let ordered = []
 
-        return res.status(200).json({ statusCode: 200, villas: villas })
+        for (const villa of villas) {
+
+            const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
+
+            let bookDate = []
+
+            getReserved.forEach(data => {
+                let obj = { date: data.date, price: data.price }
+                bookDate.push(obj)
+            })
+
+            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
+            const comments = await commentModel.find({ villa: villa._id })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            let orderedComment = []
+
+            comments.forEach(mainComment => {
+                comments.forEach(answerComment => {
+
+                    if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+                        orderedComment.push({
+                            ...mainComment,
+                            villa: answerComment.villa.title,
+                            creator: answerComment.creator,
+                            answerComment
+                        })
+                    }
+                })
+            })
+
+
+
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+            let obj = { villa, booked: bookDate.length, comments: orderedComment.length }
+            ordered.push(obj);
+        }
+
+
+        return res.status(200).json({ statusCode: 200, villas: ordered })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
 exports.getOne = async (req, res) => {
     try {
+        let userobj = null
+        const headers = req.header("Authorization")?.split(" ")
+        if (headers?.length == 2) {
+            const token = headers[1]
+
+            const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+            const user = await userModel.findOne({ phone: decoded.Identifeir })
+            if (user) userobj = user.toObject()
+        }
+
+
+
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ error: 'Invalid Object Id' })
@@ -318,8 +436,7 @@ exports.getOne = async (req, res) => {
         let bookDate = []
 
         getReserved.forEach(data => {
-            let obj = data.date
-            console.log(data);
+            let obj = { date: data.date, price: data.price }
             bookDate.push(obj)
         })
 
@@ -340,12 +457,13 @@ exports.getOne = async (req, res) => {
                     orderedComment.push({
                         ...mainComment,
                         villa: answerComment.villa.title,
-                        creator: answerComment.creator.UserName,
+                        creator: answerComment.creator,
                         answerComment
                     })
                 }
             })
         })
+
 
 
         const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
@@ -355,6 +473,16 @@ exports.getOne = async (req, res) => {
             .lean();
 
         noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+        if (userobj) {
+
+            const isWishes = await wishesModel.findOne({ user: userobj._id, villa: villa._id })
+            if (isWishes) villa.isWishes = true;
+            else villa.isWishes = false;
+
+            if (String(villa.user._id) == String(userobj._id)) villa.isOwner = true
+            else villa.isOwner = false
+
+        } else { villa.isWishes = false; villa.isOwner = false }
 
         return res.status(200).json({ statusCode: 200, villa, bookDate, comments: orderedComment })
 
@@ -386,7 +514,6 @@ exports.myVillas = async (req, res) => {
 
         getReserved.forEach(data => {
             let obj = data.date
-            console.log(data);
             bookDate.push(obj)
         })
 

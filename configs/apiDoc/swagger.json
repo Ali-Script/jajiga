@@ -1700,7 +1700,19 @@
                         "required": "true"
                     }
                 ],
-                "summary": "Add Villa to Favorite",
+                "summary": "Add/Remove Villa to/from Favorite",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "flag": "true (add to favorite), false (remove from favorite)"
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1710,6 +1722,35 @@
                     },
                     "404": {
                         "description": "Villa not found 404 !"
+                    },
+                    "421": {
+                        "description": "this villa is already in your wish list"
+                    },
+                    "422": {
+                        "description": "nothing found in wish list"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/wishes": {
+            "get": {
+                "tags": [
+                    "Utils"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Get Villa from Favorite",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
                     },
                     "500": {
                         "description": "Internal Server Error"

@@ -105,12 +105,12 @@ exports.answer = async (req, res) => {
         const isvalidID = mongoose.Types.ObjectId.isValid(req.params.mainCommentID)
         if (!isvalidID) return res.status(422).json({ statusCode: 422, message: "Invalid ObjectId !!" })
 
-        const comment = await commentModel.findOne({ _id: mainCommentID })
+        const comment = await commentModel.findOne({ _id: mainCommentID }).populate("villa", "user")
         if (!comment) return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
         else if (comment.isAccept == 0) return res.status(424).json({ statusCode: 424, message: 'The comment has not been accepted yet' })
         else if (comment.isAnswer == 1) return res.status(421).json({ statusCode: 421, message: 'this is an answer you cant reply answers' })
         else if (comment.answer.length >= 1) return res.status(423).json({ statusCode: 423, message: 'this comment already have a answer' })
-        else if (String(comment.creator) != String(req.user._id)) return res.status(425).json({ statusCode: 425, message: 'you are not the author of this comment' })
+        else if (String(comment.villa.user) != String(req.user._id)) return res.status(425).json({ statusCode: 425, message: 'you are not the owner of villa' })
 
         const Updatecomment = await commentModel.updateOne({ _id: mainCommentID }, { haveAnswer: 1 })
 
@@ -152,7 +152,7 @@ exports.getAll = async (req, res) => {
                     orderedComment.push({
                         ...mainComment,
                         villa: answerComment.villa.title,
-                        creator: answerComment.creator.UserName,
+                        creator: answerComment.creator,
                         answerComment
                     })
                 }

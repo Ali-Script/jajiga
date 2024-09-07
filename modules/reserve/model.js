@@ -14,6 +14,9 @@ const schema = new mongoose.Schema({
         from: { type: String, required: true },
         to: { type: String, required: true }
     },
+    price: {
+        type: "String"
+    }
 }, { timestamps: true })
 
 const model = mongoose.model("Book", schema);

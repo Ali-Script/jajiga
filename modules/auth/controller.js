@@ -6,6 +6,7 @@ const userModel = require('./model')
 const villaModel = require('./../villas/model')
 const reserveModel = require('./../reserve/model')
 const wishesModel = require('./../wishes/model')
+const commentModel = require('./../comment/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
 const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
@@ -51,6 +52,7 @@ exports.signup = async (req, res) => {
 
             return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
         }
+
 
         // const OTP_CODE = Math.floor(Math.random() * 1000000)
 
@@ -164,20 +166,23 @@ exports.authOtpPhone = async (req, res) => {
 
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
-            // res.cookie("RefreshToken", RefreshToken, {
-            //     maxAge: 999999999999999, //14 * 24 * 60 * 60,
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true,
-            //     sameSite: "none"
-            // })
-            // res.cookie("AccessToken", accessToken, {
-            //     maxAge: 999999999999999, //15000
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true,
-            //     sameSite: "none"
-            // })
+
+            res.cookie("test22reff", "reff", {
+                maxAge: 150000, //15000
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: "lax",
+                Domain: "https://jajiga-backend.liara.run"
+            })
+            res.cookie("test22342reff", "ref234f", {
+                maxAge: 150000, //15000
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: "lax",
+                Domain: "http://localhost:3000"
+            })
 
 
             // await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })
@@ -316,24 +321,50 @@ exports.getme = async (req, res) => {
 
         const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
             .sort({ _id: -1 }).lean()
-        const books = await reserveModel.find({ user: user._id })
-        const wishes = await wishesModel.find({ user: user._id })
-        let getfaveVillas = []
-        if (wishes.length != 0) {
+        const books = await reserveModel.find({ user: user._id }).populate("villa")
+        let faveVillas = []
 
-            const getfaveVillas = await Promise.all(
-                wishes.map(async (data) => {
-                    const find = await villaModel.findOne({ _id: data.villa }).populate("aboutVilla.villaType").lean();
-                    return find;
-                })
-            );
+        for (const data of books) {
+            const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0 }).select('score -_id');
+            const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
 
-            return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: getfaveVillas })
+            const commentCount = comments.length;
+            const totalScore = comments.reduce((acc, comment) => acc + comment.score, 0);
+            const averageScore = commentCount > 0 ? totalScore / commentCount : 0;
+
+            const getBook = await reserveModel.find({ villa: data.villa._id }).countDocuments()
+
+
+            let obj = {
+                _id: data.villa._id,
+                title: data.villa.title,
+                address: data.villa.address,
+                aboutVilla: vill[0].aboutVilla,
+                cover: data.villa.cover,
+                price: data.villa.price,
+                capacity: data.villa.capacity,
+                comments: commentCount,
+                averageScore,
+                booked: getBook
+            };
+            let obj2 = {
+                date: data.date,
+                price: data.price
+            }
+            const trueKeys = Object.keys(data.villa.facility.facility).filter(key => {
+                if (key !== "moreFacility") return data.villa.facility.facility[key].status === true
+            });
+            if (trueKeys.length >= 5) obj.costly = true
+
+            obj2.villa = obj
+            faveVillas.push(obj2);
         }
-        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: [] })
+
+
+        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
 
     } catch (err) {
-        return res.status(500).json({ statusCode: 500, error: err.message });
+        return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
 //* Checked (1)

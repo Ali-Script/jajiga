@@ -9,5 +9,8 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 router
     .route("/:villaID")
     .post(authMiddleware, controller.add)
+router
+    .route("/")
+    .get(authMiddleware, controller.get)
 
 module.exports = router;
