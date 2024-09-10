@@ -8,6 +8,7 @@ const reserveModel = require('./../reserve/model')
 const wishesModel = require('./../wishes/model')
 const commentModel = require('./../comment/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
+const moment = require('jalali-moment');
 const banModel = require('./../ban/model')
 const joi = require('./../../validator/authValidator');
 const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
@@ -347,10 +348,28 @@ exports.getme = async (req, res) => {
                 averageScore,
                 booked: getBook
             };
-            let obj2 = {
-                date: data.date,
-                price: data.price
+            let obj2 = { date: data.date, price: data.price, guestNumber: data.guestNumber }
+
+            function daysBetweenPersianDates(date1, date2) {
+                // Parse the Persian dates
+                const m1 = moment(date1, 'jYYYY/jM/jD');
+                const m2 = moment(date2, 'jYYYY/jM/jD');
+
+                // Convert to Gregorian dates
+                const gDate1 = m1.format('YYYY-MM-DD');
+                const gDate2 = m2.format('YYYY-MM-DD');
+
+                // Calculate the difference in days
+                const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
+
+                return diffInDays;
             }
+            const date1 = data.date.from;
+            const date2 = data.date.to;
+            let days = daysBetweenPersianDates(date1, date2)
+            obj2.days = days;
+
+
             const trueKeys = Object.keys(data.villa.facility.facility).filter(key => {
                 if (key !== "moreFacility") return data.villa.facility.facility[key].status === true
             });
@@ -359,6 +378,7 @@ exports.getme = async (req, res) => {
             obj2.villa = obj
             faveVillas.push(obj2);
         }
+
 
 
         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })

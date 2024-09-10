@@ -1060,7 +1060,8 @@
                                     "date": {
                                         "from": "1403/5/27",
                                         "to": "1403/5/29"
-                                    }
+                                    },
+                                    "geustNumber": "number of the geusts"
                                 }
                             }
                         }
@@ -1070,6 +1071,9 @@
                 "responses": {
                     "200": {
                         "description": "Succ"
+                    },
+                    "400": {
+                        "description": "geustNumber is bigger than maxCapacity"
                     },
                     "402": {
                         "description": "date>to  should greater than date>from"

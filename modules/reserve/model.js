@@ -16,6 +16,10 @@ const schema = new mongoose.Schema({
     },
     price: {
         type: "String"
+    },
+    guestNumber: {
+        type: "number",
+        required: true
     }
 }, { timestamps: true })
 

@@ -12,5 +12,8 @@ router
 router
     .route("/")
     .get(authMiddleware, controller.get)
+router
+    .route("/dell")
+    .get(controller.dell)
 
 module.exports = router;

@@ -10,16 +10,16 @@ exports.reserve = async (req, res) => {
 
         const villaID = req.params.villaID
         const user = req.user
-        const { date } = req.body
+        const { date, guestNumber } = req.body
 
-        const validator = joi.validate({ villa: villaID, date })
+        const validator = joi.validate({ villa: villaID, date, guestNumber })
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
 
 
         const villa = await villaModel.findOne({ _id: villaID })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
-
+        else if (villa.capacity.maxCapacity < guestNumber) return res.status(400).json({ statusCode: 404, message: "geustNumber is bigger than maxCapacity" })
 
         const isReserved = await reserveModel.find({ villa: villaID }).sort({ _id: -1 })
 
@@ -203,7 +203,8 @@ exports.reserve = async (req, res) => {
                 villa: villaID,
                 user: user._id,
                 date: req.body.date,
-                price: totalPrice
+                price: totalPrice,
+                guestNumber
             })
             reserve = await reserve.save();
 
@@ -270,7 +271,7 @@ exports.reserve = async (req, res) => {
         let holyDaysTotalPrice = 0
         let totalPrice = 0
 
-        console.log("object");
+
         let month = from.split("/")[1]
 
         if (month == 1 | month == 2 | month == 3) {
@@ -340,7 +341,8 @@ exports.reserve = async (req, res) => {
             villa: villaID,
             user: user._id,
             date,
-            price: totalPrice
+            price: totalPrice,
+            guestNumber
         })
         reserve = await reserve.save();
 
@@ -610,7 +612,7 @@ exports.reservePrice = async (req, res) => {
         let holyDaysTotalPrice = 0
         let totalPrice = 0
 
-        console.log("object");
+
         let month = from.split("/")[1]
 
         if (month == 1 | month == 2 | month == 3) {

@@ -21,6 +21,6 @@ router
     .post(authMiddleware, commentController.answer)
 router
     .route("/getAll")
-    .get(commentController.getAll)
+    .get(authMiddleware, commentController.getAll)
 
 module.exports = router

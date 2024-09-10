@@ -7,13 +7,11 @@ const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const jwt = require('jsonwebtoken');
 const joi = require("./../../validator/villaValidator");
+const moment = require('jalali-moment');
 require("dotenv").config()
 const date = new Date()
 const shamsiDate = new Intl.DateTimeFormat('en-US-u-ca-persian', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
-
-// const validator = require("email-validator");
-const { func } = require('joi');
 
 exports.add = async (req, res) => {
     try {
@@ -335,9 +333,10 @@ exports.getAll = async (req, res) => {
                 .lean();
 
             noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+            villa.booked = bookDate.length
+            villa.comments = orderedComment.length
 
-            let obj = { villa, booked: bookDate.length, comments: orderedComment.length }
-            ordered.push(obj);
+            ordered.push(villa);
         }
 
 
@@ -398,9 +397,9 @@ exports.getAllActivated = async (req, res) => {
                 .lean();
 
             noAnswerComments.forEach(i => orderedComment.push({ ...i }))
-
-            let obj = { villa, booked: bookDate.length, comments: orderedComment.length }
-            ordered.push(obj);
+            villa.booked = bookDate.length
+            villa.comments = orderedComment.length
+            ordered.push(villa);
         }
 
 
@@ -419,8 +418,6 @@ exports.getOne = async (req, res) => {
             if (user) userobj = user.toObject()
         }
 
-
-
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ error: 'Invalid Object Id' })
@@ -436,7 +433,27 @@ exports.getOne = async (req, res) => {
         let bookDate = []
 
         getReserved.forEach(data => {
-            let obj = { date: data.date, price: data.price }
+            let obj = { date: data.date, price: data.price, guestNumber: data.guestNumber }
+            function daysBetweenPersianDates(date1, date2) {
+                // Parse the Persian dates
+                const m1 = moment(date1, 'jYYYY/jM/jD');
+                const m2 = moment(date2, 'jYYYY/jM/jD');
+
+                // Convert to Gregorian dates
+                const gDate1 = m1.format('YYYY-MM-DD');
+                const gDate2 = m2.format('YYYY-MM-DD');
+
+                // Calculate the difference in days
+                const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
+
+                return diffInDays;
+            }
+
+
+            const date1 = data.date.from;
+            const date2 = data.date.to;
+            let days = daysBetweenPersianDates(date1, date2)
+            obj.days = days;
             bookDate.push(obj)
         })
 
@@ -979,7 +996,63 @@ exports.privilegedVillas = async (req, res) => {
             if (trueKeys.length >= 5) costlyVillas.push(villa)
         })
 
-        return res.status(200).json({ statusCode: 200, villas: costlyVillas })
+
+        let ordered = []
+
+        for (const villa of costlyVillas) {
+
+            const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
+
+            let bookDate = []
+
+            getReserved.forEach(data => {
+                let obj = { date: data.date, price: data.price }
+                bookDate.push(obj)
+            })
+
+            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
+            const comments = await commentModel.find({ villa: villa._id })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            let orderedComment = []
+
+            comments.forEach(mainComment => {
+                comments.forEach(answerComment => {
+
+                    if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+                        orderedComment.push({
+                            ...mainComment,
+                            villa: answerComment.villa.title,
+                            creator: answerComment.creator,
+                            answerComment
+                        })
+                    }
+                })
+            })
+
+
+
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+            villa.booked = bookDate.length
+            villa.comments = orderedComment.length
+
+            ordered.push(villa);
+        }
+
+
+
+
+        return res.status(200).json({ statusCode: 200, villas: ordered })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
