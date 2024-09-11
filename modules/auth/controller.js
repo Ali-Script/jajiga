@@ -325,7 +325,23 @@ exports.getme = async (req, res) => {
         const books = await reserveModel.find({ user: user._id }).populate("villa")
         let faveVillas = []
 
-        for (const data of books) {
+
+        const today = moment().locale('fa').format('YYYY/MM/DD');
+
+        const filterDates = (books, today) => {
+            const todayDate = new Date(today.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+            return books.filter(item => {
+                const toDate = new Date(item.date.to.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+                return toDate >= todayDate;
+            });
+        };
+
+        const filteredDates = filterDates(books, today);
+
+
+
+
+        for (const data of filteredDates) {
             const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0 }).select('score -_id');
             const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
 

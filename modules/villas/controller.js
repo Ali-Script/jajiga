@@ -420,7 +420,7 @@ exports.getOne = async (req, res) => {
 
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
-        if (!validate) return res.status(400).json({ error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).json({ statusCode: 400, message: 'Invalid Object Id' })
 
         const villa = await villaModel.findOne({ _id: id })
             .populate("user", "firstName lastName role avatar")
@@ -430,9 +430,26 @@ exports.getOne = async (req, res) => {
 
         const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
+
+
+        const today = moment().locale('fa').format('YYYY/MM/DD');
+
+        const filterDates = (getReserved, today) => {
+            const todayDate = new Date(today.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+            return getReserved.filter(item => {
+                const toDate = new Date(item.date.to.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+                return toDate >= todayDate;
+            });
+        };
+
+        const filteredDates = filterDates(getReserved, today);
+
+
+
+
         let bookDate = []
 
-        getReserved.forEach(data => {
+        filteredDates.forEach(data => {
             let obj = { date: data.date, price: data.price, guestNumber: data.guestNumber }
             function daysBetweenPersianDates(date1, date2) {
                 // Parse the Persian dates
@@ -538,6 +555,139 @@ exports.myVillas = async (req, res) => {
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+exports.getme = async (req, res) => {
+    try {
+        const user = req.user;
+        Reflect.deleteProperty(user, "password")
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
+        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
+            .sort({ _id: -1 }).lean()
+        if (findVilla.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+
+        const books = await reserveModel.find({ user: user._id }).populate("villa")
+
+
+        let faveVillas = []
+
+
+
+        for (const villa of findVilla) {
+
+            const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
+
+            let bookDate = []
+
+            getReserved.forEach(data => {
+                let obj = { date: data.date, price: data.price, guestNumber: data.guestNumber }
+                bookDate.push(obj)
+            })
+
+            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
+            const comments = await commentModel.find({ villa: villa._id })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            let orderedComment = []
+
+            comments.forEach(mainComment => {
+                comments.forEach(answerComment => {
+
+                    if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+                        orderedComment.push({
+                            ...mainComment,
+                            villa: answerComment.villa.title,
+                            creator: answerComment.creator,
+                            answerComment
+                        })
+                    }
+                })
+            })
+
+
+
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+                .populate("villa", "_id title")
+                .populate("creator", "firstName avatar")
+                .sort({ _id: -1 })
+                .lean();
+
+            noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+            villa.booked = bookDate.length
+            villa.comments = orderedComment.length
+
+            ordered.push(villa);
+        }
+
+
+
+        for (const data of books) {
+            const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0 }).select('score -_id');
+            const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
+
+            const commentCount = comments.length;
+            const totalScore = comments.reduce((acc, comment) => acc + comment.score, 0);
+            const averageScore = commentCount > 0 ? totalScore / commentCount : 0;
+
+            const getBook = await reserveModel.find({ villa: data.villa._id }).countDocuments()
+
+
+            let obj = {
+                _id: data.villa._id,
+                title: data.villa.title,
+                address: data.villa.address,
+                aboutVilla: vill[0].aboutVilla,
+                cover: data.villa.cover,
+                price: data.villa.price,
+                capacity: data.villa.capacity,
+                comments: commentCount,
+                averageScore,
+                booked: getBook
+            };
+            let obj2 = { date: data.date, price: data.price, guestNumber: data.guestNumber }
+
+            function daysBetweenPersianDates(date1, date2) {
+
+                const m1 = moment(date1, 'jYYYY/jM/jD');
+                const m2 = moment(date2, 'jYYYY/jM/jD');
+
+
+                const gDate1 = m1.format('YYYY-MM-DD');
+                const gDate2 = m2.format('YYYY-MM-DD');
+
+
+                const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
+
+                return diffInDays;
+            }
+            const date1 = data.date.from;
+            const date2 = data.date.to;
+            let days = daysBetweenPersianDates(date1, date2)
+            obj2.days = days;
+
+
+            const trueKeys = Object.keys(data.villa.facility.facility).filter(key => {
+                if (key !== "moreFacility") return data.villa.facility.facility[key].status === true
+            });
+            if (trueKeys.length >= 5) obj.costly = true
+
+            obj2.villa = obj
+            faveVillas.push(obj2);
+        }
+
+
+
+        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
+}
+//!!
 exports.getFacility = async (req, res) => {
     try {
         const facility = [
