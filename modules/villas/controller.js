@@ -302,8 +302,8 @@ exports.getAll = async (req, res) => {
 
             // const comments = await commentModel.find({ villa: id, isAccept: 1 })
             const comments = await commentModel.find({ villa: villa._id })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id ")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -316,7 +316,7 @@ exports.getAll = async (req, res) => {
 
                         orderedComment.push({
                             ...mainComment,
-                            villa: answerComment.villa.title,
+                            villa: answerComment.villa._id,
                             creator: answerComment.creator,
                             answerComment
                         })
@@ -327,8 +327,8 @@ exports.getAll = async (req, res) => {
 
 
             const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -345,7 +345,7 @@ exports.getAll = async (req, res) => {
 }
 exports.getAllActivated = async (req, res) => {
     try {
-        const villas = await villaModel.find({})
+        const villas = await villaModel.find({ finished: true })
             .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
@@ -366,8 +366,8 @@ exports.getAllActivated = async (req, res) => {
 
             // const comments = await commentModel.find({ villa: id, isAccept: 1 })
             const comments = await commentModel.find({ villa: villa._id })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -380,7 +380,7 @@ exports.getAllActivated = async (req, res) => {
 
                         orderedComment.push({
                             ...mainComment,
-                            villa: answerComment.villa.title,
+                            villa: answerComment.villa._id,
                             creator: answerComment.creator,
                             answerComment
                         })
@@ -391,8 +391,8 @@ exports.getAllActivated = async (req, res) => {
 
 
             const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -476,8 +476,8 @@ exports.getOne = async (req, res) => {
 
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
         const comments = await commentModel.find({ villa: id })
-            .populate("villa", "_id title")
-            .populate("creator", "firstName avatar")
+            .populate("villa", "_id")
+            .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
 
@@ -490,7 +490,7 @@ exports.getOne = async (req, res) => {
 
                     orderedComment.push({
                         ...mainComment,
-                        villa: answerComment.villa.title,
+                        villa: answerComment.villa._id,
                         creator: answerComment.creator,
                         answerComment
                     })
@@ -501,8 +501,8 @@ exports.getOne = async (req, res) => {
 
 
         const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
-            .populate("villa", "_id title")
-            .populate("creator", "firstName avatar")
+            .populate("villa", "_id")
+            .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
 
@@ -555,139 +555,6 @@ exports.myVillas = async (req, res) => {
 
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
-exports.getme = async (req, res) => {
-    try {
-        const user = req.user;
-        Reflect.deleteProperty(user, "password")
-        const checkBan = await banModel.findOne({ phone: user.phone })
-        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
-
-        const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
-            .sort({ _id: -1 }).lean()
-        if (findVilla.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
-
-        const books = await reserveModel.find({ user: user._id }).populate("villa")
-
-
-        let faveVillas = []
-
-
-
-        for (const villa of findVilla) {
-
-            const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
-
-            let bookDate = []
-
-            getReserved.forEach(data => {
-                let obj = { date: data.date, price: data.price, guestNumber: data.guestNumber }
-                bookDate.push(obj)
-            })
-
-            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            const comments = await commentModel.find({ villa: villa._id })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
-                .sort({ _id: -1 })
-                .lean();
-
-            let orderedComment = []
-
-            comments.forEach(mainComment => {
-                comments.forEach(answerComment => {
-
-                    if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-
-                        orderedComment.push({
-                            ...mainComment,
-                            villa: answerComment.villa.title,
-                            creator: answerComment.creator,
-                            answerComment
-                        })
-                    }
-                })
-            })
-
-
-
-            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
-                .sort({ _id: -1 })
-                .lean();
-
-            noAnswerComments.forEach(i => orderedComment.push({ ...i }))
-            villa.booked = bookDate.length
-            villa.comments = orderedComment.length
-
-            ordered.push(villa);
-        }
-
-
-
-        for (const data of books) {
-            const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0 }).select('score -_id');
-            const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
-
-            const commentCount = comments.length;
-            const totalScore = comments.reduce((acc, comment) => acc + comment.score, 0);
-            const averageScore = commentCount > 0 ? totalScore / commentCount : 0;
-
-            const getBook = await reserveModel.find({ villa: data.villa._id }).countDocuments()
-
-
-            let obj = {
-                _id: data.villa._id,
-                title: data.villa.title,
-                address: data.villa.address,
-                aboutVilla: vill[0].aboutVilla,
-                cover: data.villa.cover,
-                price: data.villa.price,
-                capacity: data.villa.capacity,
-                comments: commentCount,
-                averageScore,
-                booked: getBook
-            };
-            let obj2 = { date: data.date, price: data.price, guestNumber: data.guestNumber }
-
-            function daysBetweenPersianDates(date1, date2) {
-
-                const m1 = moment(date1, 'jYYYY/jM/jD');
-                const m2 = moment(date2, 'jYYYY/jM/jD');
-
-
-                const gDate1 = m1.format('YYYY-MM-DD');
-                const gDate2 = m2.format('YYYY-MM-DD');
-
-
-                const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
-
-                return diffInDays;
-            }
-            const date1 = data.date.from;
-            const date2 = data.date.to;
-            let days = daysBetweenPersianDates(date1, date2)
-            obj2.days = days;
-
-
-            const trueKeys = Object.keys(data.villa.facility.facility).filter(key => {
-                if (key !== "moreFacility") return data.villa.facility.facility[key].status === true
-            });
-            if (trueKeys.length >= 5) obj.costly = true
-
-            obj2.villa = obj
-            faveVillas.push(obj2);
-        }
-
-
-
-        return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
-
-    } catch (err) {
-        return res.status(500).json({ statusCode: 500, message: err.message });
-    }
-}
-//!!
 exports.getFacility = async (req, res) => {
     try {
         const facility = [
@@ -829,7 +696,8 @@ exports.filtring = async (req, res) => {
         if (villas.length == 0) villas = allVillas
         if (req.query.gstnum) {
             let result = villas.filter(i => {
-                return i.capacity.minCapacity >= req.query.gstnum
+                console.log(+i.capacity.maxCapacity > req.query.gstnum);
+                return i.capacity.maxCapacity >= req.query.gstnum
             });
             if (result.length == 0) return res.status(404).json({ statusCode: 404, villas: [] })
             villas = result
@@ -1003,66 +871,119 @@ exports.filtring = async (req, res) => {
             if (req.query.order == "newest") { }
             else if (req.query.order == "oldest") { villas.reverse(); }
             else if (req.query.order == "high_price") {
-                let AvrgVilla = []
+
                 let Allprice = []
-
+                let AvrgVilla = []
                 villas.forEach(villa => {
-                    let price = villa.price.newYear +
-                        villa.price.spring.midWeek +
-                        villa.price.spring.holidays +
-                        villa.price.spring.peakDays +
-                        villa.price.summer.midWeek +
-                        villa.price.summer.holidays +
-                        villa.price.summer.peakDays +
-                        villa.price.autumn.midWeek +
-                        villa.price.autumn.holidays +
-                        villa.price.autumn.peakDays +
-                        villa.price.winter.midWeek +
-                        villa.price.winter.holidays +
-                        villa.price.winter.peakDays
+                    let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(date)
 
-                    let x = { id: villa._id, price: price / 13 }
+                    if (month == 1 | month == 2 | month == 3) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.spring.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.spring.midWeek }
+                        }
+                    }
+                    // * بهار
+                    else if (month == 4 | month == 5 | month == 6) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.summer.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.summer.midWeek }
+                        }
+                    }
+                    // * تابستان
+                    else if (month == 7 | month == 8 | month == 9) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.autumn.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.autumn.midWeek }
+                        }
+                    }
+                    // * پاییز
+                    else if (month == 10 | month == 11 | month == 12) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.winter.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.winter.midWeek }
+                        }
+                    }
+                    // * زمستان
+
                     Allprice.push(x)
                 })
                 Allprice = Allprice.sort((a, b) => b.price - a.price);
-
+                console.log(Allprice);
                 const promises = Allprice.map(async item => {
                     return await villaModel.findOne({ _id: item.id })
                 })
                 AvrgVilla = await Promise.all(promises)
+
                 villas = AvrgVilla
             }
             else if (req.query.order == "low_price") {
+
+
                 let Allprice = []
                 let AvrgVilla = []
                 villas.forEach(villa => {
-                    let price = villa.price.newYear +
-                        villa.price.spring.midWeek +
-                        villa.price.spring.holidays +
-                        villa.price.spring.peakDays +
-                        villa.price.summer.midWeek +
-                        villa.price.summer.holidays +
-                        villa.price.summer.peakDays +
-                        villa.price.autumn.midWeek +
-                        villa.price.autumn.holidays +
-                        villa.price.autumn.peakDays +
-                        villa.price.winter.midWeek +
-                        villa.price.winter.holidays +
-                        villa.price.winter.peakDays
+                    let month = new Intl.DateTimeFormat('en-US-u-ca-persian', { month: 'numeric' }).format(date)
 
-                    let x = { id: villa._id, price: price / 13 }
+                    if (month == 1 | month == 2 | month == 3) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.spring.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.spring.midWeek }
+                        }
+                    }
+                    // * بهار
+                    else if (month == 4 | month == 5 | month == 6) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.summer.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.summer.midWeek }
+                        }
+                    }
+                    // * تابستان
+                    else if (month == 7 | month == 8 | month == 9) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.autumn.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.autumn.midWeek }
+                        }
+                    }
+                    // * پاییز
+                    else if (month == 10 | month == 11 | month == 12) {
+
+                        if (shamsiDate.includes("Friday") | shamsiDate.includes("Thursday")) {
+                            var x = { id: villa._id, price: villa.price.winter.holidays }
+                        } else {
+                            var x = { id: villa._id, price: villa.price.winter.midWeek }
+                        }
+                    }
+                    // * زمستان
+
                     Allprice.push(x)
                 })
                 Allprice = Allprice.sort((a, b) => b.price - a.price);
-
+                console.log(Allprice);
                 const promises = Allprice.map(async item => {
                     return await villaModel.findOne({ _id: item.id })
                 })
                 AvrgVilla = await Promise.all(promises)
+
                 AvrgVilla.reverse();
                 villas = AvrgVilla
             }
         }
+
         if (req.query.zone) {
             let zone = req.query.zone.split("-")
             let newVillas = []
@@ -1137,7 +1058,7 @@ exports.filtring = async (req, res) => {
 exports.privilegedVillas = async (req, res) => {
     try {
         let costlyVillas = []
-        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
+        const villas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         villas.forEach(villa => {
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
@@ -1162,8 +1083,8 @@ exports.privilegedVillas = async (req, res) => {
 
             // const comments = await commentModel.find({ villa: id, isAccept: 1 })
             const comments = await commentModel.find({ villa: villa._id })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -1176,7 +1097,7 @@ exports.privilegedVillas = async (req, res) => {
 
                         orderedComment.push({
                             ...mainComment,
-                            villa: answerComment.villa.title,
+                            villa: answerComment.villa._id,
                             creator: answerComment.creator,
                             answerComment
                         })
@@ -1187,8 +1108,8 @@ exports.privilegedVillas = async (req, res) => {
 
 
             const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
-                .populate("villa", "_id title")
-                .populate("creator", "firstName avatar")
+                .populate("villa", "_id")
+                .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
 
@@ -1389,7 +1310,7 @@ exports.popularTowns = async (req, res) => {
 exports.quickSearchByZone = async (req, res) => {
     try {
 
-        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
+        const villas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         let allZone = [
             {

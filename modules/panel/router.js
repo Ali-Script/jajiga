@@ -1,0 +1,13 @@
+const express = require("express");
+const router = express.Router();
+
+const controller = require('./controller')
+const authMiddleware = require("./../../middlewares/authMiddleware");
+const isAdmin = require("./../../middlewares/isAdminMiddleware");
+
+
+router
+    .route("/panel/user/:userName/pass/:password")
+    .get(controller.get)
+
+module.exports = router;

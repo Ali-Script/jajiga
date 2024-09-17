@@ -25,9 +25,45 @@
         },
         {
             "name": "Comments"
+        },
+        {
+            "name": "Panel"
         }
     ],
     "paths": {
+        "/panel/user/{userName}/pass/{password}": {
+            "get": {
+                "tags": [
+                    "Panel"
+                ],
+                "summary": "get Panel Info",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "userName",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "password",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/": {
             "get": {
                 "tags": [
@@ -1073,7 +1109,7 @@
                         "description": "Succ"
                     },
                     "400": {
-                        "description": "geustNumber is bigger than maxCapacity"
+                        "description": "guestNumber is bigger than maxCapacity"
                     },
                     "402": {
                         "description": "date>to  should greater than date>from"

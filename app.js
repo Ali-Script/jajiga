@@ -36,10 +36,11 @@ const commentRouter = require('./modules/comment/router')
 const categoryRouter = require('./modules/category/router')
 const reserveRouter = require('./modules/reserve/router')
 const wishesRouter = require('./modules/wishes/router')
+const panelRouter = require('./modules/panel/router')
 
 // Routers ^
 
-app.use("/", authRouter)
+app.use("/", authRouter, panelRouter)
 app.use("/auth/E-code", codeRouter)
 app.use("/user/", userRouter)
 app.use("/villa/", villaRouter, reserveRouter)

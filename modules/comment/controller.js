@@ -137,8 +137,8 @@ exports.getAll = async (req, res) => {
     try {
 
         const comments = await commentModel.find({})
-            .populate("villa", "_id title")
-            .populate("creator", "firstName avatar")
+            .populate("villa", "_id")
+            .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
 
@@ -151,7 +151,7 @@ exports.getAll = async (req, res) => {
 
                     orderedComment.push({
                         ...mainComment,
-                        villa: answerComment.villa.title,
+                        villa: answerComment.villa._id,
                         creator: answerComment.creator,
                         answerComment
                     })
@@ -161,11 +161,11 @@ exports.getAll = async (req, res) => {
 
         const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
             .populate("villa", "_id title")
-            .populate("creator", "firstName avatar")
+            .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
         noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
-        return res.status(200).json({ statusCode: 200, Comment: orderedComment })
+        return res.status(200).json({ statusCode: 200, comment: orderedComment })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }

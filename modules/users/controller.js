@@ -20,10 +20,27 @@ exports.getAll = async (req, res) => {
 
         const allUsers = []
 
-        users.forEach(user => {
+        for (const user of users) {
             Reflect.deleteProperty(user, "password")
             allUsers.push(user)
-        })
+
+            const getBooked = await reserveModel.find({ user: user._id }).lean()
+            let allreserve = { number: getBooked.length, id: [] }
+            getBooked.forEach(data => {
+                allreserve.id.push(data._id)
+            })
+
+            const getVilla = await villaModel.find({ user: user._id }).lean()
+            let allVilla = { number: getVilla.length, id: [] }
+            getVilla.forEach(data => {
+                allVilla.id.push(data._id)
+            })
+
+            user.booked = allreserve
+            user.villa = allVilla
+        }
+
+
 
         return res.status(200).json({ statusCode: 200, users: allUsers })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }

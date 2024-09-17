@@ -396,6 +396,26 @@ exports.getme = async (req, res) => {
         }
 
 
+        for (const villa of findVilla) {
+            const books = await reserveModel.find({ villa: villa._id }).populate("user", "firstName lastName _id")
+
+            const today = moment().locale('fa').format('YYYY/MM/DD');
+
+            const filterDates = (books, today) => {
+                const todayDate = new Date(today.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+                return books.filter(item => {
+                    const toDate = new Date(item.date.to.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
+                    return toDate >= todayDate;
+                });
+            };
+
+            const filteredDates = filterDates(books, today);
+
+            villa.booked = filteredDates
+
+        }
+
+
 
         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
 
