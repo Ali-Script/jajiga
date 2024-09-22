@@ -1120,6 +1120,9 @@
                     "409": {
                         "description": "validator error"
                     },
+                    "419": {
+                        "description": "date.from should be greater than realtime date"
+                    },
                     "422": {
                         "description": "Villa is already booked"
                     },

@@ -101,6 +101,5 @@ exports.get = async (req, res) => {
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.dell = async (req, res) => {
-    await commentModel.deleteMany({})
     await reserveModel.deleteMany({})
 }

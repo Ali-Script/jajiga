@@ -16,18 +16,6 @@ exports.reserve = async (req, res) => {
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
 
-
-        const villa = await villaModel.findOne({ _id: villaID })
-        if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
-        else if (villa.capacity.maxCapacity < guestNumber) return res.status(400).json({ statusCode: 404, message: "geustNumber is bigger than maxCapacity" })
-
-        const isReserved = await reserveModel.find({ villa: villaID }).sort({ _id: -1 })
-
-        if (isReserved[0]) {
-
-            if (isReserved[0].date.to >= date.from) return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
-
-        }
         let from = date.from
         let to = date.to
         let splitedFrom = from.split("/")
@@ -39,6 +27,57 @@ exports.reserve = async (req, res) => {
         if (new Date(fromYear, fromMonth - 1, fromDay) >= new Date(toYear, toMonth - 1, toDay)) {
             return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
         }
+
+        const isReservedUser = await reserveModel.find({ villa: villaID, user: user._id }).sort({ _id: -1 })
+
+
+
+        const persianDate = date.from;
+        const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
+
+        const currentDate = moment().format('YYYY-MM-DD');
+        const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
+        if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
+
+        if (isReservedUser[0]) {
+
+            const persianDate = isReservedUser[0].date.to;
+            const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
+
+            const currentDate = moment().format('YYYY-MM-DD');
+            const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
+
+            if (isFutureDate) {
+                return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
+            }
+
+        }
+
+
+        const villa = await villaModel.findOne({ _id: villaID })
+        if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
+        else if (villa.capacity.maxCapacity < guestNumber) return res.status(400).json({ statusCode: 404, message: "geustNumber is bigger than maxCapacity" })
+
+        const isReserved = await reserveModel.find({ villa: villaID }).sort({ _id: -1 })
+
+        if (isReserved[0]) {
+
+            // if (isReserved[0].date.to >= date.from) return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
+
+            const [fromYear, fromMonth, fromDay] = from.split('/').map(Number);
+            const [toYear, toMonth, toDay] = isReserved[0].date.to.split('/').map(Number);
+
+            if (new Date(fromYear, fromMonth - 1, fromDay) <= new Date(toYear, toMonth - 1, toDay)) {
+                return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
+            }
+
+        }
+        // let from = date.from
+        // let to = date.to
+        // let splitedFrom = from.split("/")
+        // let splitedTo = to.split("/")
+
+
 
 
 
@@ -357,7 +396,7 @@ exports.reservePrice = async (req, res) => {
 
         const { date } = req.body
 
-        const validator = joi.validate({ villa: villaID, date })
+        const validator = joi.validate({ villa: villaID, date, guestNumber: 3 })
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
 

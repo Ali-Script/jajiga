@@ -168,22 +168,15 @@ exports.authOtpPhone = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            res.cookie("test22reff", "reff", {
+            res.cookie("t111", "reff", {
                 maxAge: 150000, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: "lax",
-                Domain: "https://jajiga-backend.liara.run"
+                sameSite: "none",
+                Domain: "localhost"
             })
-            res.cookie("test22342reff", "ref234f", {
-                maxAge: 150000, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "lax",
-                Domain: "http://localhost:3000"
-            })
+
 
 
             // await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })

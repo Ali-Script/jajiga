@@ -17,7 +17,6 @@ exports.get = async (req, res) => {
         lastTenElements.forEach(element => Reflect.deleteProperty(element, "password"))
 
 
-
         let array = []
 
         villas.forEach(villa => {
@@ -37,6 +36,14 @@ exports.get = async (req, res) => {
             return date.isAfter(fiveMonthsAgo) && date.isBefore(now);
         });
 
+
+        const countByMonth = filteredV.reduce((acc, item) => {
+            const month = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
+            acc[`${month}`] = (acc[`${month}`] || 0) + 1;
+            return acc;
+        }, {});
+
+
         let arrayR = []
 
         reserve.forEach(book => {
@@ -51,14 +58,22 @@ exports.get = async (req, res) => {
         });
 
 
+        const countByMonthR = filteredR.reduce((acc, item) => {
+            const month = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
+            acc[`${month}`] = (acc[`${month}`] || 0) + 1;
+            return acc;
+        }, {});
+
+
+
         return res.status(200).json({
             statusCode: 200,
             usersCount: users.length,
             villasCount: villas.length,
             categoriesCount: categories.length,
             booksCount: reserve.length,
-            lastFiveMonthAddedVillasCount: filteredV.length,
-            lastFiveMonthBookedReserve: filteredR.length,
+            lastFiveMonthAddedVillasCount: countByMonth,
+            lastFiveMonthBookedReserve: countByMonthR,
             users: lastTenElements,
             categories
         })
