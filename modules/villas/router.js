@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router()
 
+
 const controller = require('./controller')
 const authMiddleware = require('./../../middlewares/authMiddleware')
 const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
@@ -43,6 +44,9 @@ router
 router
     .route("/quickSearchByZone")
     .get(controller.quickSearchByZone)
-// * add to sw
+router
+    .route("/accessVisit/:key/:villaID")
+    .put(authMiddleware, controller.accessVisit)
+
 
 module.exports = router

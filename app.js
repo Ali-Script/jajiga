@@ -21,7 +21,7 @@ app.use("/static/zone", express.static(path.join(__dirname, 'public', 'static', 
 app.use("/static/city", express.static(path.join(__dirname, 'public', 'static', 'city')));
 app.use("/api-doc", swagger)
 app.use(setHeaders);
-app.use(cors({ credentials: "include", origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: "include", origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'], }));
 
 //* Middlewares ^
 

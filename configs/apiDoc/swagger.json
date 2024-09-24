@@ -31,7 +31,7 @@
         }
     ],
     "paths": {
-        "/panel/user/{userName}/pass/{password}": {
+        "/admin-panel": {
             "get": {
                 "tags": [
                     "Panel"
@@ -40,16 +40,6 @@
                 "parameters": [
                     {
                         "name": "Authorization Token",
-                        "in": "header",
-                        "required": "true"
-                    },
-                    {
-                        "name": "userName",
-                        "in": "header",
-                        "required": "true"
-                    },
-                    {
-                        "name": "password",
                         "in": "header",
                         "required": "true"
                     }
@@ -1125,6 +1115,48 @@
                     },
                     "422": {
                         "description": "Villa is already booked"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/accessVisit/{key}/{villaID}": {
+            "put": {
+                "tags": [
+                    "Villas"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "villaID",
+                        "in": "path",
+                        "required": "true"
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "accept or reject villa",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "400": {
+                        "description": "Invalid key. Only 'accept' or 'reject' is allowed."
+                    },
+                    "401": {
+                        "description": "Invalid Object Id"
+                    },
+                    "404": {
+                        "description": "Villa not found 404 !"
                     },
                     "500": {
                         "description": "Internal Server Error"

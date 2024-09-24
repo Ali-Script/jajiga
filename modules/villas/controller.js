@@ -140,7 +140,7 @@ exports.add = async (req, res) => {
         //     return res.status(200).json({ statusCode: 200, message: "Succ Updated!", villa: newVilla })
         // }
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.update = async (req, res) => {
     try {
@@ -277,7 +277,7 @@ exports.update = async (req, res) => {
             return res.status(200).json({ statusCode: 200, message: "Succ !", villa: findUpdatedVilla })
         }
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.getAll = async (req, res) => {
     try {
@@ -341,7 +341,7 @@ exports.getAll = async (req, res) => {
 
 
         return res.status(200).json({ statusCode: 200, villas: ordered })
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.getAllActivated = async (req, res) => {
     try {
@@ -404,7 +404,7 @@ exports.getAllActivated = async (req, res) => {
 
 
         return res.status(200).json({ statusCode: 200, villas: ordered })
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.getOne = async (req, res) => {
     try {
@@ -518,9 +518,13 @@ exports.getOne = async (req, res) => {
 
         } else { villa.isWishes = false; villa.isOwner = false }
 
-        return res.status(200).json({ statusCode: 200, villa, bookDate, comments: orderedComment })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+        const getR = await reserveModel.find({ villa: villa._id })
+
+
+        return res.status(200).json({ statusCode: 200, villa, bookDate, successfulBooking: getR.length, comments: orderedComment })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.myVillas = async (req, res) => {
     try {
@@ -553,7 +557,7 @@ exports.myVillas = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, villa, bookDate })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.getFacility = async (req, res) => {
     try {
@@ -660,7 +664,7 @@ exports.getFacility = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, facility, sanitaryFacilities })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.delete = async (req, res) => {
     try {
@@ -676,7 +680,7 @@ exports.delete = async (req, res) => {
 
 
         return res.status(200).json({ statusCode: 200, message: "Succ !" })
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.filtring = async (req, res) => {
     try {
@@ -1045,15 +1049,23 @@ exports.filtring = async (req, res) => {
             villas = newVillas
         }
 
-        villas.forEach(villa => {
+        // villas.forEach(async villa => {
+        for (const villa of villas) {
+
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
                 if (key !== "moreFacility") return villa.facility.facility[key].status === true
             });
             if (trueKeys.length >= 5) villa.costly = true
-        })
+
+
+            const getR = await reserveModel.find({ villa: villa._id })
+            const getC = await commentModel.find({ villa: villa._id })
+            villa.comments = getC.length
+            villa.successfulBooking = getR.length
+        }
 
         return res.status(200).json({ statusCode: 200, villas })
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.privilegedVillas = async (req, res) => {
     try {
@@ -1125,7 +1137,7 @@ exports.privilegedVillas = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, villas: ordered })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.popularTowns = async (req, res) => {
     try {
@@ -1305,7 +1317,7 @@ exports.popularTowns = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, sortedCities })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.quickSearchByZone = async (req, res) => {
     try {
@@ -1371,5 +1383,28 @@ exports.quickSearchByZone = async (req, res) => {
 
         return res.status(200).json({ statusCode: 200, orderedVillas })
 
-    } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.accessVisit = async (req, res) => {
+    try {
+
+        const { key, villaID } = req.params
+
+        if (key !== "accept" && key !== "reject") {
+            return res.status(400).json({ statusCode: 400, message: "Invalid key. Only 'accept' or 'reject' is allowed." });
+        }
+        const validate = mongoose.Types.ObjectId.isValid(villaID);
+        if (!validate) return res.status(401).json({ statusCode: 401, message: 'Invalid Object Id' })
+
+        const villa = await villaModel.find({ _id: villaID })
+        if (!villa) return res.status(404).json({ statusCode: 404, message: "villa not found 404 !" })
+
+        if (key == "accept") await villaModel.updateOne({ _id: villaID }, { isAccepted: true })
+        else if (key == "reject") await villaModel.updateOne({ _id: villaID }, { isAccepted: false })
+
+        return res.status(200).json({ statusCode: 200, message: "succ" })
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
 }

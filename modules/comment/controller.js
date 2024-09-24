@@ -148,7 +148,8 @@ exports.getAll = async (req, res) => {
             comments.forEach(answerComment => {
 
                 if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-
+                    let a = String(answerComment.villa._id);
+                    answerComment.villa = a
                     orderedComment.push({
                         ...mainComment,
                         villa: answerComment.villa._id,
