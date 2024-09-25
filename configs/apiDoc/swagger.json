@@ -6,6 +6,9 @@
     },
     "tags": [
         {
+            "name": "Panel"
+        },
+        {
             "name": "Authentication"
         },
         {
@@ -25,9 +28,6 @@
         },
         {
             "name": "Comments"
-        },
-        {
-            "name": "Panel"
         }
     ],
     "paths": {
@@ -47,6 +47,138 @@
                 "responses": {
                     "200": {
                         "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/ban-user/{phone}": {
+            "post": {
+                "tags": [
+                    "Panel"
+                ],
+                "summary": "ban user",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "description": "######### you can send only one of the body fields to back-end #########",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "example": [
+                                    {
+                                        "violation of Terms of Service:": "Users who break the website’s rules and guidelines."
+                                    },
+                                    {
+                                        "spamming:": "Posting unsolicited or irrelevant messages repeatedly."
+                                    },
+                                    {
+                                        "harassment or Abuse:": "Engaging in threatening, abusive, or harmful behavior towards other users."
+                                    },
+                                    {
+                                        "illegal Activities:": "Participating in activities that are against the law."
+                                    },
+                                    {
+                                        "hacking or Security Breaches:": "Attempting to gain unauthorized access to the website or its data."
+                                    },
+                                    {
+                                        "inappropriate Content:": "Sharing offensive, explicit, or inappropriate material."
+                                    },
+                                    {
+                                        "impersonation:": "Pretending to be someone else without permission."
+                                    },
+                                    {
+                                        "fraudulent Activities:": "Engaging in scams, phishing, or other deceptive practices."
+                                    },
+                                    {
+                                        "multiple Account Abuse:": "Creating multiple accounts to exploit the system or evade bans."
+                                    },
+                                    {
+                                        "copyright Infringement:": "Sharing or distributing copyrighted material without permission."
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "402": {
+                        "description": "you can not ban admin"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "409": {
+                        "description": "Validator Error"
+                    },
+                    "422": {
+                        "description": "This user already has banned"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/ban-user/unban/{phone}": {
+            "delete": {
+                "tags": [
+                    "Panel"
+                ],
+                "summary": "Unban user",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user found"
+                    },
+                    "422": {
+                        "description": "this user has not been banned"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/ban-user/getAll": {
+            "get": {
+                "tags": [
+                    "Panel"
+                ],
+                "summary": "get all banned users",
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "404": {
+                        "description": "no user has banned yet"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1355,7 +1487,7 @@
             }
         },
         "/user/changeRole/{key}/{phone}": {
-            "put": {
+            "post": {
                 "tags": [
                     "Users"
                 ],

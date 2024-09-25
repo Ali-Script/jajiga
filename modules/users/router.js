@@ -20,7 +20,7 @@ router
     .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.edit)
 router
     .route("/changeRole/:key/:phone")
-    .put(authMiddleware, controller.changeRole)
+    .post(authMiddleware, controller.changeRole)
 router
     .route("/changePassword")
     .put(authMiddleware, controller.changePassword)

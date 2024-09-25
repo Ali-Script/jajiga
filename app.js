@@ -21,9 +21,25 @@ app.use("/static/zone", express.static(path.join(__dirname, 'public', 'static', 
 app.use("/static/city", express.static(path.join(__dirname, 'public', 'static', 'city')));
 app.use("/api-doc", swagger)
 app.use(setHeaders);
-app.use(cors({ credentials: "include", origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'], }));
+// app.use(cors({ credentials: "include", origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'], }));
 
 //* Middlewares ^
+
+
+
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: "include",
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+
+
 
 const authRouter = require('./modules/auth/router')
 const codeRouter = require('./modules/authcode/router')
@@ -44,7 +60,7 @@ app.use("/", authRouter, panelRouter)
 app.use("/auth/E-code", codeRouter)
 app.use("/user/", userRouter)
 app.use("/villa/", villaRouter, reserveRouter)
-app.use("/ban/", banRouter)
+app.use("/ban-user/", banRouter)
 app.use("/notification/", notificationRouter)
 app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)

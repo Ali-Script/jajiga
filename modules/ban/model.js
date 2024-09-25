@@ -11,9 +11,21 @@ const schema = new mongoose.Schema({
         ref: "User"
     },
     reason: {
-        type: 'string'
+        type: "string",
+        enum: [
+            "violation of Terms of Service",
+            "spamming",
+            "harassment or Abuse",
+            "illegal Activities",
+            "hacking or Security Breaches",
+            "inappropriate Content",
+            "impersonation",
+            "fraudulent Activities",
+            "multiple Account Abuse",
+            "copyright Infringement"
+        ],
     },
 }, { timestamps: true })
 
-const model = mongoose.model("ban-users", schema);
+const model = mongoose.model("ban-user", schema);
 module.exports = model;
