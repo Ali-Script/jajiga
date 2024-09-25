@@ -101,5 +101,6 @@ exports.get = async (req, res) => {
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.dell = async (req, res) => {
-    await reserveModel.deleteMany({})
+    await villaModel.updateMany({ isAccepted: "true" })
+    await commentModel.updateMany({ isAccept: "true" })
 }

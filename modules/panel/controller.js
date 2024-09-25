@@ -29,20 +29,6 @@ exports.get = async (req, res) => {
         })
 
         const now = moment();
-        const fiveMonthsAgo = now.clone().subtract(5, 'jMonth');
-
-        const filteredV = array.filter(item => {
-            const date = moment(item.persianDate, 'jYYYY/jM/jD');
-            return date.isAfter(fiveMonthsAgo) && date.isBefore(now);
-        });
-
-
-        const countByMonth = filteredV.reduce((acc, item) => {
-            const month = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
-            acc[`${month}`] = (acc[`${month}`] || 0) + 1;
-            return acc;
-        }, {});
-
 
         let arrayR = []
 
@@ -52,19 +38,37 @@ exports.get = async (req, res) => {
 
         const fiveMonthsAgoR = now.clone().subtract(5, 'jMonth');
 
-        const filteredR = arrayR.filter(item => {
+        const fiveMonthsAgo = now.clone().subtract(5, 'jMonth');
+
+        const filteredV = array.filter(item => {
             const date = moment(item.persianDate, 'jYYYY/jM/jD');
-            return date.isAfter(fiveMonthsAgoR) && date.isBefore(now);
+            return date.isAfter(fiveMonthsAgo) && date.isBefore(now);
         });
 
+        const lastFiveMonthAddedVillasCount = [];
+        for (let i = 0; i < 5; i++) {
+            const month = now.clone().subtract(i, 'jMonth').jMonth() + 1;
+            const count = filteredV.reduce((acc, item) => {
+                const itemMonth = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
+                if (itemMonth === month) acc++;
+                return acc;
+            }, 0);
+            lastFiveMonthAddedVillasCount.push({ month, villasCount: count });
+        }
 
-        const countByMonthR = filteredR.reduce((acc, item) => {
-            const month = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
-            acc[`${month}`] = (acc[`${month}`] || 0) + 1;
-            return acc;
-        }, {});
+        const filteredR = arrayR
 
 
+        const lastFiveMonthBookedReserve = [];
+        for (let i = 0; i < 5; i++) {
+            const month = now.clone().subtract(i, 'jMonth').jMonth() + 1;
+            const count = filteredR.reduce((acc, item) => {
+                const itemMonth = moment(item.persianDate, 'jYYYY/jM/jD').jMonth() + 1;
+                if (itemMonth === month) acc++;
+                return acc;
+            }, 0);
+            lastFiveMonthBookedReserve.push({ month, booksCount: count });
+        }
 
         return res.status(200).json({
             statusCode: 200,
@@ -72,12 +76,11 @@ exports.get = async (req, res) => {
             villasCount: villas.length,
             categoriesCount: categories.length,
             booksCount: reserve.length,
-            lastFiveMonthAddedVillasCount: countByMonth,
-            lastFiveMonthBookedReserve: countByMonthR,
+            lastFiveMonthAddedVillasCount,
+            lastFiveMonthBookedReserve,
             users: lastTenElements,
             categories
-        })
-
+        });
     } catch (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     }

@@ -142,28 +142,62 @@ exports.getAll = async (req, res) => {
 
         let orderedComment = []
 
-        comments.forEach(mainComment => {
-            comments.forEach(answerComment => {
+        // comments.forEach(mainComment => {
+        //     comments.forEach(answerComment => {
 
-                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-                    let a = String(answerComment.villa._id);
-                    answerComment.villa = a
+        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+        //             let a = String(answerComment.villa._id);
+        //             answerComment.villa = a
+        //             // orderedComment.push({
+        //             //     ...mainComment,
+        //             //     villa: answerComment.villa._id,
+        //             //     creator: answerComment.creator,
+        //             //     answerComment
+        //             // })
+        //             orderedComment.push({
+        //                 ...mainComment,
+        //                 villa: a, // Use the 'a' variable you defined earlier
+        //                 creator: answerComment.creator,
+        //                 answerComment
+        //             })
+        //         }
+        //     })
+        // })
+
+        // let orderedComment = [];
+
+        comments.forEach(comment => {
+            if (comment.mainCommentID) {
+                let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
+                if (mainComment) {
+
                     orderedComment.push({
                         ...mainComment,
-                        villa: answerComment.villa._id,
-                        creator: answerComment.creator,
-                        answerComment
+                        villa: mainComment.villa._id,
+                        creator: comment.creator ? comment.creator : null,
+                        answerComment: {
+                            ...comment,
+                            villa: comment.villa ? comment.villa._id : null
+                        }
                     })
                 }
-            })
+            } else {
+                orderedComment.push({
+                    comment: {
+                        ...comment,
+                        villa: comment.villa ? comment.villa._id : null
+                    }
+                });
+            }
         })
 
-        const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
-            .populate("villa", "_id title")
-            .populate("creator", "firstName lastName avatar")
-            .sort({ _id: -1 })
-            .lean();
-        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+        // const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
+        //     .populate("villa", "_id title")
+        //     .populate("creator", "firstName lastName avatar")
+        //     .sort({ _id: -1 })
+        //     .lean();
+        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
         return res.status(200).json({ statusCode: 200, comment: orderedComment })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
