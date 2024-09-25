@@ -197,8 +197,9 @@ const schema = new mongoose.Schema({
         type: "string",
     },
     isAccepted: {
-        type: Boolean,
-        default: false
+        type: "string",
+        enum: ["true", "false", "rejected"],
+        default: "false"
     }
 }, { timestamps: true })
 

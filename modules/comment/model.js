@@ -14,9 +14,9 @@ const schema = new mongoose.Schema({
         ref: 'Villa'
     },
     isAccept: {
-        type: Number,
-        enum: [0, 1],
-        default: 0
+        type: "string",
+        enum: ["true", "false", "rejected"],
+        default: "false"
     },
     score: {
         type: Number,

@@ -2089,7 +2089,7 @@
             }
         },
         "/comment/delete/{commentID}": {
-            "post": {
+            "delete": {
                 "tags": [
                     "Comments"
                 ],

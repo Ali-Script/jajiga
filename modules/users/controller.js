@@ -66,8 +66,10 @@ exports.getOne = async (req, res) => {
                 })
             );
 
+            Reflect.deleteProperty(user, "password")
             return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: getfaveVillas })
         }
+        Reflect.deleteProperty(user, "password")
         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: [] })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }

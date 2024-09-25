@@ -1399,8 +1399,8 @@ exports.accessVisit = async (req, res) => {
         const villa = await villaModel.find({ _id: villaID })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "villa not found 404 !" })
 
-        if (key == "accept") await villaModel.updateOne({ _id: villaID }, { isAccepted: true })
-        else if (key == "reject") await villaModel.updateOne({ _id: villaID }, { isAccepted: false })
+        if (key == "accept") await villaModel.updateOne({ _id: villaID }, { isAccepted: "true" })
+        else if (key == "reject") await villaModel.updateOne({ _id: villaID }, { isAccepted: "rejected" })
 
         return res.status(200).json({ statusCode: 200, message: "succ" })
 

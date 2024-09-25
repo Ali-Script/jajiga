@@ -131,7 +131,7 @@ const schema = Joi.object({
     step: Joi.number().when("finished", { is: false, then: Joi.required() }),
     disable: Joi.boolean(),
     oldPics: Joi.string(),
-    isAccepted: Joi.boolean().default("false")
+    isAccepted: Joi.string().valid("true", "false", "rejected").default("false")
 });
 
 module.exports = schema;
