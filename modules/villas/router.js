@@ -47,6 +47,9 @@ router
 router
     .route("/accessVisit/:key/:villaID")
     .put(authMiddleware, controller.accessVisit)
+router
+    .route("/getAllBooks")
+    .get(authMiddleware, controller.getAllBooks)
 
 
 module.exports = router

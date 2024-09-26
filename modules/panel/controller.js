@@ -70,6 +70,27 @@ exports.get = async (req, res) => {
             lastFiveMonthBookedReserve.push({ month, booksCount: count });
         }
 
+        categories.forEach(category => {
+            category.villas = villas.filter(villa => villa.aboutVilla.villaType.toString() === category._id.toString()).length || 0;
+
+            if (category.href == "houseboat") category.cover = "kish.webp"
+            if (category.href == "boutiqueHotel") category.cover = "rasht.webp"
+            if (category.href == "inn") category.cover = "masal.webp"
+            if (category.href == "hostle") category.cover = "kordan.webp"
+            if (category.href == "dorm") category.cover = "shahriar.webp"
+            if (category.href == "tent") category.cover = "talesh.webp"
+            if (category.href == "guestHouse") category.cover = "tabriz.webp"
+            if (category.href == "hotelApartment") category.cover = "sari.webp"
+            if (category.href == "apartment") category.cover = "sari.webp"
+            if (category.href == "ecoResort") category.cover = "savadkuh.webp"
+            if (category.href == "cottage") category.cover = "kordan.webp"
+            if (category.href == "farmhouse") category.cover = "kelardasht.webp"
+            if (category.href == "suite") category.cover = "shahriar.webp"
+            if (category.href == "house") category.cover = "kordan.webp"
+
+        });
+
+
         return res.status(200).json({
             statusCode: 200,
             usersCount: users.length,

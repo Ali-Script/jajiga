@@ -1,43 +1,41 @@
-i wrote code to give me info of last five month added villad and booked villas in this 2 variable
+houseboat
+kish.webp
 
-lastFiveMonthAddedVillasCount
+rasht.webp
+boutiqueHotel
 
-lastFiveMonthBookedReserve
+masal.webp
+inn
 
-but my code return this response:
+hostle
+kordan.webp
 
-"lastFiveMonthAddedVillasCount": {
+dorm
+shahriar.webp
 
-    "5": 5,
+tent
+talesh.webp
 
-        "6": 1,
+guestHouse
+tabriz.webp
 
-            "7": 1
+hotelApartment
+sari.webp
 
-},
+apartment
+sari.webp
 
-"lastFiveMonthBookedReserve": {
+ecoResort
+savadkuh.webp
 
-    "7": 1
+cottage
+kordan.webp
 
-},
+farmhouse
+kelardasht.webp
 
-but i want get this response:
+suite
+shahriar.webp
 
-lastFiveMonthAddedVillasCount = [
-
-    { month: 3, villasCount: 0 },
-    { month: 4, villasCount: 0 },
-    { month: 5, villasCount: 5 },
-    { month: 6, villasCount: 1 },
-    { month: 7, villasCount: 1 },
-],
-
-    lastFiveMonthBookedReserve = [
-        { month: 3, villasCount: 0 },
-        { month: 4, villasCount: 0 },
-        { month: 5, villasCount: 0 },
-        { month: 6, villasCount: 0 },
-        { month: 7, villasCount: 1 },
-
-    ],
+house
+kordan.webp

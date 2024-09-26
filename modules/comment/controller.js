@@ -48,7 +48,7 @@ exports.remove = async (req, res) => {
             return res.status(404).json({ statusCode: 404, message: 'Comment not found' })
         }
         if (comment.isAnswer == 1) {
-            const commentt = await commentModel.findOneAndUpdate({ _id: comment.mainCommentID }, { haveAnswer: 0 })
+            const commentt = await commentModel.findOneAndUpdate({ _id: comment.mainCommentID }, { haveAnswer: 0, answer: [] })
         }
 
         if (comment.answer) {
@@ -170,24 +170,18 @@ exports.getAll = async (req, res) => {
             if (comment.mainCommentID) {
                 let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
                 if (mainComment) {
-
                     orderedComment.push({
                         ...mainComment,
-                        villa: mainComment.villa._id,
+                        villa: mainComment._id,
                         creator: comment.creator ? comment.creator : null,
                         answerComment: {
                             ...comment,
-                            villa: comment.villa ? comment.villa._id : null
+                            villa: mainComment._id
                         }
                     })
                 }
             } else {
-                orderedComment.push({
-                    comment: {
-                        ...comment,
-                        villa: comment.villa ? comment.villa._id : null
-                    }
-                });
+                orderedComment.push({ ...comment, villa: comment.villa._id });
             }
         })
 

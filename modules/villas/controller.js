@@ -1408,3 +1408,14 @@ exports.accessVisit = async (req, res) => {
         return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
+exports.getAllBooks = async (req, res) => {
+    try {
+
+        const books = await reserveModel.find({})
+
+        return res.status(200).json({ statusCode: 200, books })
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
+}
