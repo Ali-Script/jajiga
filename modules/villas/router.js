@@ -11,7 +11,7 @@ router
     .route("/add")
     .post(authMiddleware, multerPhotoMiddleware.array("cover", 10), controller.add)
 router
-    .route("/update/:id")
+    .route("/update/:villaID")
     .put(authMiddleware, multerPhotoMiddleware.array("cover", 10), controller.update)
 router
     .route("/getAll")
@@ -20,13 +20,13 @@ router
     .route("/getAllActivated")
     .get(controller.getAllActivated)
 router
-    .route("/get/:id")
+    .route("/get/:villaID")
     .get(controller.getOne)
 router
     .route("/myVillas")
     .get(authMiddleware, controller.myVillas)
 router
-    .route("/delete/:id")
+    .route("/delete/:villaID")
     .delete(authMiddleware, controller.delete)
 // ! admin mid
 router

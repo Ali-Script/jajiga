@@ -144,7 +144,7 @@ exports.add = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.villaID
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ statusCode: 400, message: 'Invalid Object Id' })
 

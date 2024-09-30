@@ -718,7 +718,7 @@
                 }
             }
         },
-        "/villa/update/{id}": {
+        "/villa/update/{villaID}": {
             "put": {
                 "tags": [
                     "Villas"
@@ -986,7 +986,7 @@
                 }
             }
         },
-        "/villa/get/{id}": {
+        "/villa/get/{villaID}": {
             "get": {
                 "tags": [
                     "Villas"
@@ -1043,7 +1043,7 @@
                 }
             }
         },
-        "/villa/delete/{id}": {
+        "/villa/delete/{villaID}": {
             "delete": {
                 "tags": [
                     "Villas"
