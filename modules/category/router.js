@@ -8,7 +8,7 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 router
     .route("/add")
-    .post(authMiddleware, categoryController.setCategory)
+    .post(authMiddleware, isAdmin, categoryController.setCategory)
 // router
 //     .route("/getOne/:id")
 //     .get(categoryController.getOne)
@@ -17,6 +17,6 @@ router
     .get(categoryController.getAll)
 router
     .route("/remove/:id")
-    .delete(authMiddleware, categoryController.removeOne)
+    .delete(authMiddleware, isAdmin, categoryController.removeOne)
 
 module.exports = router;

@@ -8,6 +8,6 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 
 router
     .route("/admin-panel")
-    .get(authMiddleware, controller.get)
+    .get(authMiddleware, isAdmin, controller.get)
 
 module.exports = router;

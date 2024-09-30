@@ -53,6 +53,7 @@ const categoryRouter = require('./modules/category/router')
 const reserveRouter = require('./modules/reserve/router')
 const wishesRouter = require('./modules/wishes/router')
 const panelRouter = require('./modules/panel/router')
+const ticketRouter = require('./modules/ticket/router')
 
 // Routers ^
 
@@ -66,16 +67,17 @@ app.use("/newsletter/", newsletterRouter)
 app.use("/comment/", commentRouter)
 app.use("/category/", categoryRouter)
 app.use("/wishes/", wishesRouter)
+app.use("/ticket/", ticketRouter)
 
 
 // Routers Middleware ^
 
 app.use((req, res) => {
-    return res.status(404).json({ message: "page not found 404" })
+    return res.status(404).json({ statusCode: 404, message: "page not found 404" })
 })
 
 app.use((err, req, res, next) => {
-    return res.status(500).json({ error: { message: err }, });
+    return res.status(500).json({ statusCode: 500, message: err });
 });
 // Static Routes ^
 

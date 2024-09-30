@@ -11,7 +11,7 @@ exports.get = async (req, res) => {
         const users = await userModel.find({}).lean()
         const categories = await categoryModel.find({}).lean()
         const villas = await villaModel.find({}).lean()
-        const reserve = await reserveModel.find({}).lean()
+        const reserve = await reserveModel.find({}).populate("user", "firstName lastName phone").lean()
 
         const lastTenElements = reserve.slice(-10);
 

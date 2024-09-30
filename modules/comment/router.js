@@ -9,18 +9,18 @@ router
     .post(authMiddleware, commentController.create)
 router
     .route("/delete/:commentID")
-    .delete(authMiddleware, commentController.remove)
+    .delete(authMiddleware, isAdmin, commentController.remove)
 router
     .route("/accept/:commentID")
-    .put(authMiddleware, commentController.accept)
+    .put(authMiddleware, isAdmin, commentController.accept)
 router
     .route("/reject/:commentID")
-    .put(authMiddleware, commentController.reject)
+    .put(authMiddleware, isAdmin, commentController.reject)
 router
     .route("/answer/:mainCommentID")
     .post(authMiddleware, commentController.answer)
 router
     .route("/getAll")
-    .get(authMiddleware, commentController.getAll)
+    .get(authMiddleware, isAdmin, commentController.getAll)
 
 module.exports = router

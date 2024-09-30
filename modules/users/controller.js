@@ -246,7 +246,7 @@ exports.addEmail = async (req, res) => {
         const user = req.user
         const { email } = req.body;
 
-        if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 422, message: "Invalid email" })
+        if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 423, message: "Invalid email" })
 
         await OtpcodeModel.create({
             code: 1111,

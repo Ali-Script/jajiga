@@ -2,11 +2,11 @@
     "openapi": "3.0.1",
     "info": {
         "title": "Power By Ali-Script",
-        "version": "1.0.1"
+        "version": "1.2.7"
     },
     "tags": [
         {
-            "name": "Panel"
+            "name": "Only Admin Access"
         },
         {
             "name": "Authentication"
@@ -34,7 +34,7 @@
         "/admin-panel": {
             "get": {
                 "tags": [
-                    "Panel"
+                    "Only Admin Access"
                 ],
                 "summary": "get Panel Info",
                 "parameters": [
@@ -57,7 +57,7 @@
         "/ban-user/{phone}": {
             "post": {
                 "tags": [
-                    "Panel"
+                    "Only Admin Access"
                 ],
                 "summary": "ban user",
                 "parameters": [
@@ -134,7 +134,7 @@
         "/ban-user/unban/{phone}": {
             "delete": {
                 "tags": [
-                    "Panel"
+                    "Only Admin Access"
                 ],
                 "summary": "Unban user",
                 "parameters": [
@@ -163,7 +163,7 @@
         "/ban-user/getAll": {
             "get": {
                 "tags": [
-                    "Panel"
+                    "Only Admin Access"
                 ],
                 "summary": "get all banned users",
                 "parameters": [
@@ -899,6 +899,9 @@
                     "401": {
                         "description": "no villa found with this id"
                     },
+                    "402": {
+                        "description": "you are not the owner of this villa"
+                    },
                     "406": {
                         "description": "The minimum number of photos is 3"
                     },
@@ -1257,7 +1260,7 @@
         "/villa/accessVisit/{key}/{villaID}": {
             "put": {
                 "tags": [
-                    "Villas"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1299,7 +1302,7 @@
         "/villa/getAllBooks": {
             "get": {
                 "tags": [
-                    "Villas"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1322,7 +1325,7 @@
         "/category/add": {
             "post": {
                 "tags": [
-                    "Categories"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1390,7 +1393,7 @@
         "/category/remove/{id}": {
             "delete": {
                 "tags": [
-                    "Categories"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1424,7 +1427,7 @@
         "/user/getAll": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1450,7 +1453,7 @@
         "/user/get/{phone}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1481,7 +1484,7 @@
         "/user/remove/{phone}": {
             "delete": {
                 "tags": [
-                    "Users"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -1512,7 +1515,7 @@
         "/user/changeRole/{key}/{phone}": {
             "post": {
                 "tags": [
-                    "Users"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -2040,7 +2043,7 @@
         "/comment/accept/{commentID}": {
             "put": {
                 "tags": [
-                    "Comments"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -2077,7 +2080,7 @@
         "/comment/reject/{commentID}": {
             "put": {
                 "tags": [
-                    "Comments"
+                    "Only Admin Access"
                 ],
                 "parameters": [
                     {
@@ -2206,7 +2209,7 @@
         "/comment/getAll": {
             "get": {
                 "tags": [
-                    "Comments"
+                    "Only Admin Access"
                 ],
                 "summary": "getAll Comments",
                 "responses": {

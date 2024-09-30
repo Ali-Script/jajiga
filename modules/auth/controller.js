@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const villaModel = require('./../villas/model')
 const reserveModel = require('./../reserve/model')
-const wishesModel = require('./../wishes/model')
 const commentModel = require('./../comment/model')
 const OtpcodeModel = require('./../authcode/OTPModel')
 const moment = require('jalali-moment');
@@ -168,13 +167,19 @@ exports.authOtpPhone = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            res.cookie("t111", "reff", {
+            res.cookie("accessToken", accessToken, {
                 maxAge: 150000, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none",
-                Domain: "localhost"
+            })
+            res.cookie("RefreshToken", RefreshToken, {
+                maxAge: 150000, //15000
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: "none",
             })
 
 

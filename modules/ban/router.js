@@ -7,12 +7,12 @@ const isAdminMiddleware = require('./../../middlewares/isAdminMiddleware')
 
 router
     .route("/:phone")
-    .post(authMiddleware, controller.ban)
+    .post(authMiddleware, isAdminMiddleware, controller.ban)
 router
     .route("/unban/:phone")
-    .delete(authMiddleware, controller.unban)
+    .delete(authMiddleware, isAdminMiddleware, controller.unban)
 router
     .route("/getAll")
-    .get(authMiddleware, controller.getAll)
+    .get(authMiddleware, isAdminMiddleware, controller.getAll)
 
 module.exports = router

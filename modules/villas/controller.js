@@ -146,10 +146,12 @@ exports.update = async (req, res) => {
     try {
         const id = req.params.id
         const validate = mongoose.Types.ObjectId.isValid(id);
-        if (!validate) return res.status(400).json({ statusCode: 400, error: 'Invalid Object Id' })
+        if (!validate) return res.status(400).json({ statusCode: 400, message: 'Invalid Object Id' })
 
         const findVilla = await villaModel.findOne({ _id: id }).lean()
-        if (!findVilla) return res.status(401).json({ statusCode: 401, error: 'no villa found with this id' })
+        if (!findVilla) return res.status(401).json({ statusCode: 401, message: 'no villa found with this id' })
+
+        if (req.user._id != findVilla) return res.status(402).json({ statusCode: 402, message: 'you are not the owner of this villa' })
 
         const { title, disable, oldPics, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 

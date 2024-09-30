@@ -8,19 +8,19 @@ const addAvatarMiddleware = require('./../../middlewares/addAvatarMiddleware')
 
 router
     .route("/getAll")
-    .get(authMiddleware, controller.getAll)
+    .get(authMiddleware, isAdminMiddleware, controller.getAll)
 router
     .route("/get/:phone")
-    .get(authMiddleware, controller.getOne)
+    .get(authMiddleware, isAdminMiddleware, controller.getOne)
 router
     .route("/remove/:phone")
-    .delete(authMiddleware, controller.delete)
+    .delete(authMiddleware, isAdminMiddleware, controller.delete)
 router
     .route("/edit")
     .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.edit)
 router
     .route("/changeRole/:key/:phone")
-    .post(authMiddleware, controller.changeRole)
+    .post(authMiddleware, isAdminMiddleware, controller.changeRole)
 router
     .route("/changePassword")
     .put(authMiddleware, controller.changePassword)

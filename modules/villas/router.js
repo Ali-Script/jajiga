@@ -46,10 +46,10 @@ router
     .get(controller.quickSearchByZone)
 router
     .route("/accessVisit/:key/:villaID")
-    .put(authMiddleware, controller.accessVisit)
+    .put(authMiddleware, isAdminMiddleware, controller.accessVisit)
 router
     .route("/getAllBooks")
-    .get(authMiddleware, controller.getAllBooks)
+    .get(authMiddleware, isAdminMiddleware, controller.getAllBooks)
 
 
 module.exports = router
