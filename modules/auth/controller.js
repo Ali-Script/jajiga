@@ -107,6 +107,9 @@ exports.sendOtpPhone = async (req, res) => {
         const regex = /[aA-zZ]+/;
         if (regex.test(phone)) return res.status(406).json({ statusCode: 406, message: "phone have to be a number" })
 
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
@@ -133,6 +136,9 @@ exports.authOtpPhone = async (req, res) => {
 
         const regex = /[aA-zZ]+/;
         if (regex.test(phone)) return res.status(406).json({ statusCode: 406, message: "phone have to be a number" })
+
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
@@ -479,6 +485,8 @@ exports.resendCode = async (req, res) => {
     try {
         const phone = req.params.phone
 
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         await OtpcodeModel.create({
             code: 1111,

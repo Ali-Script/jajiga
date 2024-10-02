@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const userModel = require('./../auth/model');
 const villaModel = require('./../villas/model');
 const reserveModel = require('./../reserve/model');
+const banModel = require('./../ban/model');
 const OtpcodeModel = require('./../authcode/OTPModel');
 const userVillaModel = require('./../user-villa/model');
 const newsletterModel = require('./../newsletter/model');
@@ -15,8 +16,12 @@ const joi = require("./../../validator/authValidator");
 
 exports.getAll = async (req, res) => {
     try {
-        const users = await userModel.find().sort({ _id: -1 }).lean();
-        if (users.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
+        const userss = await userModel.find().sort({ _id: -1 }).lean();
+        if (userss.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
+
+        const checkBan = await banModel.find({})
+        const users = userss.filter(user => !checkBan.find(banneduser => user.phone == banneduser.phone));
+
 
         const allUsers = []
 
@@ -49,6 +54,8 @@ exports.getOne = async (req, res) => {
     try {
         const phone = req.params.phone
 
+        const checkBan = await banModel.findOne({ phone })
+
         const user = await userModel.findOne({ phone }).lean();
         if (!user || user.length == 0) return res.status(404).json({ statusCode: 404, message: 'No user found !' })
 
@@ -70,6 +77,9 @@ exports.getOne = async (req, res) => {
             return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: getfaveVillas })
         }
         Reflect.deleteProperty(user, "password")
+
+        if (checkBan) user.ban = true
+        else if (!checkBan) user.ban = false
         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, books, wishes: [] })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
@@ -93,6 +103,9 @@ exports.changeRole = async (req, res) => {
     try {
         const phone = req.params.phone;
         const key = req.params.key;
+
+        const checkBan = await banModel.findOne({ phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "this user has banned from this website" })
 
         if (key !== "promotion" && key !== "demotion") {
             return res.status(400).json({ statusCode: 400, message: "Invalid key. Only 'promotion' or 'demotion' is allowed." });
@@ -126,6 +139,9 @@ exports.changePassword = async (req, res) => {
         const user = req.user
         const { currentPassword, newPassword } = req.body
 
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
         const checkPassword = await bcrypt.compare(currentPassword, user.password)
         if (!checkPassword) {
             return res.status(401).json({ statusCode: 401, message: "Password is Incrract !!" })
@@ -147,6 +163,9 @@ exports.changePassword = async (req, res) => {
 exports.forgetPassword = async (req, res) => {
     try {
 
+        const checkBan = await banModel.findOne({ phone: req.user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
         await OtpcodeModel.create({
             code: 1111,
             phone: req.user.phone,
@@ -161,6 +180,9 @@ exports.forgetPassword = async (req, res) => {
 exports.forgetPasswordConfirmCode = async (req, res) => {
     try {
         const user = req.user
+
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         const { code, password, confirmPassword } = req.body;
         if (password != confirmPassword) return res.status(416).json({ statusCode: 416, message: "password and confirmPassword are not same" })
@@ -201,6 +223,9 @@ exports.edit = async (req, res) => {
     try {
         const user = req.user
         const { avatar, firstName, lastName, gender, aboutMe } = req.body;
+
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
         const regex = /[0-9]+/;
 
@@ -246,6 +271,9 @@ exports.addEmail = async (req, res) => {
         const user = req.user
         const { email } = req.body;
 
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
         if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 423, message: "Invalid email" })
 
         await OtpcodeModel.create({
@@ -288,6 +316,9 @@ exports.authEmail = async (req, res) => {
         const user = req.user
         const { email, code, newsletter } = req.body;
 
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+
         if (newsletter == undefined) return res.status(465).json({ statusCode: 465, message: `newsletter required` })
         else if (newsletter !== true && newsletter !== false) return res.status(400).json({ statusCode: 400, message: "newsletter must be boolean" });
         else if (!emailValidator.validate(email)) return res.status(423).json({ statusCode: 422, message: "Invalid email" })
@@ -326,6 +357,11 @@ exports.changeNumber = async (req, res) => {
     try {
         const user = req.user
         const { phone } = req.body;
+
+        const checkBan = await banModel.findOne({ phone: user.phone })
+        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+        const checkBann = await banModel.findOne({ phone })
+        if (checkBann) return res.status(403).json({ statusCode: 403, message: "Sorry this PhoneNumber has banned from this website" })
 
         const regex = /[aA-zZ]+/;
         if (regex.test(phone)) return res.status(406).json({ statusCode: 406, message: "phone have to be a number" })

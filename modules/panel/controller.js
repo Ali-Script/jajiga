@@ -2,13 +2,19 @@ const mongoose = require('mongoose')
 const userModel = require('./../auth/model')
 const villaModel = require('./../villas/model')
 const categoryModel = require('./../category/model')
+const banModel = require('./../ban/model')
 const reserveModel = require('./../reserve/model')
 const moment = require('jalali-moment')
 
 exports.get = async (req, res) => {
     try {
 
-        const users = await userModel.find({}).lean()
+        const userss = await userModel.find({}).lean()
+
+        const checkBan = await banModel.find({})
+
+        const users = userss.filter(user => !checkBan.find(banneduser => user.phone == banneduser.phone));
+
         const categories = await categoryModel.find({}).lean()
         const villass = await villaModel.find({}).lean()
         const rejectedVillas = await villaModel.find({ isAccepted: "rejected" }).lean()

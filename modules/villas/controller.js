@@ -3,6 +3,7 @@ const villaModel = require('./../villas/model');
 const reserveModel = require('./../reserve/model');
 const wishesModel = require('./../wishes/model');
 const userModel = require('./../auth/model');
+const banModel = require('./../ban/model');
 const commentModel = require('./../comment/model');
 const userVilla = require('./../user-villa/model');
 const jwt = require('jsonwebtoken');
@@ -429,6 +430,8 @@ exports.getOne = async (req, res) => {
 
             const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
             const user = await userModel.findOne({ phone: decoded.Identifeir })
+            const checkBan = await banModel.findOne({ phone: user.phone })
+            if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
             if (user) userobj = user.toObject()
         }
 
