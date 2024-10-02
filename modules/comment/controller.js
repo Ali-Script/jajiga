@@ -177,3 +177,14 @@ exports.getAll = async (req, res) => {
         return res.status(200).json({ statusCode: 200, comment: orderedComment })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
 }
+exports.getAllRejectedComments = async (req, res) => {
+    try {
+
+        const rejectedComments = await commentModel.find({ isAccepted: "rejected" }).lean()
+
+        return res.status(200).json({ statusCode: 200, rejectedComments })
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
+}

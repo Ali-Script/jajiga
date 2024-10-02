@@ -1433,3 +1433,14 @@ exports.getAllBooks = async (req, res) => {
         return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
+exports.getAllRejectedVillas = async (req, res) => {
+    try {
+
+        const rejectedVillas = await villaModel.find({ isAccepted: "rejected" }).lean()
+
+        return res.status(200).json({ statusCode: 200, rejectedVillas })
+
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
+}

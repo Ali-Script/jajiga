@@ -50,6 +50,9 @@ router
 router
     .route("/getAllBooks")
     .get(authMiddleware, isAdminMiddleware, controller.getAllBooks)
+router
+    .route("/getAllRejectedVillas")
+    .get(authMiddleware, isAdminMiddleware, controller.getAllRejectedVillas)
 
 
 module.exports = router

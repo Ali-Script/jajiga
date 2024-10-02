@@ -2221,6 +2221,38 @@
                     }
                 }
             }
+        },
+        "/comment/getAllRejectedComments": {
+            "get": {
+                "tags": [
+                    "Only Admin Access"
+                ],
+                "summary": "getAll Rejected Comments",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/villa/getAllRejectedVillas": {
+            "get": {
+                "tags": [
+                    "Only Admin Access"
+                ],
+                "summary": "getAll Rejected Villas",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }

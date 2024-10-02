@@ -22,5 +22,8 @@ router
 router
     .route("/getAll")
     .get(authMiddleware, isAdmin, commentController.getAll)
+router
+    .route("/getAllRejectedComments")
+    .get(authMiddleware, isAdmin, commentController.getAllRejectedComments)
 
 module.exports = router
