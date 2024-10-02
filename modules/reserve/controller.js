@@ -28,30 +28,48 @@ exports.reserve = async (req, res) => {
             return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
         }
 
-        const isReservedUser = await reserveModel.find({ villa: villaID, user: user._id }).sort({ _id: -1 })
+        // const isReservedUser = await reserveModel.find({ villa: villaID, user: user._id }).sort({ _id: -1 })
 
 
 
-        const persianDate = date.from;
-        const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
+        // const persianDate = date.from;
+        // const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
 
-        const currentDate = moment().format('YYYY-MM-DD');
-        const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
-        // if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
+        // const currentDate = moment().format('YYYY-MM-DD');
+        // const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
+        // // if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
 
-        if (isReservedUser[0]) {
+        // if (isReservedUser[0]) {
 
-            const persianDate = isReservedUser[0].date.to;
-            const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
+        //     const persianDate = isReservedUser[0].date.to;
+        //     const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
 
-            const currentDate = moment().format('YYYY-MM-DD');
-            const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
+        //     const currentDate = moment().format('YYYY-MM-DD');
+        //     const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
 
-            if (isFutureDate) {
-                return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
-            }
+        //     if (isFutureDate) {
+        //         return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
+        //     }
 
+        // }
+
+
+
+        const isReservedUser = await reserveModel.find({
+            villa: villaID,
+            user: user._id,
+            $or: [
+                { "date.from": { $lte: date.to }, "date.to": { $gte: date.from } },
+                { "date.from": { $lte: date.from }, "date.to": { $gte: date.to } },
+                { "date.from": { $gte: date.from }, "date.to": { $lte: date.to } },
+            ]
+        }).sort({ _id: -1 })
+
+        if (isReservedUser.length > 0) {
+            return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
         }
+
+
 
 
         const villa = await villaModel.findOne({ _id: villaID, finished: true, isAccepted: "true" })
