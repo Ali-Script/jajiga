@@ -10,7 +10,12 @@ exports.get = async (req, res) => {
 
         const users = await userModel.find({}).lean()
         const categories = await categoryModel.find({}).lean()
-        const villas = await villaModel.find({}).lean()
+        const villass = await villaModel.find({}).lean()
+        const rejectedVillas = await villaModel.find({ isAccepted: "rejected" }).lean()
+
+        const villas = villass.filter(villa => !rejectedVillas.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
+
+
         const reserve = await reserveModel.find({}).populate("user", "firstName lastName phone").lean()
 
         const lastTenElements = reserve.slice(-10);

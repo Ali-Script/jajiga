@@ -16,7 +16,7 @@ exports.add = async (req, res) => {
         const validate = mongoose.Types.ObjectId.isValid(villaID);
         if (!validate) return res.status(400).json({ statusCode: 400, message: 'Invalid Object Id' })
 
-        const villa = await villaModel.findOne({ _id: villaID }).lean()
+        const villa = await villaModel.findOne({ _id: villaID, finished: true, isAccepted: "true" }).lean()
         if (!villa) return res.status(404).json({ statusCode: 404, message: 'no villa found with this id' })
 
 

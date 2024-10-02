@@ -150,6 +150,8 @@ exports.update = async (req, res) => {
 
         const findVilla = await villaModel.findOne({ _id: id }).lean()
         if (!findVilla) return res.status(401).json({ statusCode: 401, message: 'no villa found with this id' })
+        else if (findVilla.isAccepted == "rejected") return res.status(405).json({ statusCode: 405, message: 'this villa is rejected' })
+
 
         if (req.user._id != findVilla) return res.status(402).json({ statusCode: 402, message: 'you are not the owner of this villa' })
 
@@ -283,12 +285,20 @@ exports.update = async (req, res) => {
 }
 exports.getAll = async (req, res) => {
     try {
-        const villas = await villaModel.find({})
+        const villass = await villaModel.find({})
             .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
-        if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+        if (villass.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+
+
+        const rejectedVillas = await villaModel.find({ isAccepted: "rejected" }).lean()
+
+        const villas = villass.filter(villa => !rejectedVillas.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
+
+
+
         let ordered = []
 
         for (const villa of villas) {
@@ -347,12 +357,13 @@ exports.getAll = async (req, res) => {
 }
 exports.getAllActivated = async (req, res) => {
     try {
-        const villas = await villaModel.find({ finished: true })
+        const villas = await villaModel.find({ isAccepted: "true", finished: true })
             .populate("user", "firstName lastName role avatar")
             .populate("aboutVilla.villaType")
             .sort({ _id: -1 })
             .lean()
         if (villas.length == 0) return res.status(404).json({ statusCode: 404, message: "there is no villa!" })
+
         let ordered = []
 
         for (const villa of villas) {
@@ -368,7 +379,7 @@ exports.getAllActivated = async (req, res) => {
 
             // const comments = await commentModel.find({ villa: id, isAccept: 1 })
             const comments = await commentModel.find({ villa: villa._id })
-                .populate("villa", "_id")
+                .populate("villa", "_id ")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
                 .lean();
@@ -401,6 +412,7 @@ exports.getAllActivated = async (req, res) => {
             noAnswerComments.forEach(i => orderedComment.push({ ...i }))
             villa.booked = bookDate.length
             villa.comments = orderedComment.length
+
             ordered.push(villa);
         }
 
@@ -420,7 +432,7 @@ exports.getOne = async (req, res) => {
             if (user) userobj = user.toObject()
         }
 
-        const id = req.params.id
+        const id = req.params.villaID
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ statusCode: 400, message: 'Invalid Object Id' })
 
@@ -670,7 +682,7 @@ exports.getFacility = async (req, res) => {
 }
 exports.delete = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.villaID
         const validate = mongoose.Types.ObjectId.isValid(id);
         if (!validate) return res.status(400).json({ statusCode: 400, error: 'Invalid Object Id' })
 
@@ -687,7 +699,7 @@ exports.delete = async (req, res) => {
 exports.filtring = async (req, res) => {
     try {
 
-        const allVillas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
+        const allVillas = await villaModel.find({ finished: true, isAccepted: "true" }).populate("aboutVilla.villaType").sort({ _id: -1 }).lean()
         let villas = []
 
         if (req.query.city) {
@@ -1072,7 +1084,7 @@ exports.filtring = async (req, res) => {
 exports.privilegedVillas = async (req, res) => {
     try {
         let costlyVillas = []
-        const villas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
+        const villas = await villaModel.find({ finished: true, isAccepted: "true" }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         villas.forEach(villa => {
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
@@ -1143,7 +1155,7 @@ exports.privilegedVillas = async (req, res) => {
 }
 exports.popularTowns = async (req, res) => {
     try {
-        const villas = await villaModel.find({}).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
+        const villas = await villaModel.find({ finished: true, isAccepted: "true" }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         let city = [
             {
@@ -1324,7 +1336,7 @@ exports.popularTowns = async (req, res) => {
 exports.quickSearchByZone = async (req, res) => {
     try {
 
-        const villas = await villaModel.find({ finished: true }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
+        const villas = await villaModel.find({ finished: true, isAccepted: "true" }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean();
 
         let allZone = [
             {

@@ -43,7 +43,7 @@ exports.getAll = async (req, res) => {
         if (categories.length === 0) return res.status(404).json({ statusCode: 404, message: "There is no Category !!" })
 
 
-        const villas = await villaModel.find({}).lean()
+        const villas = await villaModel.find({ finished: true, isAccepted: "true" }).lean()
 
         categories.forEach(category => {
             category.villas = villas.filter(villa => villa.aboutVilla.villaType.toString() === category._id.toString()).length || 0;

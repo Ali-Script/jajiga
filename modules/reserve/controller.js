@@ -37,7 +37,7 @@ exports.reserve = async (req, res) => {
 
         const currentDate = moment().format('YYYY-MM-DD');
         const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
-        if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
+        // if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
 
         if (isReservedUser[0]) {
 
@@ -54,7 +54,7 @@ exports.reserve = async (req, res) => {
         }
 
 
-        const villa = await villaModel.findOne({ _id: villaID })
+        const villa = await villaModel.findOne({ _id: villaID, finished: true, isAccepted: "true" })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
         else if (villa.capacity.maxCapacity < guestNumber) return res.status(400).json({ statusCode: 404, message: "geustNumber is bigger than maxCapacity" })
 
@@ -413,7 +413,7 @@ exports.reservePrice = async (req, res) => {
             return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
         }
 
-        const villa = await villaModel.findOne({ _id: villaID })
+        const villa = await villaModel.findOne({ _id: villaID, finished: true, isAccepted: "true" })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
 
 
