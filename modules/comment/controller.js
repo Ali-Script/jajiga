@@ -134,37 +134,18 @@ exports.answer = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
 
-        const comments = await commentModel.find({})
+        const commentss = await commentModel.find({})
             .populate("villa", "_id")
             .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
 
+
+        const rejectedComments = await commentModel.find({ isAccept: "rejected" }).lean()
+        const comments = commentss.filter(villa => !rejectedComments.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
+
         let orderedComment = []
 
-        // comments.forEach(mainComment => {
-        //     comments.forEach(answerComment => {
-
-        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-        //             let a = String(answerComment.villa._id);
-        //             answerComment.villa = a
-        //             // orderedComment.push({
-        //             //     ...mainComment,
-        //             //     villa: answerComment.villa._id,
-        //             //     creator: answerComment.creator,
-        //             //     answerComment
-        //             // })
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: a, // Use the 'a' variable you defined earlier
-        //                 creator: answerComment.creator,
-        //                 answerComment
-        //             })
-        //         }
-        //     })
-        // })
-
-        // let orderedComment = [];
 
         comments.forEach(comment => {
             if (comment.mainCommentID) {

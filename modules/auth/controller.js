@@ -340,7 +340,7 @@ exports.getme = async (req, res) => {
 
 
         for (const data of filteredDates) {
-            const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0 }).select('score -_id');
+            const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0, isAccept: "true" }).select('score -_id');
             const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
 
             const commentCount = comments.length;

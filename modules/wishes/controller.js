@@ -46,7 +46,7 @@ exports.get = async (req, res) => {
         const getWishes = await wishesModel.find({ user: user._id }).populate("villa").lean()
 
         for (const data of getWishes) {
-            const comments = await commentModel.find({ villa: data.villa._id }).select('score -_id');
+            const comments = await commentModel.find({ villa: data.villa._id, isAccept: "true" }).select('score -_id');
             const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
 
             const commentCount = comments.length;

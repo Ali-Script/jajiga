@@ -312,8 +312,8 @@ exports.getAll = async (req, res) => {
                 bookDate.push(obj)
             })
 
-            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            const comments = await commentModel.find({ villa: villa._id })
+
+            const comments = await commentModel.find({ villa: villa._id, isAccept: "true" })
                 .populate("villa", "_id ")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
@@ -338,7 +338,7 @@ exports.getAll = async (req, res) => {
 
 
 
-            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
@@ -377,8 +377,8 @@ exports.getAllActivated = async (req, res) => {
                 bookDate.push(obj)
             })
 
-            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            const comments = await commentModel.find({ villa: villa._id })
+
+            const comments = await commentModel.find({ villa: villa._id, isAccept: "true" })
                 .populate("villa", "_id ")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
@@ -403,7 +403,7 @@ exports.getAllActivated = async (req, res) => {
 
 
 
-            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
@@ -489,7 +489,7 @@ exports.getOne = async (req, res) => {
         })
 
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-        const comments = await commentModel.find({ villa: id })
+        const comments = await commentModel.find({ villa: id, isAccept: "true" })
             .populate("villa", "_id")
             .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
@@ -514,7 +514,7 @@ exports.getOne = async (req, res) => {
 
 
 
-        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0 })
+        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
             .populate("villa", "_id")
             .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
@@ -1108,7 +1108,7 @@ exports.privilegedVillas = async (req, res) => {
             })
 
             // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-            const comments = await commentModel.find({ villa: villa._id })
+            const comments = await commentModel.find({ villa: villa._id, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
@@ -1133,7 +1133,7 @@ exports.privilegedVillas = async (req, res) => {
 
 
 
-            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0 })
+            const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
                 .sort({ _id: -1 })
