@@ -20,6 +20,23 @@ exports.start = async (req, res) => {
         const checkBan = await banModel.findOne({ phone: req.user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
+
+        res.cookie("accessToken", "accessToken-value", {
+            maxAge: 150000, //15000
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "none",
+        })
+        res.cookie("RefreshToken", "RefreshToken-value", {
+            maxAge: 150000, //15000
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "lax",
+        })
+
+
         return res.status(200).json({ statusCode: 200, message: "Succ" })
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
@@ -185,7 +202,7 @@ exports.authOtpPhone = async (req, res) => {
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: "none",
+                sameSite: "lax",
             })
 
 
@@ -284,20 +301,21 @@ exports.loginByCode = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            // res.cookie("RefreshToken", RefreshToken, {
-            //     maxAge: 999999999999999, //14 * 24 * 60 * 60,
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true,
-            //     sameSite: "lax"
-            // })
-            // res.cookie("AccessToken", accessToken, {
-            //     maxAge: 999999999999999, //15000
-            //     httpOnly: true,
-            //     signed: true,
-            //     secure: true,
-            //     sameSite: "lax"
-            // })
+
+            res.cookie("accessToken", accessToken, {
+                maxAge: 150000, //15000
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: "none",
+            })
+            res.cookie("RefreshToken", RefreshToken, {
+                maxAge: 150000, //15000
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: "lax",
+            })
 
 
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
