@@ -32,7 +32,7 @@ router
     .route("/resendCode/:phone")
     .post(controller.resendCode)
 router
-    .route("/loguot")
+    .route("/logout")
     .post(controller.logout)
 
 module.exports = router

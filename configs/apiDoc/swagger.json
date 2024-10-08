@@ -270,6 +270,22 @@
                 }
             }
         },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Succ"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/auth/sendCode": {
             "post": {
                 "tags": [
