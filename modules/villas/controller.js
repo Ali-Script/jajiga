@@ -492,38 +492,74 @@ exports.getOne = async (req, res) => {
         })
 
         // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-        const comments = await commentModel.find({ villa: id, isAccept: "true" })
+        // const comments = await commentModel.find({ villa: id, isAccept: "true" })
+        //     .populate("villa", "_id")
+        //     .populate("creator", "firstName lastName avatar")
+        //     .sort({ _id: -1 })
+        //     .lean();
+
+        // let orderedComment = []
+
+        // comments.forEach(mainComment => {
+        //     comments.forEach(answerComment => {
+
+        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
+
+        //             orderedComment.push({
+        //                 ...mainComment,
+        //                 villa: answerComment.villa._id,
+        //                 creator: answerComment.creator,
+        //                 answerComment
+        //             })
+        //         }
+        //     })
+        // })
+
+
+
+        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
+        //     .populate("villa", "_id")
+        //     .populate("creator", "firstName lastName avatar")
+        //     .sort({ _id: -1 })
+        //     .lean();
+
+        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
+
+
+
+        const commentss = await commentModel.find({ villa: id, isAccept: "true" })
             .populate("villa", "_id")
             .populate("creator", "firstName lastName avatar")
             .sort({ _id: -1 })
             .lean();
+
+
+        const rejectedComments = await commentModel.find({ isAccept: "rejected" }).lean()
+        const comments = commentss.filter(villa => !rejectedComments.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
 
         let orderedComment = []
 
-        comments.forEach(mainComment => {
-            comments.forEach(answerComment => {
 
-                if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-
+        comments.forEach(comment => {
+            if (comment.mainCommentID) {
+                let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
+                if (mainComment) {
                     orderedComment.push({
                         ...mainComment,
-                        villa: answerComment.villa._id,
-                        creator: answerComment.creator,
-                        answerComment
+                        villa: mainComment._id,
+                        creator: mainComment.creator ? mainComment.creator : null,
+                        answerComment: {
+                            ...comment,
+                            villa: mainComment._id
+                        }
                     })
                 }
-            })
+            } else {
+                orderedComment.push({ ...comment, villa: comment.villa._id });
+            }
         })
 
 
-
-        const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
-            .populate("villa", "_id")
-            .populate("creator", "firstName lastName avatar")
-            .sort({ _id: -1 })
-            .lean();
-
-        noAnswerComments.forEach(i => orderedComment.push({ ...i }))
         if (userobj) {
 
             const isWishes = await wishesModel.findOne({ user: userobj._id, villa: villa._id })

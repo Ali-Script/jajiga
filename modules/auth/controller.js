@@ -17,24 +17,26 @@ require("dotenv").config()
 
 exports.start = async (req, res) => {
     try {
-        const checkBan = await banModel.findOne({ phone: req.user.phone })
-        if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
 
-        res.cookie("accessToken", "accessToken-value", {
-            maxAge: 150000, //15000
+        res.cookie("accessToken", "accessToken", {
+            maxAge: 30 * 24 * 60 * 1000, //15000
             httpOnly: true,
             signed: true,
             secure: true,
             sameSite: "none",
+            domain: 'localhost'
         })
-        res.cookie("RefreshToken", "RefreshToken-value", {
-            maxAge: 150000, //15000
+        res.cookie("RefreshToken", "RefreshToken", {
+            maxAge: 30 * 24 * 60 * 1000, //15000
             httpOnly: true,
             signed: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
+            domain: 'localhost',
         })
+
+
 
 
         return res.status(200).json({ statusCode: 200, message: "Succ" })
@@ -191,18 +193,22 @@ exports.authOtpPhone = async (req, res) => {
             const RefreshToken = genRefreshToken(user.phone)
 
             res.cookie("accessToken", accessToken, {
-                maxAge: 150000, //15000
+                maxAge: 30 * 24 * 60 * 1000, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none",
+                // domain: "localhost",
+                // path: '/'
             })
             res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 150000, //15000
+                maxAge: 30 * 24 * 60 * 1000, //15000
                 httpOnly: true,
                 signed: true,
                 secure: true,
-                sameSite: "lax",
+                sameSite: "none",
+                //  domain: "localhost",
+                //path: '/'
             })
 
 
@@ -301,20 +307,23 @@ exports.loginByCode = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
+            const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-            res.cookie("accessToken", accessToken, {
-                maxAge: 150000, //15000
+            res.cookie("accessToken", "accessToken", {
+                maxAge: expires,
+                httpOnly: true,
+                signed: true,
+                secure: false,
+                sameSite: "none",
+                domain: "jajiga-backend.liara.run"
+            })
+            res.cookie("RefreshToken", "RefreshToken", {
+                maxAge: expires,
                 httpOnly: true,
                 signed: true,
                 secure: true,
                 sameSite: "none",
-            })
-            res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 150000, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "lax",
+                domain: "jajiga-backend.liara.run"
             })
 
 

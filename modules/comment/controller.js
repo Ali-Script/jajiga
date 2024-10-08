@@ -154,7 +154,7 @@ exports.getAll = async (req, res) => {
                     orderedComment.push({
                         ...mainComment,
                         villa: mainComment._id,
-                        creator: comment.creator ? comment.creator : null,
+                        creator: mainComment.creator ? mainComment.creator : null,
                         answerComment: {
                             ...comment,
                             villa: mainComment._id

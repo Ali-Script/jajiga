@@ -6,7 +6,7 @@ const authMiddleware = require('./../../middlewares/authMiddleware')
 
 router
     .route("/")
-    .get(authMiddleware, controller.start)
+    .get(controller.start)
 router
     .route("/signup")
     .post(controller.signup)
