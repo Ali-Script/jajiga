@@ -31,5 +31,8 @@ router
 router
     .route("/resendCode/:phone")
     .post(controller.resendCode)
+router
+    .route("/loguot")
+    .post(controller.logout)
 
 module.exports = router

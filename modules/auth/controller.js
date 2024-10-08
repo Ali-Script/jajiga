@@ -529,3 +529,19 @@ exports.resendCode = async (req, res) => {
     }
 }
 //* Checked (1)
+exports.logout = async (req, res) => {
+    try {
+
+
+        // Clear the cookies
+        res.clearCookie('session-id');
+        res.clearCookie('connect.sid');
+        res.clearCookie('RefreshToken');
+        res.clearCookie('AccessToken');
+
+        // Return a success response
+        return res.status(200).json({ statusCode: 200, message: 'Logged out successfully' });
+    } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    }
+};
