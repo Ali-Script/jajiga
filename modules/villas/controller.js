@@ -152,9 +152,9 @@ exports.update = async (req, res) => {
         const findVilla = await villaModel.findOne({ _id: id }).lean()
         if (!findVilla) return res.status(401).json({ statusCode: 401, message: 'no villa found with this id' })
         else if (findVilla.isAccepted == "rejected") return res.status(405).json({ statusCode: 405, message: 'this villa is rejected' })
+        console.log(findVilla.user);
 
-
-        if (req.user._id != findVilla) return res.status(402).json({ statusCode: 402, message: 'you are not the owner of this villa' })
+        if (req.user._id != String(findVilla.user)) return res.status(402).json({ statusCode: 402, message: 'you are not the owner of this villa' })
 
         const { title, disable, oldPics, finished, address, step, cover, coordinates, aboutVilla, capacity, facility, price, rules } = req.body
 
@@ -537,27 +537,40 @@ exports.getOne = async (req, res) => {
         const rejectedComments = await commentModel.find({ isAccept: "rejected" }).lean()
         const comments = commentss.filter(villa => !rejectedComments.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
 
+        const addedMainCommentIds = new Set();
+        const answerComments = {};
         let orderedComment = []
-
-
         comments.forEach(comment => {
             if (comment.mainCommentID) {
-                let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
-                if (mainComment) {
-                    orderedComment.push({
-                        ...mainComment,
-                        villa: mainComment._id,
-                        creator: mainComment.creator ? mainComment.creator : null,
-                        answerComment: {
-                            ...comment,
-                            villa: mainComment._id
-                        }
-                    })
+                let mainCommentId = comment.mainCommentID;
+                if (!answerComments[mainCommentId]) {
+                    answerComments[mainCommentId] = [];
                 }
-            } else {
+                answerComments[mainCommentId].push(comment);
+            }
+        });
+
+        comments.forEach(comment => {
+            if (!comment.mainCommentID) {
+                let mainCommentId = comment._id;
+                if (answerComments[mainCommentId]) {
+                    orderedComment.push({
+                        ...comment,
+                        villa: comment.villa._id,
+                        creator: comment.creator ? comment.creator : null,
+                        answerComment: answerComments[mainCommentId]
+                    });
+                    addedMainCommentIds.add(mainCommentId);
+                }
+            }
+        });
+
+        comments.forEach(comment => {
+            if (!comment.mainCommentID && !addedMainCommentIds.has(comment._id)) {
                 orderedComment.push({ ...comment, villa: comment.villa._id });
             }
-        })
+        });
+
 
 
         if (userobj) {

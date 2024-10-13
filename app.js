@@ -29,7 +29,7 @@ app.use(setHeaders);
 
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ["https://jajiga.liara.run", "http://localhost:3000"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: "include",
     optionsSuccessStatus: 200

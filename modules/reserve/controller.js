@@ -21,37 +21,25 @@ exports.reserve = async (req, res) => {
         let splitedFrom = from.split("/")
         let splitedTo = to.split("/")
 
-        const [fromYear, fromMonth, fromDay] = from.split('/').map(Number);
-        const [toYear, toMonth, toDay] = to.split('/').map(Number);
+        const isReservedd = await reserveModel.find({ villa: villaID }).sort({ _id: -1 });
 
-        if (new Date(fromYear, fromMonth - 1, fromDay) >= new Date(toYear, toMonth - 1, toDay)) {
-            return res.status(402).json({ statusCode: 402, message: "date>to should be greater than date>from" });
+        if (isReservedd.length > 0) {
+            const existingFrom = new JalaliDate(isReservedd[0].date.from.split('/').map(Number)).toGregorian();
+            const existingTo = new JalaliDate(isReservedd[0].date.to.split('/').map(Number)).toGregorian();
+            const fromGregorian = new JalaliDate(from.split('/').map(Number)).toGregorian();
+            const toGregorian = new JalaliDate(to.split('/').map(Number)).toGregorian();
+
+            if (fromGregorian >= existingFrom && fromGregorian <= existingTo ||
+                toGregorian >= existingFrom && toGregorian <= existingTo ||
+                fromGregorian <= existingFrom && toGregorian >= existingTo) {
+                return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
+            }
         }
 
-        // const isReservedUser = await reserveModel.find({ villa: villaID, user: user._id }).sort({ _id: -1 })
 
 
 
-        // const persianDate = date.from;
-        // const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
 
-        // const currentDate = moment().format('YYYY-MM-DD');
-        // const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
-        // // if (!isFutureDate) return res.status(419).json({ statusCode: 419, message: "you cant book past time !" })
-
-        // if (isReservedUser[0]) {
-
-        //     const persianDate = isReservedUser[0].date.to;
-        //     const gregorianDate = moment.from(persianDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
-
-        //     const currentDate = moment().format('YYYY-MM-DD');
-        //     const isFutureDate = moment(gregorianDate).isSameOrAfter(currentDate);
-
-        //     if (isFutureDate) {
-        //         return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
-        //     }
-
-        // }
 
 
 
@@ -66,7 +54,16 @@ exports.reserve = async (req, res) => {
         }).sort({ _id: -1 })
 
         if (isReservedUser.length > 0) {
-            return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
+            const existingFrom = new JalaliDate(isReservedUser[0].date.from.split('/').map(Number)).toGregorian();
+            const existingTo = new JalaliDate(isReservedUser[0].date.to.split('/').map(Number)).toGregorian();
+            const fromGregorian = new JalaliDate(date.from.split('/').map(Number)).toGregorian();
+            const toGregorian = new JalaliDate(date.to.split('/').map(Number)).toGregorian();
+
+            if (fromGregorian >= existingFrom && fromGregorian <= existingTo ||
+                toGregorian >= existingFrom && toGregorian <= existingTo ||
+                fromGregorian <= existingFrom && toGregorian >= existingTo) {
+                return res.status(422).json({ statusCode: 422, message: "Villa is already booked by this user" })
+            }
         }
 
 

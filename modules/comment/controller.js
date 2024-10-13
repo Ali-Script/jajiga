@@ -118,6 +118,7 @@ exports.answer = async (req, res) => {
             creator: req.user._id,
             villa: comment.villa,
             isAnswer: 1,
+            isAccept: "true",
             mainCommentID: comment._id,
             date: realTimeShamsiDate
         })
@@ -147,32 +148,59 @@ exports.getAll = async (req, res) => {
         let orderedComment = []
 
 
+        // comments.forEach(comment => {
+        //     if (comment.mainCommentID) {
+        //         let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
+        //         if (mainComment) {
+        //             orderedComment.push({
+        //                 ...mainComment,
+        //                 villa: mainComment._id,
+        //                 creator: mainComment.creator ? mainComment.creator : null,
+        //                 answerComment: {
+        //                     ...comment,
+        //                     villa: mainComment._id
+        //                 }
+        //             })
+        //         }
+        //     } else {
+        //         orderedComment.push({ ...comment, villa: comment.villa._id });
+        //     }
+        // })
+
+        const addedMainCommentIds = new Set();
+        const answerComments = {};
+
         comments.forEach(comment => {
             if (comment.mainCommentID) {
-                let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
-                if (mainComment) {
-                    orderedComment.push({
-                        ...mainComment,
-                        villa: mainComment._id,
-                        creator: mainComment.creator ? mainComment.creator : null,
-                        answerComment: {
-                            ...comment,
-                            villa: mainComment._id
-                        }
-                    })
+                let mainCommentId = comment.mainCommentID;
+                if (!answerComments[mainCommentId]) {
+                    answerComments[mainCommentId] = [];
                 }
-            } else {
+                answerComments[mainCommentId].push(comment);
+            }
+        });
+
+        comments.forEach(comment => {
+            if (!comment.mainCommentID) {
+                let mainCommentId = comment._id;
+                if (answerComments[mainCommentId]) {
+                    orderedComment.push({
+                        ...comment,
+                        villa: comment.villa._id,
+                        creator: comment.creator ? comment.creator : null,
+                        answerComment: answerComments[mainCommentId]
+                    });
+                    addedMainCommentIds.add(mainCommentId);
+                }
+            }
+        });
+
+        comments.forEach(comment => {
+            if (!comment.mainCommentID && !addedMainCommentIds.has(comment._id)) {
                 orderedComment.push({ ...comment, villa: comment.villa._id });
             }
-        })
+        });
 
-
-        // const noAnswerComments = await commentModel.find({ isAnswer: 0, haveAnswer: 0 })
-        //     .populate("villa", "_id title")
-        //     .populate("creator", "firstName lastName avatar")
-        //     .sort({ _id: -1 })
-        //     .lean();
-        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
 
         return res.status(200).json({ statusCode: 200, comment: orderedComment })
     } catch (err) { return res.status(500).json({ statusCode: 500, error: err.message }); }
