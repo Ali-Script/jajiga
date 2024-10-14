@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const request = require('request');
 const nodemailer = require('nodemailer');
 const userModel = require('./model')
 const villaModel = require('./../villas/model')
@@ -61,57 +62,63 @@ exports.signup = async (req, res) => {
         const ifDUPLCNum = await userModel.findOne({ phone })
         if (ifDUPLCNum) {
 
-            await OtpcodeModel.create({
-                code: 1111,
-                phone,
-                email: null,
-                expiresIn: Date.now() + 120000,
-                for: "auth"
-            })
+            // await OtpcodeModel.create({
+            //     code: 1111,
+            //     phone,
+            //     email: null,
+            //     expiresIn: Date.now() + 120000,
+            //     for: "auth"
+            // })
 
-            return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
+
+            const OTP_CODE = Math.floor(Math.random() * 10000)
+
+            request.post({
+                url: 'http://ippanel.com/api/select',
+                body: {
+                    "op": "pattern",
+                    "user": process.env.USERNAME_OTP_PANEL,
+                    "pass": process.env.PASSWORD_OTP_PANEL,
+                    "fromNum": process.env.FORMNUM_OTP_PANEL,
+                    "toNum": phone,
+                    "patternCode": process.env.PATTERT_OTP_PANEL,
+                    "inputData": [{ "verification-code": OTP_CODE }]
+                },
+                json: true,
+            },
+                async function (error, response, body) {
+                    if (!error && response.statusCode === 200) {
+                        /////////************ */
+                        //  if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
+                        /****************************** */
+
+                        await OtpcodeModel.create({
+                            code: OTP_CODE,
+                            phone,
+                            email: null,
+                            expiresIn: Date.now() + 120000,
+                            for: "auth"
+                        })
+
+                        // return res.status(200).json({ statusCode: 200, message: "code send succ" }
+                        return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
+
+                    } else {
+                        return res.status(500).json({ statusCode: 500, error: err.message })
+                    }
+                });
+
+
+        } else {
+            return res.status(200).json({ statusCode: 200, message: "redirect ro register" })
+
         }
 
 
-        // const OTP_CODE = Math.floor(Math.random() * 1000000)
 
-        // request.post({
-        //     url: 'http://ippanel.com/api/select',
-        //     body: {
-        //         "op": "pattern",
-        //         "user": process.env.USERNAME_OTP_PANEL,
-        //         "pass": process.env.PASSWORD_OTP_PANEL,
-        //         "fromNum": process.env.FORMNUM_OTP_PANEL,
-        //         "toNum": Phone,
-        //         "patternCode": process.env.PATTERT_OTP_PANEL,
-        //         "inputData": [{ "verification-code": OTP_CODE }]
-        //     },
-        //     json: true,
-        // },
-        //     async function (error, response, body) {
-        //         if (!error && response.statusCode === 200) {
-        //             /////////************ */
-        //             //  if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
-        //             /****************************** */
 
-        //             const setcode = await OtpcodeModel.create({
-        //                 Code: OTP_CODE,
-        //                 Phone,
-        //                 ExpiresIn: Date.now() + 120000,
-        //             })
-        //             return res.status(200).json("code send succ")
-        //         } else {
 
-        //         }
-        //     });
 
-        // const setcode = await OtpcodeModel.create({
-        //     Code: 1111,
-        //     Phone,
-        //     ExpiresIn: Date.now() + 120000,
-        // })
-
-        return res.status(200).json({ statusCode: 200, message: "redirect ro register" })
 
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message })
@@ -132,15 +139,48 @@ exports.sendOtpPhone = async (req, res) => {
         const validator = joi.validate(req.body)
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
-        await OtpcodeModel.create({
-            code: 1111,
-            phone,
-            email: null,
-            expiresIn: Date.now() + 99999999, // 120000
-            for: "auth"
+        const OTP_CODE = Math.floor(Math.random() * 10000)
+
+        request.post({
+            url: 'http://ippanel.com/api/select',
+            body: {
+                "op": "pattern",
+                "user": process.env.USERNAME_OTP_PANEL,
+                "pass": process.env.PASSWORD_OTP_PANEL,
+                "fromNum": process.env.FORMNUM_OTP_PANEL,
+                "toNum": phone,
+                "patternCode": process.env.PATTERT_OTP_PANEL,
+                "inputData": [{ "verification-code": OTP_CODE }]
+            },
+            json: true,
+        }, async function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+
+                /////////************ */
+                if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
+                /****************************** */
+
+
+                await OtpcodeModel.create({
+                    code: OTP_CODE,
+                    phone,
+                    email: null,
+                    expiresIn: Date.now() + 120000,
+                    for: "auth"
+                })
+
+
+                return res.status(200).json({ statusCode: 200, message: "code send succ" })
+                // return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
+
+            } else {
+
+                return res.status(500).json({ statusCode: 500, error: err.message })
+            }
         })
 
-        return res.status(200).json({ statusCode: 200, message: "code sended succ" })
+
+
 
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
@@ -307,24 +347,8 @@ exports.loginByCode = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-            res.cookie("accessToken", "accessToken", {
-                maxAge: expires,
-                httpOnly: true,
-                signed: true,
-                secure: false,
-                sameSite: "none",
-                domain: "jajiga-backend.liara.run"
-            })
-            res.cookie("RefreshToken", "RefreshToken", {
-                maxAge: expires,
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "none",
-                domain: "jajiga-backend.liara.run"
-            })
+
 
 
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
@@ -580,7 +604,6 @@ exports.getme = async (req, res) => {
         return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
-
 //* Checked (1)
 exports.getAccessToken = async (req, res) => {
     try {
@@ -641,15 +664,46 @@ exports.resendCode = async (req, res) => {
 
         const checkBan = await banModel.findOne({ phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
+        const OTP_CODE = Math.floor(Math.random() * 10000)
+        request.post({
+            url: 'http://ippanel.com/api/select',
+            body: {
+                "op": "pattern",
+                "user": process.env.USERNAME_OTP_PANEL,
+                "pass": process.env.PASSWORD_OTP_PANEL,
+                "fromNum": process.env.FORMNUM_OTP_PANEL,
+                "toNum": phone,
+                "patternCode": process.env.PATTERT_OTP_PANEL,
+                "inputData": [{ "verification-code": OTP_CODE }]
+            },
+            json: true,
+        }, async function (error, response, body) {
+            if (!error && response.statusCode === 200) {
 
-        await OtpcodeModel.create({
-            code: 1111,
-            phone: phone,
-            expiresIn: Date.now() + 120000,
-            for: "auth"
+                /////////************ */
+                if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
+                /****************************** */
+
+
+                await OtpcodeModel.create({
+                    code: OTP_CODE,
+                    phone,
+                    email: null,
+                    expiresIn: Date.now() + 120000,
+                    for: "auth"
+                })
+
+
+                return res.status(200).json({ statusCode: 200, message: "code send succ" })
+                // return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
+
+            } else {
+
+                return res.status(500).json({ statusCode: 500, error: err.message })
+            }
         })
 
-        return res.status(200).json({ statusCode: 200, message: "succ !" })
+
 
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
