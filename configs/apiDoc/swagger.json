@@ -2247,6 +2247,40 @@
                     }
                 }
             }
+        },
+        "/villa/cancelReservation/{villaID}": {
+            "delete": {
+                "tags": [
+                    "Villas"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization Token",
+                        "in": "header",
+                        "required": "true"
+                    },
+                    {
+                        "name": "villaID",
+                        "in": "path",
+                        "required": "true"
+                    }
+                ],
+                "summary": "Cancel Villa Reservation",
+                "responses": {
+                    "200": {
+                        "description": "Reservation has been successfully canceled"
+                    },
+                    "403": {
+                        "description": "You do not have an active reservation for this villa, so you cannot cancel it"
+                    },
+                    "400": {
+                        "description": "Invalid ObjectId"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     }
 }
