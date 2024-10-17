@@ -9,9 +9,6 @@ const isAdmin = require("./../../middlewares/isAdminMiddleware");
 router
     .route("/add")
     .post(authMiddleware, isAdmin, categoryController.setCategory)
-// router
-//     .route("/getOne/:id")
-//     .get(categoryController.getOne)
 router
     .route("/getAll")
     .get(categoryController.getAll)

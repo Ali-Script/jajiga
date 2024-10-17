@@ -15,7 +15,6 @@ exports.reserve = async (req, res) => {
         const validator = joi.validate({ villa: villaID, date, guestNumber })
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
 
-
         let from = date.from
         let to = date.to
         let splitedFrom = from.split("/")
@@ -35,13 +34,6 @@ exports.reserve = async (req, res) => {
                 return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
             }
         }
-
-
-
-
-
-
-
 
         const isReservedUser = await reserveModel.find({
             villa: villaID,
@@ -66,9 +58,6 @@ exports.reserve = async (req, res) => {
             }
         }
 
-
-
-
         const villa = await villaModel.findOne({ _id: villaID, finished: true, isAccepted: "true" })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa not found 404 !" })
         else if (villa.capacity.maxCapacity < guestNumber) return res.status(400).json({ statusCode: 404, message: "geustNumber is bigger than maxCapacity" })
@@ -77,7 +66,7 @@ exports.reserve = async (req, res) => {
 
         if (isReserved[0]) {
 
-            // if (isReserved[0].date.to >= date.from) return res.status(422).json({ statusCode: 422, message: "Villa is already booked" })
+
 
             const [fromYear, fromMonth, fromDay] = from.split('/').map(Number);
             const [toYear, toMonth, toDay] = isReserved[0].date.to.split('/').map(Number);
@@ -87,14 +76,6 @@ exports.reserve = async (req, res) => {
             }
 
         }
-        // let from = date.from
-        // let to = date.to
-        // let splitedFrom = from.split("/")
-        // let splitedTo = to.split("/")
-
-
-
-
 
         if (splitedFrom[1] < splitedTo[1]) {
 
@@ -115,18 +96,10 @@ exports.reserve = async (req, res) => {
             let holidaysFrom = thursdaysAtFrom + fridaysAtFrom
             let midWeekFrom = daysBetweenMiddleOfMonthAndEndOfMonth - holidaysFrom
 
-
-
-
-
             function persianToGregorian(year, month, day) {
                 const persianDate = new Date(year, month - 1, day);
                 return persianDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
             }
-
-
-
-
 
             function countThursdaysAndFridays(startDate, endDate) {
                 let thursdays = 0;
@@ -143,7 +116,6 @@ exports.reserve = async (req, res) => {
                 return { thursdays, fridays };
             }
 
-
             const persianStartDate = new JalaliDate(splitedTo[0], splitedTo[1], 1).toGregorian();
             const persianEndDate = new JalaliDate(splitedTo).toGregorian();
 
@@ -152,8 +124,6 @@ exports.reserve = async (req, res) => {
             let holidaysTo = result.thursdays + result.fridays
             let midweekToDiff = +splitedTo[2]
             let midWeekTo = midweekToDiff - holidaysTo
-
-
 
             function daysBetweenPersianDates(startDate, endDate) {
                 const start = moment(startDate, 'jYYYY/jM/jD').format('YYYY-MM-DD');
@@ -167,7 +137,6 @@ exports.reserve = async (req, res) => {
 
                 return daysDifference;
             }
-
 
             const persianStartDateFrom = from;
             const persianEndDateTo = to;
@@ -263,19 +232,13 @@ exports.reserve = async (req, res) => {
             reserve = await reserve.save();
 
             return res.status(200).json({ statusCode: 200, message: "Successful booking" })
-
-
-
-
         }
-
 
         function persianToGregorian(persianDate) {
             const [year, month, day] = persianDate.split('/').map(Number);
             const jd = new JalaliDate(year, month, day);
             return jd.toGregorian();
         }
-
 
         function countThursdaysAndFridays(dateRange) {
             const startDate = persianToGregorian(dateRange.from);
@@ -361,36 +324,6 @@ exports.reserve = async (req, res) => {
         }
         // * زمستان
 
-        // return res.status(200).json({
-        //     statusCode: 200,
-        //     midWeeks,
-        //     holyDays,
-        //     midWeekTotalPrice,
-        //     holyDaysTotalPrice,
-        //     totalDays: holyDays + midWeeks,
-        //     totalPrice
-
-        // })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         let reserve = new reserveModel({
             villa: villaID,
             user: user._id,
@@ -413,7 +346,6 @@ exports.reservePrice = async (req, res) => {
 
         const validator = joi.validate({ villa: villaID, date, guestNumber: 3 })
         if (validator.error) return res.status(409).json({ statusCode: 409, message: validator.error.details })
-
 
 
         let from = date.from
@@ -451,18 +383,10 @@ exports.reservePrice = async (req, res) => {
             let holidaysFrom = thursdaysAtFrom + fridaysAtFrom
             let midWeekFrom = daysBetweenMiddleOfMonthAndEndOfMonth - holidaysFrom
 
-
-
-
-
             function persianToGregorian(year, month, day) {
                 const persianDate = new Date(year, month - 1, day);
                 return persianDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
             }
-
-
-
-
 
             function countThursdaysAndFridays(startDate, endDate) {
                 let thursdays = 0;
@@ -479,7 +403,6 @@ exports.reservePrice = async (req, res) => {
                 return { thursdays, fridays };
             }
 
-
             const persianStartDate = new JalaliDate(splitedTo[0], splitedTo[1], 1).toGregorian();
             const persianEndDate = new JalaliDate(splitedTo).toGregorian();
 
@@ -488,7 +411,6 @@ exports.reservePrice = async (req, res) => {
             let holidaysTo = result.thursdays + result.fridays
             let midweekToDiff = +splitedTo[2]
             let midWeekTo = midweekToDiff - holidaysTo
-
 
 
             function daysBetweenPersianDates(startDate, endDate) {
@@ -503,7 +425,6 @@ exports.reservePrice = async (req, res) => {
 
                 return daysDifference;
             }
-
 
             const persianStartDateFrom = from;
             const persianEndDateTo = to;
@@ -604,19 +525,13 @@ exports.reservePrice = async (req, res) => {
                 totalDays: resultDiff,
                 totalPrice
             });
-
-
-
-
         }
-
 
         function persianToGregorian(persianDate) {
             const [year, month, day] = persianDate.split('/').map(Number);
             const jd = new JalaliDate(year, month, day);
             return jd.toGregorian();
         }
-
 
         function countThursdaysAndFridays(dateRange) {
             const startDate = persianToGregorian(dateRange.from);

@@ -22,9 +22,6 @@ router
 router
     .route("/loginByCode/:phone")
     .post(controller.loginByCode)
-// router
-//     .route("/getMe")
-//     .get(controller.getme)
 router
     .route("/getMe")
     .get(authMiddleware, controller.getme)

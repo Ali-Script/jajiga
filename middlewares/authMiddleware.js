@@ -16,7 +16,6 @@ module.exports = async (req, res, next) => {
 
         const token = headers[1]
 
-
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
         const user = await userModel.findOne({ phone: decoded.Identifeir })
         if (!user) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })

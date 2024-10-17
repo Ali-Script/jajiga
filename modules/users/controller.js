@@ -45,8 +45,6 @@ exports.getAll = async (req, res) => {
             user.villa = allVilla
         }
 
-
-
         return res.status(200).json({ statusCode: 200, users: allUsers })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
@@ -308,7 +306,6 @@ exports.addEmail = async (req, res) => {
             }
         })
 
-        // return res.status(422).json({ statusCode: 422, message: "unknown error" })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
 exports.authEmail = async (req, res) => {

@@ -21,12 +21,6 @@ app.use("/static/zone", express.static(path.join(__dirname, 'public', 'static', 
 app.use("/static/city", express.static(path.join(__dirname, 'public', 'static', 'city')));
 app.use("/api-doc", swagger)
 app.use(setHeaders);
-// app.use(cors({ credentials: "include", origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'], }));
-
-//* Middlewares ^
-
-
-
 
 const corsOptions = {
     origin: ["https://jajiga.liara.run", "http://localhost:3000"],
@@ -37,9 +31,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
-
-
-
 
 const authRouter = require('./modules/auth/router')
 const codeRouter = require('./modules/authcode/router')
@@ -55,7 +46,6 @@ const wishesRouter = require('./modules/wishes/router')
 const panelRouter = require('./modules/panel/router')
 const ticketRouter = require('./modules/ticket/router')
 
-// Routers ^
 
 app.use("/", authRouter, panelRouter)
 app.use("/auth/E-code", codeRouter)
@@ -69,9 +59,6 @@ app.use("/category/", categoryRouter)
 app.use("/wishes/", wishesRouter)
 app.use("/ticket/", ticketRouter)
 
-
-// Routers Middleware ^
-
 app.use((req, res) => {
     return res.status(404).json({ statusCode: 404, message: "page not found 404" })
 })
@@ -79,6 +66,6 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     return res.status(500).json({ statusCode: 500, message: err });
 });
-// Static Routes ^
+
 
 module.exports = app;

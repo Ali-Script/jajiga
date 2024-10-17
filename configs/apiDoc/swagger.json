@@ -36,7 +36,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "get Panel Info",
+                "summary": "Get Panel Info",
                 "parameters": [
                     {
                         "name": "Authorization Token",
@@ -59,7 +59,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "ban user",
+                "summary": "Ban User",
                 "parameters": [
                     {
                         "name": "Authorization Token",
@@ -136,7 +136,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "Unban user",
+                "summary": "Unban User",
                 "parameters": [
                     {
                         "name": "Authorization Token",
@@ -165,7 +165,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "get all banned users",
+                "summary": "Get All Banned Users",
                 "parameters": [
                     {
                         "name": "Authorization Token",
@@ -275,7 +275,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "logout",
+                "summary": "Logout",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -494,28 +494,6 @@
                     },
                     "404": {
                         "description": "User Not Found !"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/setNewAccessToken": {
-            "get": {
-                "tags": [
-                    "Utils"
-                ],
-                "summary": "Set New Refresh Token",
-                "responses": {
-                    "200": {
-                        "description": "Succ"
-                    },
-                    "404": {
-                        "description": "User Not Found ! | Undefined Cookie"
-                    },
-                    "403": {
-                        "description": "Refresh Token has expired please login"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1105,7 +1083,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "filtring villas",
+                "summary": "Filtring Villas",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1121,7 +1099,7 @@
                 "tags": [
                     "Villas"
                 ],
-                "summary": "privilegedVillas",
+                "summary": "PrivilegedVillas",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1137,7 +1115,7 @@
                 "tags": [
                     "Villas"
                 ],
-                "summary": "array of popularTowns",
+                "summary": "Array Of PopularTowns",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1153,7 +1131,7 @@
                 "tags": [
                     "Villas"
                 ],
-                "summary": "Sorted list of villas sort by villaZone",
+                "summary": "Sorted List Of Villas Sort By VillaZone",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1191,7 +1169,7 @@
                         }
                     }
                 },
-                "summary": "price of booking",
+                "summary": "Price Of Booking",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1244,7 +1222,7 @@
                         }
                     }
                 },
-                "summary": "book villa",
+                "summary": "Book Villa",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1295,7 +1273,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "accept or reject villa",
+                "summary": "Accept Or Reject Villa",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1550,7 +1528,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "Change User Role (Only 'promotion' or 'demotion' is allowed in key parameter.)",
+                "summary": "Change User Role (Only 'promotion' Or 'demotion' Is Allowed In Key Parameter.)",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -1996,7 +1974,7 @@
                         "required": "true"
                     }
                 ],
-                "summary": "Get Villa from Favorite",
+                "summary": "Get Villa From Favorite",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -2227,7 +2205,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "getAll Comments",
+                "summary": "GetAll Comments",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -2243,7 +2221,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "getAll Rejected Comments",
+                "summary": "GetAll Rejected Comments",
                 "responses": {
                     "200": {
                         "description": "Succ"
@@ -2259,7 +2237,7 @@
                 "tags": [
                     "Only Admin Access"
                 ],
-                "summary": "getAll Rejected Villas",
+                "summary": "GetAll Rejected Villas",
                 "responses": {
                     "200": {
                         "description": "Succ"

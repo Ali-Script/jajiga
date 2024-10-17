@@ -21,22 +21,6 @@ exports.setCategory = async (req, res) => {
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }) }
 }
-// exports.getOne = async (req, res) => {
-//     try {
-
-//         const isvalidID = mongoose.Types.ObjectId.isValid(req.params.id)
-//         if (!isvalidID) {
-//             return res.status(422).json({ message: "Invalid ObjectId !!" })
-//         }
-
-//         const category = await categoryModel.findOne({ _id: req.params.id }).lean()
-//         if (!category) {
-//             return res.status(404).json({ message: "Category not found 404" })
-//         }
-
-//         return res.json(category)
-//     } catch (err) { return res.status(422).json(err.message) }
-// }
 exports.getAll = async (req, res) => {
     try {
         const categories = await categoryModel.find({}).sort({ _id: -1 }).sort({ _id: -1 }).lean()
@@ -64,14 +48,6 @@ exports.getAll = async (req, res) => {
             if (category.href == "house") category.cover = "kordan.webp"
 
         });
-
-
-
-
-
-
-
-
         return res.status(200).json({ statusCode: 200, categories })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }) }

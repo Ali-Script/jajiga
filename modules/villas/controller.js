@@ -40,7 +40,6 @@ exports.add = async (req, res) => {
             user: req.user._id,
             title,
             cover: coverFiles,
-            // cover: coverFiles = undefined ? coverarray : coverFiles,
             address,
             coordinates,
             aboutVilla,
@@ -58,88 +57,6 @@ exports.add = async (req, res) => {
         })
 
         return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
-
-        // async function addnewvilla() {
-        //     if (coordinates == undefined) {
-        //         const newVilla = await villaModel.create({
-        //             user: req.user._id,
-        //             title,
-        //             cover,
-        //             address,
-        //             coordinates,
-        //             aboutVilla,
-        //             capacity,
-        //             facility,
-        //             price,
-        //             rules,
-        //             step,
-        //             finished
-        //         })
-
-        //         const create = await userVilla.create({
-        //             user: req.user._id,
-        //             villa: newVilla._id,
-        //         })
-
-        //         return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
-        //     }
-        //     const ifDUPLC = await villaModel.findOne({ coordinates })
-        //     if (ifDUPLC) return res.status(409).json({ statusCode: 422, message: "this location is already exist" })
-
-        //     const covers = req.files;
-        //     const coverFiles = []
-        //     covers.forEach(i => coverFiles.push(i.filename))
-
-        //     const newVilla = await villaModel.create({
-        //         user: req.user._id,
-        //         title,
-        //         cover,
-        //         address,
-        //         coordinates,
-        //         aboutVilla,
-        //         capacity,
-        //         facility,
-        //         price,
-        //         rules,
-        //         step,
-        //         finished
-        //     })
-
-        //     const create = await userVilla.create({
-        //         user: req.user._id,
-        //         villa: newVilla._id,
-        //     })
-
-        //     return res.status(200).json({ statusCode: 200, message: "Succ !", villa: newVilla })
-        // }
-
-        // const checkExists = await userVilla.find({ user: req.user._id }).sort({ _id: -1 }).lean()
-        // if (!checkExists[0]) {
-        //     return addnewvilla()
-        // } else {
-        //     const findvilla = await villaModel.findOne({ _id: checkExists[0].villa })
-        //     if (findvilla.finished == true) {
-        //         return addnewvilla()
-        //     }
-
-
-        //     const newVilla = await villaModel.updateOne({ _id: checkExists[0].villa }, {
-        //         user: req.user._id,
-        //         title,
-        //         cover,
-        //         address,
-        //         coordinates,
-        //         aboutVilla,
-        //         capacity,
-        //         facility,
-        //         price,
-        //         rules,
-        //         step,
-        //         finished
-        //     })
-
-        //     return res.status(200).json({ statusCode: 200, message: "Succ Updated!", villa: newVilla })
-        // }
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
@@ -337,8 +254,6 @@ exports.getAll = async (req, res) => {
                 })
             })
 
-
-
             const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
@@ -351,7 +266,6 @@ exports.getAll = async (req, res) => {
 
             ordered.push(villa);
         }
-
 
         return res.status(200).json({ statusCode: 200, villas: ordered })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
@@ -402,8 +316,6 @@ exports.getAllActivated = async (req, res) => {
                 })
             })
 
-
-
             const noAnswerComments = await commentModel.find({ villa: villa._id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
@@ -416,7 +328,6 @@ exports.getAllActivated = async (req, res) => {
 
             ordered.push(villa);
         }
-
 
         return res.status(200).json({ statusCode: 200, villas: ordered })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
@@ -447,8 +358,6 @@ exports.getOne = async (req, res) => {
 
         const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
-
-
         const today = moment().locale('fa').format('YYYY/MM/DD');
 
         const filterDates = (getReserved, today) => {
@@ -461,23 +370,20 @@ exports.getOne = async (req, res) => {
 
         const filteredDates = filterDates(getReserved, today);
 
-
-
-
         let bookDate = []
 
         filteredDates.forEach(data => {
             let obj = { date: data.date, price: data.price, guestNumber: data.guestNumber }
             function daysBetweenPersianDates(date1, date2) {
-                // Parse the Persian dates
+
                 const m1 = moment(date1, 'jYYYY/jM/jD');
                 const m2 = moment(date2, 'jYYYY/jM/jD');
 
-                // Convert to Gregorian dates
+
                 const gDate1 = m1.format('YYYY-MM-DD');
                 const gDate2 = m2.format('YYYY-MM-DD');
 
-                // Calculate the difference in days
+
                 const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
 
                 return diffInDays;
@@ -490,42 +396,6 @@ exports.getOne = async (req, res) => {
             obj.days = days;
             bookDate.push(obj)
         })
-
-        // const comments = await commentModel.find({ villa: id, isAccept: 1 })
-        // const comments = await commentModel.find({ villa: id, isAccept: "true" })
-        //     .populate("villa", "_id")
-        //     .populate("creator", "firstName lastName avatar")
-        //     .sort({ _id: -1 })
-        //     .lean();
-
-        // let orderedComment = []
-
-        // comments.forEach(mainComment => {
-        //     comments.forEach(answerComment => {
-
-        //         if (String(mainComment._id) == String(answerComment.mainCommentID)) {
-
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: answerComment.villa._id,
-        //                 creator: answerComment.creator,
-        //                 answerComment
-        //             })
-        //         }
-        //     })
-        // })
-
-
-
-        // const noAnswerComments = await commentModel.find({ villa: id, isAnswer: 0, haveAnswer: 0, isAccept: "true" })
-        //     .populate("villa", "_id")
-        //     .populate("creator", "firstName lastName avatar")
-        //     .sort({ _id: -1 })
-        //     .lean();
-
-        // noAnswerComments.forEach(i => orderedComment.push({ ...i }))
-
-
 
         const commentss = await commentModel.find({ villa: id, isAccept: "true" })
             .populate("villa", "_id")
@@ -571,8 +441,6 @@ exports.getOne = async (req, res) => {
             }
         });
 
-
-
         if (userobj) {
 
             const isWishes = await wishesModel.findOne({ user: userobj._id, villa: villa._id })
@@ -597,21 +465,8 @@ exports.myVillas = async (req, res) => {
         const user = req.user
         const villa = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar").lean()
         if (villa.length == 0) return res.status(404).json({ statusCode: 404, message: "You have`t add villa yet` " })
-        // let newVillas = []
 
-        // villa.forEach(async item => {
 
-        //     const getReserved = await reserveModel.find({ villa: item._id }).sort({ _id: -1 })
-        //     if (getReserved[0]) {
-        //         var index = villa.findIndex(data => {
-        //             return data._id == item._id
-        //         })
-        //         villa[index].bookedDate = 1
-        //     }
-
-        // })
-        // console.log(newVillas);
-        //!fghsssssssssssss
         const getReserved = await reserveModel.find({ villa: villa._id }).sort({ _id: -1 })
 
         let bookDate = []
@@ -741,9 +596,7 @@ exports.delete = async (req, res) => {
         const villa = await villaModel.findOneAndDelete({ _id: id })
         if (!villa) return res.status(404).json({ statusCode: 404, message: "Villa Not Found 404 ! " })
 
-        // const deleteComment = await commentModel.deleteMany({ villa: id })
         const removeuservilla = await userVilla.findOneAndDelete({ villa: id })
-
 
         return res.status(200).json({ statusCode: 200, message: "Succ !" })
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
@@ -1114,8 +967,6 @@ exports.filtring = async (req, res) => {
             })
             villas = newVillas
         }
-
-        // villas.forEach(async villa => {
         for (const villa of villas) {
 
             const trueKeys = Object.keys(villa.facility.facility).filter(key => {
@@ -1145,7 +996,6 @@ exports.privilegedVillas = async (req, res) => {
             if (trueKeys.length >= 5) costlyVillas.push(villa)
         })
 
-
         let ordered = []
 
         for (const villa of costlyVillas) {
@@ -1159,7 +1009,6 @@ exports.privilegedVillas = async (req, res) => {
                 bookDate.push(obj)
             })
 
-            // const comments = await commentModel.find({ villa: id, isAccept: 1 })
             const comments = await commentModel.find({ villa: villa._id, isAccept: "true" })
                 .populate("villa", "_id")
                 .populate("creator", "firstName lastName avatar")
@@ -1197,10 +1046,6 @@ exports.privilegedVillas = async (req, res) => {
 
             ordered.push(villa);
         }
-
-
-
-
         return res.status(200).json({ statusCode: 200, villas: ordered })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
@@ -1487,7 +1332,6 @@ exports.getAllBooks = async (req, res) => {
 }
 exports.getAllRejectedVillas = async (req, res) => {
     try {
-
         const rejectedVillas = await villaModel.find({ isAccepted: "rejected" }).lean()
 
         return res.status(200).json({ statusCode: 200, rejectedVillas })

@@ -76,26 +76,6 @@ exports.get = async (req, res) => {
 
             faveVillas.push(obj);
         }
-
-
-
-        res.cookie("test11acc", "ffac", {
-            maxAge: 999999999999999, //14 * 24 * 60 * 60,
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "strict"
-        })
-        res.cookie("test22reff", "ffref", {
-            maxAge: 999999999999999, //15000
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "strict"
-        })
-
-
-
         return res.status(200).json({ statusCode: 200, faveVillas })
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }

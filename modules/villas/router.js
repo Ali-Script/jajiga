@@ -27,8 +27,7 @@ router
     .get(authMiddleware, controller.myVillas)
 router
     .route("/delete/:villaID")
-    .delete(authMiddleware, controller.delete)
-// ! admin mid
+    .delete(authMiddleware, isAdminMiddleware, controller.delete)
 router
     .route("/facility")
     .get(controller.getFacility)

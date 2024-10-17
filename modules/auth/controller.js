@@ -18,28 +18,6 @@ require("dotenv").config()
 
 exports.start = async (req, res) => {
     try {
-
-
-        res.cookie("accessToken", "accessToken", {
-            maxAge: 30 * 24 * 60 * 1000, //15000
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "none",
-            domain: 'localhost'
-        })
-        res.cookie("RefreshToken", "RefreshToken", {
-            maxAge: 30 * 24 * 60 * 1000, //15000
-            httpOnly: true,
-            signed: true,
-            secure: true,
-            sameSite: "none",
-            domain: 'localhost',
-        })
-
-
-
-
         return res.status(200).json({ statusCode: 200, message: "Succ" })
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
@@ -62,15 +40,6 @@ exports.signup = async (req, res) => {
         const ifDUPLCNum = await userModel.findOne({ phone })
         if (ifDUPLCNum) {
 
-            // await OtpcodeModel.create({
-            //     code: 1111,
-            //     phone,
-            //     email: null,
-            //     expiresIn: Date.now() + 120000,
-            //     for: "auth"
-            // })
-
-
             const OTP_CODE = Math.floor(Math.random() * 10000)
 
             request.post({
@@ -88,9 +57,8 @@ exports.signup = async (req, res) => {
             },
                 async function (error, response, body) {
                     if (!error && response.statusCode === 200) {
-                        /////////************ */
+
                         //  if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
-                        /****************************** */
 
                         await OtpcodeModel.create({
                             code: OTP_CODE,
@@ -100,28 +68,19 @@ exports.signup = async (req, res) => {
                             for: "auth"
                         })
 
-                        // return res.status(200).json({ statusCode: 200, message: "code send succ" }
                         return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
 
                     } else {
-                        return res.status(500).json({ statusCode: 500, error: err.message })
+                        return res.status(500).json({ statusCode: 500, message: err.message })
                     }
                 });
-
-
         } else {
             return res.status(200).json({ statusCode: 200, message: "redirect ro register" })
 
         }
 
-
-
-
-
-
-
     } catch (err) {
-        return res.status(500).json({ statusCode: 500, error: err.message })
+        return res.status(500).json({ statusCode: 500, message: err.message })
     }
 }
 //* Checked (1)
@@ -154,12 +113,10 @@ exports.sendOtpPhone = async (req, res) => {
             },
             json: true,
         }, async function (error, response, body) {
+
             if (!error && response.statusCode === 200) {
 
-                /////////************ */
-                if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
-                /****************************** */
-
+                //if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
 
                 await OtpcodeModel.create({
                     code: OTP_CODE,
@@ -171,16 +128,11 @@ exports.sendOtpPhone = async (req, res) => {
 
 
                 return res.status(200).json({ statusCode: 200, message: "code send succ" })
-                // return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
 
             } else {
-
                 return res.status(500).json({ statusCode: 500, error: err.message })
             }
         })
-
-
-
 
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
@@ -232,28 +184,6 @@ exports.authOtpPhone = async (req, res) => {
             const accessToken = genAccessToken(user.phone)
             const RefreshToken = genRefreshToken(user.phone)
 
-            res.cookie("accessToken", accessToken, {
-                maxAge: 30 * 24 * 60 * 1000, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "none",
-                // domain: "localhost",
-                // path: '/'
-            })
-            res.cookie("RefreshToken", RefreshToken, {
-                maxAge: 30 * 24 * 60 * 1000, //15000
-                httpOnly: true,
-                signed: true,
-                secure: true,
-                sameSite: "none",
-                //  domain: "localhost",
-                //path: '/'
-            })
-
-
-
-            // await userModel.updateOne({ phone }, { $set: { refreshToken: RefreshToken } })
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
 
             return res.status(200).json({ statusCode: 200, message: "User Created Succ !", RefreshToken, accessToken })
@@ -266,6 +196,7 @@ exports.authOtpPhone = async (req, res) => {
         }
 
         return res.status(500).json({ statusCode: 500, message: "Invalid Err" })
+
     } catch (err) {
         return res.status(500).json({ statusCode: 500, error: err.message });
     }
@@ -297,26 +228,9 @@ exports.loginByPassword = async (req, res) => {
         const accessToken = genAccessToken(user.phone)
         const RefreshToken = genRefreshToken(user.phone)
 
-        // res.cookie("RefreshToken", RefreshToken, {
-        //     maxAge: 999999999999999,
-        //     httpOnly: true,
-        //     signed: true,
-        //     secure: true,
-        //     sameSite: "none"
-        // })
-        // res.cookie("AccessToken", accessToken, {
-        //     maxAge: 999999999999999,
-        //     httpOnly: true,
-        //     signed: true,
-        //     secure: true,
-        //     sameSite: "none"
-        // })
-
-        // await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
-
         return res.json({ statusCode: 200, message: "Login Successfully ", accessToken, RefreshToken })
     } catch (err) {
-        return res.status(500).json({ statusCode: 500, error: err.message });
+        return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
 //* Checked (1)
@@ -348,11 +262,8 @@ exports.loginByCode = async (req, res) => {
             const RefreshToken = genRefreshToken(user.phone)
 
 
-
-
-
             await OtpcodeModel.updateOne({ _id: getCode[0]._id }, { used: 1 })
-            // await userModel.updateOne({ phone: user.phone }, { $set: { refreshToken: RefreshToken } })
+
             return res.status(200).json({ statusCode: 200, message: "Login Successfully ", accessToken, RefreshToken })
 
 
@@ -364,136 +275,10 @@ exports.loginByCode = async (req, res) => {
         }
 
     } catch (err) {
-        return res.status(500).json({ statusCode: 500, error: err.message });
+        return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
 //* Checked (1)
-// exports.getme = async (req, res) => {
-//     try {
-
-
-
-
-
-//         const token = req.signedCookies.accessToken;
-
-//         console.log(token);
-//         if (token == undefined) return res.status(440).json({ statusCode: 440, message: "Please login no user found" })
-
-//         const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-//         const usere = await userModel.findOne({ phone: decoded.Identifeir })
-//         if (!usere) return res.status(404).json({ statusCode: 404, message: "User Not Found !" })
-
-
-//         const user = usere.toObject()
-//         // const user = userr;
-//         Reflect.deleteProperty(user, "password")
-//         const checkBan = await banModel.findOne({ phone: user.phone })
-//         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
-
-//         const findVilla = await villaModel.find({ user: user._id }).populate("aboutVilla.villaType").populate("user", "firstName lastName role avatar")
-//             .sort({ _id: -1 }).lean()
-//         const books = await reserveModel.find({ user: user._id }).populate("villa")
-//         let faveVillas = []
-
-
-//         const today = moment().locale('fa').format('YYYY/MM/DD');
-
-//         const filterDates = (books, today) => {
-//             const todayDate = new Date(today.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
-//             return books.filter(item => {
-//                 const toDate = new Date(item.date.to.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
-//                 return toDate >= todayDate;
-//             });
-//         };
-
-//         const filteredDates = filterDates(books, today);
-
-
-
-
-//         for (const data of filteredDates) {
-//             const comments = await commentModel.find({ villa: data.villa._id, isAnswer: 0, isAccept: "true" }).select('score -_id');
-//             const vill = await villaModel.find({ _id: data.villa._id }).populate("aboutVilla.villaType")
-
-//             const commentCount = comments.length;
-//             const totalScore = comments.reduce((acc, comment) => acc + comment.score, 0);
-//             const averageScore = commentCount > 0 ? totalScore / commentCount : 0;
-
-//             const getBook = await reserveModel.find({ villa: data.villa._id }).countDocuments()
-
-
-//             let obj = {
-//                 _id: data.villa._id,
-//                 title: data.villa.title,
-//                 address: data.villa.address,
-//                 aboutVilla: vill[0].aboutVilla,
-//                 cover: data.villa.cover,
-//                 price: data.villa.price,
-//                 capacity: data.villa.capacity,
-//                 comments: commentCount,
-//                 averageScore,
-//                 booked: getBook
-//             };
-//             let obj2 = { date: data.date, price: data.price, guestNumber: data.guestNumber }
-
-//             function daysBetweenPersianDates(date1, date2) {
-//                 // Parse the Persian dates
-//                 const m1 = moment(date1, 'jYYYY/jM/jD');
-//                 const m2 = moment(date2, 'jYYYY/jM/jD');
-
-//                 // Convert to Gregorian dates
-//                 const gDate1 = m1.format('YYYY-MM-DD');
-//                 const gDate2 = m2.format('YYYY-MM-DD');
-
-//                 // Calculate the difference in days
-//                 const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
-
-//                 return diffInDays;
-//             }
-//             const date1 = data.date.from;
-//             const date2 = data.date.to;
-//             let days = daysBetweenPersianDates(date1, date2)
-//             obj2.days = days;
-
-
-//             const trueKeys = Object.keys(data.villa.facility.facility).filter(key => {
-//                 if (key !== "moreFacility") return data.villa.facility.facility[key].status === true
-//             });
-//             if (trueKeys.length >= 5) obj.costly = true
-
-//             obj2.villa = obj
-//             faveVillas.push(obj2);
-//         }
-
-
-//         for (const villa of findVilla) {
-//             const books = await reserveModel.find({ villa: villa._id }).populate("user", "firstName lastName _id")
-
-//             const today = moment().locale('fa').format('YYYY/MM/DD');
-
-//             const filterDates = (books, today) => {
-//                 const todayDate = new Date(today.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
-//                 return books.filter(item => {
-//                     const toDate = new Date(item.date.to.replace(/(\d+)\/(\d+)\/(\d+)/, (match, p1, p2, p3) => `${p1}-${p2}-${p3}`));
-//                     return toDate >= todayDate;
-//                 });
-//             };
-
-//             const filteredDates = filterDates(books, today);
-
-//             villa.booked = filteredDates
-
-//         }
-
-
-
-//         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
-
-//     } catch (err) {
-//         return res.status(500).json({ statusCode: 500, message: err.message });
-//     }
-// }
 exports.getme = async (req, res) => {
     try {
         const user = req.user;
@@ -518,8 +303,6 @@ exports.getme = async (req, res) => {
         };
 
         const filteredDates = filterDates(books, today);
-
-
 
 
         for (const data of filteredDates) {
@@ -548,15 +331,15 @@ exports.getme = async (req, res) => {
             let obj2 = { date: data.date, price: data.price, guestNumber: data.guestNumber }
 
             function daysBetweenPersianDates(date1, date2) {
-                // Parse the Persian dates
+
                 const m1 = moment(date1, 'jYYYY/jM/jD');
                 const m2 = moment(date2, 'jYYYY/jM/jD');
 
-                // Convert to Gregorian dates
+
                 const gDate1 = m1.format('YYYY-MM-DD');
                 const gDate2 = m2.format('YYYY-MM-DD');
 
-                // Calculate the difference in days
+
                 const diffInDays = moment(gDate2).diff(moment(gDate1), 'days') + 1;
 
                 return diffInDays;
@@ -595,9 +378,6 @@ exports.getme = async (req, res) => {
             villa.booked = filteredDates
 
         }
-
-
-
         return res.status(200).json({ statusCode: 200, message: "Succ", user, villas: findVilla, booked: faveVillas })
 
     } catch (err) {
@@ -657,7 +437,7 @@ exports.getAccessToken = async (req, res) => {
         return res.status(500).json({ statusCode: 500, error: err.message });
     }
 }
-//* Checked (1)
+
 exports.resendCode = async (req, res) => {
     try {
         const phone = req.params.phone
@@ -678,12 +458,10 @@ exports.resendCode = async (req, res) => {
             },
             json: true,
         }, async function (error, response, body) {
+
             if (!error && response.statusCode === 200) {
 
-                /////////************ */
-                if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
-                /****************************** */
-
+                //if (typeof response.body !== "number" && response.body[0] !== 0) return res.status(response.body[0]).json(response.body)
 
                 await OtpcodeModel.create({
                     code: OTP_CODE,
@@ -695,34 +473,28 @@ exports.resendCode = async (req, res) => {
 
 
                 return res.status(200).json({ statusCode: 200, message: "code send succ" })
-                // return res.status(411).json({ statusCode: 411, message: "Phone Number is already exist please login" })
 
             } else {
-
-                return res.status(500).json({ statusCode: 500, error: err.message })
+                return res.status(500).json({ statusCode: 500, message: err.message })
             }
         })
 
-
-
     } catch (err) {
-        return res.status(500).json({ statusCode: 500, error: err.message });
+        return res.status(500).json({ statusCode: 500, message: err.message });
     }
 }
 //* Checked (1)
 exports.logout = async (req, res) => {
     try {
 
-
-        // Clear the cookies
         res.clearCookie('session-id');
         res.clearCookie('connect.sid');
         res.clearCookie('RefreshToken');
         res.clearCookie('AccessToken');
 
-        // Return a success response
         return res.status(200).json({ statusCode: 200, message: 'Logged out successfully' });
     } catch (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     }
 };
+//* Checked (1)

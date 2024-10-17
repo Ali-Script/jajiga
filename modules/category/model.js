@@ -9,9 +9,7 @@ const schema = new mongoose.Schema({
         type: 'string',
         required: true
     }
-
 }, { timestamps: true })
-
 
 const model = mongoose.model("Categories", schema);
 module.exports = model;

@@ -125,8 +125,6 @@ exports.answer = async (req, res) => {
 
         answer = await answer.save();
 
-
-
         await commentModel.findOneAndUpdate({ _id: mainCommentID }, { $push: { answer: answer._id } })
         return res.status(200).json({ statusCode: 200, message: "succ" })
 
@@ -146,26 +144,6 @@ exports.getAll = async (req, res) => {
         const comments = commentss.filter(villa => !rejectedComments.find(rejectedVilla => String(villa._id) === String(rejectedVilla._id)));
 
         let orderedComment = []
-
-
-        // comments.forEach(comment => {
-        //     if (comment.mainCommentID) {
-        //         let mainComment = comments.find(c => String(c._id) == String(comment.mainCommentID));
-        //         if (mainComment) {
-        //             orderedComment.push({
-        //                 ...mainComment,
-        //                 villa: mainComment._id,
-        //                 creator: mainComment.creator ? mainComment.creator : null,
-        //                 answerComment: {
-        //                     ...comment,
-        //                     villa: mainComment._id
-        //                 }
-        //             })
-        //         }
-        //     } else {
-        //         orderedComment.push({ ...comment, villa: comment.villa._id });
-        //     }
-        // })
 
         const addedMainCommentIds = new Set();
         const answerComments = {};

@@ -14,13 +14,10 @@ const storage = multer.diskStorage({
 
             const validFormat = [".jpg", ".png", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".webp"]
 
-            if (validFormat.includes(extname)) {
-                cb(null, fileunicname + extname)
+            if (validFormat.includes(extname)) cb(null, fileunicname + extname)
+            else cb(new Error(`Just ${validFormat.join(' | ')} is valid`))
 
-            } else {
-                cb(new Error(`Just ${validFormat.join(' | ')} is valid`))
 
-            }
         } catch (err) {
             return res.status(444).json({ statusCode: 444, message: err.message })
         }
