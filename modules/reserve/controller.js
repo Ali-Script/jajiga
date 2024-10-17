@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
 const joi = require('./../../validator/reserveValidator');
 const villaModel = require('../villas/model')
 const reserveModel = require('./model')
 const JalaliDate = require('jalali-date');
 const moment = require('jalali-moment');
+const { isValidObjectId } = require('mongoose');
 
 exports.reserve = async (req, res) => {
     try {
@@ -627,6 +627,27 @@ exports.reservePrice = async (req, res) => {
             totalPrice
 
         })
+
+    } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
+}
+exports.cancelReservation = async (req, res) => {
+    try {
+        const villaID = req.params.villaID
+        const user = req.user
+
+        if (isValidObjectId(villaID)) {
+            const isAlraedyReserved = await reserveModel.findOne({ user: user._id, villa: villaID });
+            if (!isAlraedyReserved) {
+                return res.status(403).json({ statusCode: 403, message: `You do not have an active reservation for this villa, so you cannot cancel it.` });
+            }
+
+            await reserveModel.findOneAndDelete({ _id: isAlraedyReserved._id });
+            return res.status(200).json({ statusCode: 200, message: 'Your reservation has been successfully canceled.' });
+
+        } else {
+            return res.status(400).json({ statusCode: 400, message: 'Invalid ObjectId.' });
+        }
+
 
     } catch (err) { return res.status(500).json({ statusCode: 500, message: err.message }); }
 }
