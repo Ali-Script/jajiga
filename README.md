@@ -28,10 +28,8 @@
 [![nodejs](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://github.com/Ali-Script)
  [![ex](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)](https://github.com/Ali-Script)
  [![db](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)](https://github.com/Ali-Script)
+
  [![db](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)](https://github.com/Ali-Script)
 
 
 
@@ -39,4 +37,5 @@
 
 
 
-Thanks to the front-end developer : https://github.com/KasraMg
+
+Thanks to the front-end developer, The website looks amazing : https://github.com/KasraMg
