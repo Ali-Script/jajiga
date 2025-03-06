@@ -46,6 +46,10 @@ Filtering For Villas
 RESTful API Compliance: Follows REST principles, ensuring scalable and maintainable API design.
 Clean Code Architecture: Implements modular, readable, and maintainable code with best practices.
 
+High-Security Authentication
+Database Management
+API Documentation & Developer Support
+File Handling & Media Management
 ```
   <div align="center">
 ---
