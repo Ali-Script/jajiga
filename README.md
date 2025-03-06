@@ -22,7 +22,7 @@
 
 <br>
 
-<div align="center">
+<div align="left">
  
 ## Some of Abilities 
 
@@ -47,7 +47,7 @@ RESTful API Compliance: Follows REST principles, ensuring scalable and maintaina
 Clean Code Architecture: Implements modular, readable, and maintainable code with best practices.
 
 ```
-  
+  <div align="center">
 ---
 ## TECHNOLOGY USED
 
