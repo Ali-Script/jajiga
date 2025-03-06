@@ -21,7 +21,9 @@
 
 
 <br>
+
 <div align="center">
+ 
 ## Some of Abilities 
 
 ``` py
