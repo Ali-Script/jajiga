@@ -21,17 +21,43 @@
 
 
 <br>
-  
+
+<div align="left">
+ 
+## Some of Abilities 
+
+``` py
+
+Send Email To User 
+Send SmS To User
+
+High Security Protocol To Hash Password
+(Each User Has Unique Salt)
+
+Protection Of All Important APIs 
+Encryption of Database Data 
+
+Easy And Safe Access To Admin Dashboad 
+(Management Dashboard)
+
+Very Sensitive Classification And 
+Filtering For Villas
+
+RESTful API Compliance: Follows REST principles, ensuring scalable and maintainable API design.
+Clean Code Architecture: Implements modular, readable, and maintainable code with best practices.
+
+High-Security Authentication
+Database Management
+API Documentation & Developer Support
+File Handling & Media Management
+```
+  <div align="center">
 ---
 ## TECHNOLOGY USED
 
 [![nodejs](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://github.com/Ali-Script)
  [![ex](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)](https://github.com/Ali-Script)
  [![db](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)](https://github.com/Ali-Script)
- [![db](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)](https://github.com/Ali-Script)
 
 
 
@@ -39,4 +65,6 @@
 
 
 
-Thanks to the front-end developer : https://github.com/KasraMg
+
+
+Thanks to the front-end developer, The website looks amazing : https://github.com/KasraMg
