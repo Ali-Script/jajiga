@@ -17,7 +17,8 @@ router
     .delete(authMiddleware, isAdminMiddleware, controller.delete)
 router
     .route("/edit")
-    .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.edit)
+    .put(addAvatarMiddleware.single("avatar"), controller.edit)
+// .put(authMiddleware, addAvatarMiddleware.single("avatar"), controller.edit)
 router
     .route("/changeRole/:key/:phone")
     .post(authMiddleware, isAdminMiddleware, controller.changeRole)

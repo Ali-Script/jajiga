@@ -13,6 +13,7 @@ const { genRefreshToken, genAccessToken } = require('./../../utils/auth');
 const dotenv = require("dotenv").config();
 const bcrypt = require("bcrypt");
 const joi = require("./../../validator/authValidator");
+const sharp = require("sharp")
 
 exports.getAll = async (req, res) => {
     try {
@@ -21,7 +22,6 @@ exports.getAll = async (req, res) => {
 
         const checkBan = await banModel.find({})
         const users = userss.filter(user => !checkBan.find(banneduser => user.phone == banneduser.phone));
-
 
         const allUsers = []
 
@@ -219,9 +219,9 @@ exports.forgetPasswordConfirmCode = async (req, res) => {
 }
 exports.edit = async (req, res) => {
     try {
-        const user = req.user
+        // const user = req.user
         const { avatar, firstName, lastName, gender, aboutMe } = req.body;
-
+        const user = await userModel.findOne({ phone: "09189450686" })
         const checkBan = await banModel.findOne({ phone: user.phone })
         if (checkBan) return res.status(403).json({ statusCode: 403, message: "Sorry u has banned from this website" })
 
@@ -237,10 +237,21 @@ exports.edit = async (req, res) => {
 
         if (req.file != undefined) {
 
+            const pathh = `./avatars/${Date.now()}${req.file.originalname}`
+            const buffer = req.file.buffer
+
+
+            try {
+                await sharp(buffer).toFormat('png').jpeg({ quality: 30 }).toFile(`./public/${pathh}`);
+            } catch (error) {
+                console.error("Error processing image with sharp:", error);
+                return res.status(500).json({ statusCode: 500, message: "Image processing failed." });
+            }
+            const finalPath = pathh.replace('./avatars/', '');
             const update = await userModel.findOneAndUpdate({ _id: user._id }, {
                 firstName,
                 lastName,
-                avatar: req.file.filename,
+                avatar: finalPath,
                 gender,
                 aboutMe
             })

